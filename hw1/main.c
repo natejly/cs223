@@ -1,7 +1,7 @@
 /*
 Driver for Game of Life assignment in CPSC 223 Fall 2023
 
-Author: [your name here]
+Author: Nate Ly
 */
 
 #include <stdlib.h>
@@ -23,15 +23,24 @@ int main(int argc, char *argv[])
      *      a string consisting of the characters '0' and '1', of length ROWS * COLS,
      *      representing the initial state for this run of Game of Life.
      */
-
+    if(argc != 3){
+        printf("not 3 arguments");
+        return 1;
+    }
+    int time_steps = (int) argv[1];
+    char init[ROWS*COLS];
+    for(size_t i=0; i<sizeof(init); i++){
+        init[i]=argv[2][i];
+    }
+    
+    printf("%d", time_steps);
     /*
      * TODO: Create a new statically-allocated array of size ROWS x COLS
      */
-
+    int board [ROWS][COLS];
     /*
      * TODO: Print the initial values held in the field
      */
-
     /*
      * TODO: Run the game time_steps times, printing the field at the end of
      * each step
