@@ -45,19 +45,22 @@ int main(int argc, char *argv[])
     /*
      * TODO: Print the initial values held in the field
      */
-    for (int i = 0; i < ROWS; i++)
-    {
-        for (int j = 0; j < COLS; j++)
-        {
-            printf("%c\t", board[i][j]);
-        }
-        printf("\n");
-    }
+    // for (int i = 0; i < ROWS; i++)
+    // {
+    //     for (int j = 0; j < COLS; j++)
+    //     {
+    //         printf("%c\t", board[i][j]);
+    //     }
+    //     printf("\n");
+    // }
+    print_initial(board);
     /*
      * TODO: Run the game time_steps times, printing the field at the end of
      * each step
      */
-
+    for(size_t i = 0; i < time_steps; i++){
+        print_generation(board, i);
+    }
     /*
      * Print "Done." then exit.
      */
