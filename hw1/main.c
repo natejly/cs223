@@ -23,24 +23,36 @@ int main(int argc, char *argv[])
      *      a string consisting of the characters '0' and '1', of length ROWS * COLS,
      *      representing the initial state for this run of Game of Life.
      */
-    if(argc != 3){
-        printf("not 3 arguments");
-        return 1;
-    }
-    int time_steps = (int) argv[1];
-    char init[ROWS*COLS];
-    for(size_t i=0; i<sizeof(init); i++){
-        init[i]=argv[2][i];
-    }
-    
-    printf("%d", time_steps);
+
+    int time_steps = atoi(argv[1]);
+
+    printf("Time Steps: %d\n", time_steps);
+    printf("Init String: %s\n", argv[2]);
     /*
      * TODO: Create a new statically-allocated array of size ROWS x COLS
      */
-    int board [ROWS][COLS];
+    char board [ROWS][COLS];
+    int init_index = 0;
+    for (size_t i = 0; i < ROWS; i++)
+    {
+        for (size_t j = 0; j < COLS; j++)
+        {
+            board[i][j] = argv[2][init_index];
+
+            init_index++;
+        }
+    }
     /*
      * TODO: Print the initial values held in the field
      */
+    for (int i = 0; i < ROWS; i++)
+    {
+        for (int j = 0; j < COLS; j++)
+        {
+            printf("%c\t", board[i][j]);
+        }
+        printf("\n");
+    }
     /*
      * TODO: Run the game time_steps times, printing the field at the end of
      * each step
