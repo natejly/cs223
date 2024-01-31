@@ -46,18 +46,18 @@ int get_next_state(int field[ROWS][COLS], size_t i, size_t j)
     {
         if (alive_neighbors == 2 || alive_neighbors == 3)
         {
-            return 1;
+            return ALIVE;
         }
 
-        return 0;
+        return DEAD;
     }
 
     if (alive_neighbors == 3)
     {
-        return 1;
+        return ALIVE;
     }
 
-    return 0;
+    return DEAD;
 }
 
 void compute_next_gen(int cur_field[ROWS][COLS], int next_field[ROWS][COLS])
