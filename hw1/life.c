@@ -20,13 +20,15 @@ unsigned int num_living_neighbors(int field[ROWS][COLS], size_t i, size_t j)
     int count = 0;
     int mrows = ROWS - 1;
     int mcols = COLS - 1;
-    for (int row = i - 1; row <= i + 1; row++)
+    int i_int = (int)i;
+    int j_int = (int)j;
+    for (int row = i_int - 1; row <= i_int + 1; row++)
     {
-        for (int col = j - 1; col <= j + 1; col++)
+        for (int col = j_int - 1; col <= j_int + 1; col++)
         {
             if (0 <= row && row <= mrows && 0 <= col && col <= mcols)
             {
-                if (field[row][col] == 1)
+                if (field[row][col] == 1 && !(row == i && col == j))
                 {
                     count++;
                 }
@@ -46,16 +48,16 @@ int get_next_state(int field[ROWS][COLS], size_t i, size_t j)
         {
             return 1;
         }
+
         return 0;
     }
-    else
+
+    if (alive_neighbors == 3)
     {
-        if (alive_neighbors == 3)
-        {
-            return 1;
-        }
-        return 0;
+        return 1;
     }
+
+    return 0;
 }
 
 void compute_next_gen(int cur_field[ROWS][COLS], int next_field[ROWS][COLS])
