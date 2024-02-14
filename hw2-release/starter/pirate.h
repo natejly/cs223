@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 /**
- * Header file for pirate for HookBook B in CPSC 223 SP2024.
+ * Header file for pirate for HookBook A in CPSC 223 SP2024.
  *
  * Author: Alan Weide
  *
@@ -20,13 +20,7 @@ typedef struct pirate_t pirate;
 struct pirate_t
 {
     char *name;
-    char *rank;
-    char *vessel;
-    pirate *captain;
-    char *port_of_call;
-    bool has_treasure;
-    unsigned int treasure;
-    skills_list *skills;
+    // TODO: Extend this struct (optional for Hookbook A)
 };
 
 /**
@@ -74,9 +68,9 @@ void pirate_print(const pirate *p, FILE *restrict output);
 /**
  * Compares two pirates, returning a negative number, zero, or a positive
  *  number as pirate a "comes before", is equal to, or "comes after" pirate b.
- * For this function, we say a "comes before" b if the a->name is
- *  lexicographically less than the b->name, and that they are equal if they
- *  have the same name.
+ * For this function, we say a "comes before" b if the name of pirate a is
+ *  lexicographically less than the name of pirate b, and that they are equal
+ *  if they have the same name.
  *
  * A pirate with no name always comes after a pirate with a name. No order is
  *  defined between two pirates with no name.
@@ -88,43 +82,6 @@ void pirate_print(const pirate *p, FILE *restrict output);
  * @assumes neither a nor b are NULL
  */
 int pirate_compare_name(const pirate *a, const pirate *b);
-
-/**
- * Compares two pirates, returning a negative number, zero, or a positive
- *  number as pirate a "comes before", is equal to, or "comes after" pirate b.
- * For this function, we say a "comes before" b if the vessel of pirate a is
- *  lexicographically less than the vessel of pirate b. Two pirates with the same
- *  vessel compare identically to pirate_compare_name(a,b).
- *
- * A pirate with no vessel always comes after a pirate with a vessel. Two
- *  pirates with no vessels compare identically to pirate_compare_name(a,b)
- *
- * @param a the first pirate
- * @param b the second pirate
- * @return a negative number, zero, or a positive number as a "comes before",
- *  is equal to, or "comes after" b according to their vessels
- * @assumes neither a nor b are NULL
- */
-int pirate_compare_vessel(const pirate *a, const pirate *b);
-
-/**
- * Compares two pirates, returning a negative number, zero, or a positive
- *  number as pirate a "comes before", is equal to, or "comes after" pirate b.
- * For this function, we say a "comes before" b if the treasure of pirate a is
- *  greater than the treasure of pirate b. Two pirates with the same treasure
- *  compare identically to pirate_compare_name(a,b).
- *
- * A pirate without a specified treasure always comes after a pirate with a
- *  specified treasure, even if that specified treasure is 0. Two pirates
- *  without specified treasure compare identically to pirate_compare_name(a,b)
- *
- * @param a the first pirate
- * @param b the second pirate
- * @return a negative number, zero, or a positive number as a "comes before",
- *  is equal to, or "comes after" b according to their treasures
- * @assumes neither a nor b are NULL
- */
-int pirate_compare_treasure(const pirate *a, const pirate *b);
 
 /**
  * Frees all memory owned by p. This function claims ownership of p.

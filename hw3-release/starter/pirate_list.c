@@ -59,9 +59,13 @@ void list_expand_if_necessary(pirate_list *pirates);
  * @param pirates the pirate list to contract, if necessary
  * @does decreases the capacity of the array if there are too few pirates in
  *  it.
- * @assumes the pirate list is in the process of having a pirate added to it.
+ * @assumes the pirate list is in the process of having a pirate removed from it.
  */
 void list_contract_if_necessary(pirate_list *pirates);
+
+/*******************
+ * Function bodies *
+ *******************/
 
 pirate_list *list_create()
 {
@@ -120,4 +124,14 @@ size_t list_length(const pirate_list *pirates)
 void list_destroy(pirate_list *pirates)
 {
     // TODO: implement this function
+}
+
+void list_expand_if_necessary(pirate_list *pirates)
+{
+    // TODO: Implement this function.
+}
+
+void list_contract_if_necessary(pirate_list *pirates)
+{
+    // TODO: Implement this function.
 }

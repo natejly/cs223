@@ -55,5 +55,15 @@
   "C_Cpp_Runner.useLeakSanitizer": false,
   "C_Cpp_Runner.showCompilationTime": false,
   "C_Cpp_Runner.useLinkTimeOptimization": false,
-  "C_Cpp_Runner.msvcSecureNoWarnings": false
+  "C_Cpp_Runner.msvcSecureNoWarnings": false,
+  "files.associations": {
+    "*.rmd": "rmarkdown",
+    "*.Rmd": "rmd",
+    "ios": "c",
+    "random": "c",
+    "*.tcc": "c",
+    "__tuple": "c",
+    "array": "c",
+    "stdio.h": "c"
+  }
 }
