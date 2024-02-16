@@ -1,10 +1,35 @@
+#include <stdio.h>
+#include <string.h>
+
 #include "pirate.h"
 #include "pirate_list.h"
 #include "libhookbook.h"
 
 int main(int argc, char *argv[])
 {
-    
+    //checking for one argument input
+    if (argc != 2)
+    {
+        printf("Error: invalid argument count\n");
+        return 1;
+    }
+    //init vars
+    FILE *file;
+    // pirate_list *list = list_create();
+    char name[127];
+    //open file given in command line
+    file = fopen(argv[1], "r");
+    //if can't be opened then error
+    if (file == NULL)
+    {
+        printf("Error: File not found\n");
+        return 1;
+    }
+    //reads each pirate name and stores in name and stores in name
+    while (fscanf(file, "%s", name) != EOF)
+    {
+        pirate *p = pirate_create(name);
+    }
     /**
      * Your main function must:
      *   1. Take as the only command-line argument the path to a file

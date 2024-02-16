@@ -8,9 +8,17 @@
 
 pirate *pirate_create(char *name)
 {
-    // TODO: Implement this function.
-    // This line is here only so starter code compiles.
-    return NULL;
+    pirate *new_pirate = (pirate *)malloc(sizeof(pirate));
+    //if allocation fails 
+    if (new_pirate == NULL){
+        return NULL;
+    }
+    (*new_pirate).name = strdup(name);
+    if ((*new_pirate).name == NULL) {
+        // free if allocation fails
+        free(new_pirate);
+        return NULL;
+    }
 }
 
 pirate *pirate_read(FILE *restrict input)

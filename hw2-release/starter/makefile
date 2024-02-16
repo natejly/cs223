@@ -5,7 +5,9 @@ CFLAGS = -std=c17 -Wall -pedantic -g
 #   "Hookbook" that generates an executable named the same, and a target named
 #   "clean" that removes all files created by the Hookbook target.
 
-Hookbook :
+Hookbook : hookbooka.o libhookbook.o pirate_list.o pirate.o
+	$(CC) $(CFLAGS) -o $@ $^
+
 # TODO: You must complete this rule to compile Hookbook, including 
 #   dependencies
 
