@@ -4,11 +4,13 @@
 
 int main(int argc, char *argv[])
 {
+
     /**
      * Your main function must:
      *  1. Take three command-line arguments: the path to a file containing the
      *      pirates' profiles, the path to a file containing pirate/captain
      *      pairs, and the sort order.
+     
      *  2. Open the profiles file and read from it the list of pirate profiles,
      *      appearing as specified in the README, and store them in a
      *      pirate_list*
@@ -20,4 +22,5 @@ int main(int argc, char *argv[])
      *      in the README
      *  6. Release all resources (files, memory, etc.)
      */
+    return 0;
 }
