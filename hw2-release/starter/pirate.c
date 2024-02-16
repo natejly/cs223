@@ -1,5 +1,6 @@
 #include "pirate.h"
-
+#include <string.h>
+#include <stdlib.h>
 /**
  * Implementation file for pirate for HookBook A in CPSC 223 SP2024.
  *
@@ -19,28 +20,62 @@ pirate *pirate_create(char *name)
         free(new_pirate);
         return NULL;
     }
+    return new_pirate;
 }
 
 pirate *pirate_read(FILE *restrict input)
 {
-    // TODO: Implement this function.
-    // This line is here only so starter code compiles.
+    //null terminator so 128
+    char name[128];
+    if (input == NULL)
+    {
+        printf("Error: File not found\n");
+    }
+    while (fgets(name, sizeof(name), input) != NULL)
+    {     
+        //remove null terminator  
+        name[strcspn(name, "\n")] = '\0';
+        pirate *p = pirate_create(name);
+    return p;
+    }
     return NULL;
+
+
 }
 
 void pirate_print(const pirate *p, FILE *restrict output)
 {
-    // TODO: Implement this function.
+    if (p == NULL){
+        fprintf(stderr, "Pirate doesn't exist\n");
+    }
+    if (output == NULL){
+        fprintf(stderr, "Output doesn't exist\n");
+    }
+    fprintf(output, "%s\n", (*p).name);
 }
 
 int pirate_compare_name(const pirate *a, const pirate *b)
-{
-    // TODO: Implement this function.
-    // This line is here only so starter code compiles.
-    return 0;
+{   
+    if ((*a).name == (*b).name){   
+        //names are equal
+        printf("equal");
+        return 0;
+    }
+    else if((*a).name == ""){
+        //a is empty, b comes first
+        printf("in order");
+        return 1;
+    } else if ((*b).name == ""){
+        //b is empty a comes first
+        printf("not in order");
+        return -1;
+    } else {
+    return strcmp((*a).name, (*b).name);
+    }
 }
 
 void pirate_destroy(pirate *p)
 {
-    // TODO: Implement this function.
+    free((*p).name);
+    free(p);
 }

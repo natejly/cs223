@@ -82,7 +82,7 @@ void pirate_print(const pirate *p, FILE *restrict output);
  * @assumes neither a nor b are NULL
  */
 int pirate_compare_name(const pirate *a, const pirate *b);
-
+    
 /**
  * Frees all memory owned by p. This function claims ownership of p.
  *

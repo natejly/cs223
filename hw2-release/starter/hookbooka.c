@@ -14,22 +14,11 @@ int main(int argc, char *argv[])
         return 1;
     }
     //init vars
-    FILE *file;
-    // pirate_list *list = list_create();
-    char name[127];
-    //open file given in command line
-    file = fopen(argv[1], "r");
-    //if can't be opened then error
-    if (file == NULL)
-    {
-        printf("Error: File not found\n");
-        return 1;
-    }
-    //reads each pirate name and stores in name and stores in name
-    while (fscanf(file, "%s", name) != EOF)
-    {
-        pirate *p = pirate_create(name);
-    }
+    FILE *file = fopen(argv[1], "r");
+
+    
+    pirate_print(pirate_read(file), stdout);
+    
     /**
      * Your main function must:
      *   1. Take as the only command-line argument the path to a file

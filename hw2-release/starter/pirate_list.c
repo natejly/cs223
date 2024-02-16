@@ -5,12 +5,16 @@
  */
 
 #include "pirate_list.h"
-
+#include <stdio.h>
+#include <string.h>
 struct pirate_list_instance_t
 {
-    // TODO: Complete this struct definition
+    pirate *pirates; 
+    size_t size;    
+    size_t capacity; 
 };
-
+#define INITIAL_CAPACITY 25
+#define RESIZE_FACTOR 2
 /***********************
  * "Private" Functions *
  ***********************/
@@ -67,16 +71,26 @@ void list_contract_if_necessary(pirate_list *pirates);
 
 pirate_list *list_create()
 {
-    // TODO: Implement this function.
-    // This line is here only so starter code compiles.
-    return NULL;
+    pirate_list *list = (pirate_list *)malloc(sizeof(pirate_list));
+    if (list == NULL) {
+        // Memory allocation failed
+        fprintf(stderr, "list not created\n");
+        return NULL;
+    }
+    (*list).capacity = INITIAL_CAPACITY;
+    (*list).size = 0;
+    return list;
 }
 
 size_t list_index_of(const pirate_list *pirates, const char *name)
 {
-    // TODO: Implement this function.
-    // This line is here only so starter code compiles.
-    return 0;
+    for(size_t i = 0; i < (*pirates).size; i++){
+        if (strcmp(pirates->pirates[i].name, name) == 0) {
+            return i;
+        }
+
+    }
+    return (*pirates).size +1;
 }
 
 pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
