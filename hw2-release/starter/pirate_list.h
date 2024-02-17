@@ -103,6 +103,7 @@ const pirate *list_access(const pirate_list *pirates, size_t idx);
  */
 void list_sort(pirate_list *pirates);
 
+void msort(pirate_list *pirates, int start, int end);
 /**
  * Return the number of pirates in the list.
  *

@@ -36,7 +36,6 @@ int main(int argc, char *argv[])
         pirate_print(list_access(pirates, i), stdout);
     }
 
-    printf("%d", pirate_compare_name(pirate_create("a"),pirate_create("")));
     list_destroy(pirates);
     fclose(file);
     return 0;
