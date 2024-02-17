@@ -34,8 +34,6 @@ pirate *pirate_read(FILE *restrict input)
     }
     while (freadln(name, sizeof(name), input) != NULL)
     {     
-        //remove null terminator  
-        // name[strcspn(name, "\n")] = '\0';
         pirate *p = pirate_create(name);
     return p;
     }

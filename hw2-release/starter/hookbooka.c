@@ -21,16 +21,25 @@ int main(int argc, char *argv[])
         return 1;
     }    
     pirate_list *pirates = list_create();
-    pirate *next_pirate = pirate_read(file);
-    while (next_pirate != NULL)
-    {
-        list_insert(pirates, next_pirate, list_length(pirates));
-        next_pirate = pirate_read(file);
-    }
+    pirate *next_pirate = pirate_read(file);;
+    list_insert(pirates, next_pirate, list_length(pirates));
+    next_pirate = pirate_read(file);
+    list_insert(pirates, next_pirate, list_length(pirates));
+
+    // while (next_pirate != NULL)
+    // {
+    //     list_insert(pirates, next_pirate, list_length(pirates));
+    //     next_pirate = pirate_read(file);
+
+    // }
+    
+    list_sort(pirates);
     for (size_t i = 0; i < list_length(pirates); i++)
     {
         pirate_print(list_access(pirates, i), stdout);
     }
+
+
     list_destroy(pirates);
     fclose(file);
     return 0;

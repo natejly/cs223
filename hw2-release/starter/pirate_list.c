@@ -78,7 +78,6 @@ pirate_list *list_create()
     (*list).pirates = malloc(INITIAL_CAPACITY * sizeof(pirate *));
     (*list).capacity = INITIAL_CAPACITY;
     (*list).size = 0;
-    pirate_list *temp;
 
     return list;
 }
@@ -103,7 +102,7 @@ pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
         idx = (*pirates).size;
     }
     size_t index = list_index_of(pirates, (*p).name);
-    if (index < (*pirates).size)
+    if (index <= (*pirates).size)
     {
         return NULL; // Return NULL if pirate already exists
     }
