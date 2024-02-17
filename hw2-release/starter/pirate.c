@@ -1,4 +1,5 @@
 #include "pirate.h"
+#include "libhookbook.h"
 #include <string.h>
 #include <stdlib.h>
 /**
@@ -31,10 +32,10 @@ pirate *pirate_read(FILE *restrict input)
     {
         printf("Error: File not found\n");
     }
-    while (fgets(name, sizeof(name), input) != NULL)
+    while (freadln(name, sizeof(name), input) != NULL)
     {     
         //remove null terminator  
-        name[strcspn(name, "\n")] = '\0';
+        // name[strcspn(name, "\n")] = '\0';
         pirate *p = pirate_create(name);
     return p;
     }

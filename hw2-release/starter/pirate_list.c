@@ -172,10 +172,13 @@ void list_destroy(pirate_list *pirates)
 
 void list_expand_if_necessary(pirate_list *pirates)
 {
-    // TODO: Implement this function.
+
+
+
 }
+    
 
 void list_contract_if_necessary(pirate_list *pirates)
 {
-    // TODO: Implement this function.
+    
 }
