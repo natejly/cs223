@@ -61,11 +61,11 @@ int pirate_compare_name(const pirate *a, const pirate *b)
         printf("equal");
         return 0;
     }
-    else if((*a).name == ""){
+    else if(strcmp((*a).name, "")==0){
         //a is empty, b comes first
         printf("in order");
         return 1;
-    } else if ((*b).name == ""){
+    } else if(strcmp((*b).name, "")==0){
         //b is empty a comes first
         printf("not in order");
         return -1;

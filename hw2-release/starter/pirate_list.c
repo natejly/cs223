@@ -9,9 +9,9 @@
 #include <string.h>
 struct pirate_list_instance_t
 {
-    pirate *pirates; 
-    size_t size;    
-    size_t capacity; 
+    pirate **pirates;
+    size_t size;
+    size_t capacity;
 };
 #define INITIAL_CAPACITY 25
 #define RESIZE_FACTOR 2
@@ -71,52 +71,88 @@ void list_contract_if_necessary(pirate_list *pirates);
 
 pirate_list *list_create()
 {
-    pirate_list *list = (pirate_list *)malloc(sizeof(pirate_list));
+    pirate_list *list = malloc(sizeof(pirate_list));
     if (list == NULL) {
-        // Memory allocation failed
-        fprintf(stderr, "list not created\n");
-        return NULL;
+        return NULL; // Return NULL if memory allocation fails
     }
+    (*list).pirates = malloc(INITIAL_CAPACITY * sizeof(pirate *));
     (*list).capacity = INITIAL_CAPACITY;
     (*list).size = 0;
+    pirate_list *temp;
+
     return list;
 }
 
 size_t list_index_of(const pirate_list *pirates, const char *name)
 {
-    for(size_t i = 0; i < (*pirates).size; i++){
-        if (strcmp(pirates->pirates[i].name, name) == 0) {
+    for (size_t i = 0; i < (*pirates).size; i++)
+    {
+        if (strcmp(((*pirates).pirates[i])->name, name) == 0)
+        {
             return i;
         }
-
     }
-    return (*pirates).size +1;
+    return (*pirates).size + 1;
 }
 
 pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
 {
-    // TODO: Implement this function.
-    // This line is here only so starter code compiles.
+    if (idx > (*pirates).size)
+    {   
+        //out of bounds
+        idx = (*pirates).size;
+    }
+    size_t index = list_index_of(pirates, (*p).name);
+    if (index < (*pirates).size)
+    {
+        return NULL; // Return NULL if pirate already exists
+    }
+    list_expand_if_necessary(pirates);
+    
+    for (size_t i = (*pirates).size; i > idx; i--)
+    {   
+        //shift all elements to the right starting at end of list to idx
+        (*pirates).pirates[i] = (*pirates).pirates[i - 1];
+    }
+    (*pirates).pirates[idx] = p;
+    (*pirates).size++;
     return NULL;
+    
+
 }
 
 pirate *list_remove(pirate_list *pirates, const char *name)
 {
-    // TODO: Implement this function.
-    // This line is here only so starter code compiles.
-    return NULL;
+    size_t index = list_index_of(pirates, name);
+    if (index >= (*pirates).size)
+    {
+        return NULL;
+    }
+    pirate *toremove = (*pirates).pirates[index];
+
+    for (size_t i = index; i < (*pirates).size-1; i++)
+    {
+        (*pirates).pirates[i] = (*pirates).pirates[i + 1];
+    }
+    list_contract_if_necessary(pirates);
+
+    (*pirates).size--;
+    return toremove;
 }
 
 const pirate *list_access(const pirate_list *pirates, size_t idx)
 {
-    // TODO: Implement this function.
-    // This line is here only so starter code compiles.
-    return NULL;
+    if (idx >= (*pirates).size) {
+        return NULL; 
+    }
+    return (*pirates).pirates[idx];
+
 }
 
 void list_sort(pirate_list *pirates)
 {
     // TODO: Implement this function.
+    
 }
 
 size_t list_length(const pirate_list *pirates)
