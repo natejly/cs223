@@ -61,11 +61,9 @@ int pirate_compare_name(const pirate *a, const pirate *b)
         return 0;
     }
     else if ((*a).name[0] == '\0'){
-        printf("not in order");
         return 1;
     }else if ((*b).name[0] == '\0'){
 
-        printf("in order");
         return -1;
     } else {
     return strcmp((*a).name, (*b).name);

@@ -97,6 +97,7 @@ size_t list_index_of(const pirate_list *pirates, const char *name)
 
 pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
 {
+
     if (idx > (*pirates).size)
     {
         // out of bounds
@@ -107,6 +108,7 @@ pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
     {
         return NULL; // Return NULL if pirate already exists
     }
+
     list_expand_if_necessary(pirates);
 
     for (size_t i = (*pirates).size; i > idx; i--)
@@ -131,8 +133,9 @@ pirate *list_remove(pirate_list *pirates, const char *name)
     for (size_t i = index; i < (*pirates).size - 1; i++)
     {
         (*pirates).pirates[i] = (*pirates).pirates[i + 1];
+        list_contract_if_necessary(pirates);
+
     }
-    list_contract_if_necessary(pirates);
 
     (*pirates).size--;
     return toremove;
@@ -149,7 +152,7 @@ const pirate *list_access(const pirate_list *pirates, size_t idx)
 
 void list_sort(pirate_list *pirates)
 {
-    msort(pirates, 0, list_length(pirates)-1);
+    msort(pirates, 0, list_length(pirates) - 1);
 }
 void msort(pirate_list *pirates, int start, int end)
 {
@@ -173,13 +176,13 @@ void msort(pirate_list *pirates, int start, int end)
         }
         else
         {
-            pirate temp = *(*pirates).pirates[right];
+            pirate *temp = (*pirates).pirates[right];
 
             for (int i = right; i > left; i--)
             {
                 (*pirates).pirates[i] = (*pirates).pirates[i - 1];
             }
-            (*pirates).pirates[left] = &temp;
+            (*pirates).pirates[left] = temp;
             mid++;
             left++;
             right++;
@@ -204,8 +207,29 @@ void list_destroy(pirate_list *pirates)
 
 void list_expand_if_necessary(pirate_list *pirates)
 {
+    if ((*pirates).size >= (*pirates).capacity)
+    {
+        size_t newcap = (*pirates).capacity * RESIZE_FACTOR;
+        (*pirates).pirates = realloc((*pirates).pirates, newcap * sizeof(pirate));
+        (*pirates).capacity = newcap;
+
+        fprintf(stdout, "Expand to %zu\n", newcap);
+    }
 }
 
 void list_contract_if_necessary(pirate_list *pirates)
 {
+    if ((*pirates).capacity > INITIAL_CAPACITY &&
+        (*pirates).size * RESIZE_FACTOR <= (*pirates).capacity / RESIZE_FACTOR)
+    {
+        size_t newcap = (*pirates).capacity / RESIZE_FACTOR;
+        // making sure not to go below initail cap
+        if (newcap < INITIAL_CAPACITY)
+        {
+            newcap = INITIAL_CAPACITY;
+        }
+        (*pirates).pirates = realloc((*pirates).pirates, newcap * sizeof(pirate));
+        (*pirates).capacity = newcap;
+        fprintf(stdout, "Contract to %zu\n", newcap);
+    }
 }
