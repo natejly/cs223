@@ -157,14 +157,17 @@ void list_sort(pirate_list *pirates)
 
 size_t list_length(const pirate_list *pirates)
 {
-    // TODO: Implement this function.
-    // This line is here only so starter code compiles.
-    return 0;
+    return (*pirates).size;
 }
 
 void list_destroy(pirate_list *pirates)
 {
-    // TODO: Implement this function.
+    for (size_t i = 0; i < (*pirates).size; i++)
+    {
+        pirate_destroy((*pirates).pirates[i]);
+    }
+    free((*pirates).pirates);
+    free(pirates);
 }
 
 void list_expand_if_necessary(pirate_list *pirates)

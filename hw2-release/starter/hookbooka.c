@@ -21,14 +21,22 @@ int main(int argc, char *argv[])
         return 1;
     }    
     pirate_list *pirates = list_create();
-    list_insert(pirates, pirate_create("test"), 0);
-    pirate_print(list_access(pirates, 0),stdout);
+    printf("listmade");
+    pirate *next_pirate = pirate_read(file);
+    while (next_pirate != NULL)
+    {
+        list_insert(pirates, next_pirate, list_length(pirates));
+        next_pirate = pirate_read(file);
+    }
+  
+    for (size_t i = 0; i < list_length(pirates); i++)
+    {
+        pirate_print(list_access(pirates, i), stdout);
+    }
+    list_destroy(pirates);
+    fclose(file);
+    return 0;
 
-    list_insert(pirates, pirate_create("test1"), 121);
-
-    pirate_print(list_access(pirates, 1),stdout);
-    list_remove(pirates, "test");
-    pirate_print(list_access(pirates, 0),stdout);
 
 
 

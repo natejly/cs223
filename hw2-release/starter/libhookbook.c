@@ -10,7 +10,21 @@
 
 char *freadln(char *str, int count, FILE *stream)
 {
-    // TODO: Implement this function.
-    // This line is here only so starter code compiles.
-    return NULL;
+    size_t i = 0;
+    char c = fgetc(stream);
+    if (c == EOF)
+    {
+        return NULL;
+    }
+    while(c != '\n' && c != EOF)
+    {
+        if (i < count - 1)
+        {
+            str[i] = c;
+            i++;
+        }
+        c = fgetc(stream);
+    }
+    str[i] = '\0';
+    return str;
 }
