@@ -150,7 +150,32 @@ const pirate *list_access(const pirate_list *pirates, size_t idx)
 
 void list_sort(pirate_list *pirates)
 {
-    // TODO: Implement this function.
+    msort(pirates, 0, list_length(pirates));
+    
+}
+pirate_list msort(pirate_list *pirates, int start, int end){
+    // base case
+    if (start >= end){
+        return;
+    }
+    int mid = (start+end)/2;
+    msort(pirates, start, mid);
+    msort(pirates, mid+1, end);
+    int left = start;
+    int right = mid +1;
+    while(left <= mid && right <= end){
+        if(pirate_compare_name((*pirates).pirates[left], (*pirates).pirates[right])<=0){
+            left++;
+        }else{
+            pirate temp = *(*pirates).pirates[right];
+            mid++;
+            left++;
+            right++;
+
+        }
+
+    }
+
     
 }
 
