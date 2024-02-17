@@ -11,7 +11,11 @@
 char *freadln(char *str, int count, FILE *stream)
 {
     size_t i = 0;
-    char c = fgetc(stream);
+    char c;
+    //skips whitespaces
+    while ((c = fgetc(stream)) != EOF && c == '\n')
+    {
+    }
     if (c == EOF)
     {
         return NULL;

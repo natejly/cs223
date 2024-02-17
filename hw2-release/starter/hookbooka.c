@@ -22,16 +22,13 @@ int main(int argc, char *argv[])
     }    
     pirate_list *pirates = list_create();
     pirate *next_pirate = pirate_read(file);;
-    list_insert(pirates, next_pirate, list_length(pirates));
-    next_pirate = pirate_read(file);
-    list_insert(pirates, next_pirate, list_length(pirates));
 
-    // while (next_pirate != NULL)
-    // {
-    //     list_insert(pirates, next_pirate, list_length(pirates));
-    //     next_pirate = pirate_read(file);
+    while (next_pirate != NULL)
+    {
+        list_insert(pirates, next_pirate, list_length(pirates));
+        next_pirate = pirate_read(file);
 
-    // }
+    }
     
     list_sort(pirates);
     for (size_t i = 0; i < list_length(pirates); i++)
@@ -44,27 +41,4 @@ int main(int argc, char *argv[])
     fclose(file);
     return 0;
 
-
-
-
-
-    // pirate *next_pirate = pirate_read(file);
-    // while (next_pirate != NULL)
-    // {
-    //     pirate *p = list_insert(pirates, next_pirate, list_length(pirates));
-    //     pirate_destroy(p);
-    // }
-    // list_insert(pirates, pirate_read(file), 1);
-    // pirate_print(list_access(pirates, 1),stdout);
-    /**
-     * Your main function must:
-     *   1. Take as the only command-line argument the path to a file
-     *      containing the pirates' names to be placed into your Hookbook.
-     *   2. Open that file and read from it the list of pirate names, formatted
-     *      as specified in the README, and store them in a pirate_list*
-     *   3. Sort the list in lexicographic order by pirate name
-     *   4. Print the sorted list to stdout, conforming to the format described
-     *      in the README
-     *   5. Release all resources (files, memory, etc.)
-     */
 }
