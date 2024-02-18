@@ -7,8 +7,8 @@
 
 int main(int argc, char *argv[])
 {
-    //checking for one argument input
-    if (argc != 2)
+    //checking for one or more argument input
+    if (argc < 2)
     {
         fprintf(stderr, "invalid argument count\n");
         return 1;
@@ -20,9 +20,6 @@ int main(int argc, char *argv[])
         fprintf(stderr, "can't open file %s\n", argv[1]);
         return 1;
     }    
-        char name[127];
-
-
     pirate_list *pirates = list_create();
     pirate *next_pirate = pirate_read(file);;
 

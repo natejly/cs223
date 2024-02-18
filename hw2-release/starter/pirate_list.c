@@ -110,7 +110,7 @@ pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
     size_t index = list_index_of(pirates, (*p).name);
     if (index <= (*pirates).size)
     {
-        return NULL; // Return NULL if pirate already exists
+        return p; 
     }
 
     list_expand_if_necessary(pirates);
@@ -127,6 +127,9 @@ pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
 
 pirate *list_remove(pirate_list *pirates, const char *name)
 {
+    if (name == NULL){
+        return NULL;
+    }
     size_t index = list_index_of(pirates, name);
     if (index >= (*pirates).size)
     {
@@ -137,10 +140,9 @@ pirate *list_remove(pirate_list *pirates, const char *name)
     for (size_t i = index; i < (*pirates).size - 1; i++)
     {
         (*pirates).pirates[i] = (*pirates).pirates[i + 1];
-        list_contract_if_necessary(pirates);
 
     }
-
+    list_contract_if_necessary(pirates);
     (*pirates).size--;
     return toremove;
 }
@@ -217,7 +219,7 @@ void list_expand_if_necessary(pirate_list *pirates)
         (*pirates).pirates = realloc((*pirates).pirates, newcap * sizeof(pirate*));
         (*pirates).capacity = newcap;
 
-        fprintf(stdout, "Expand to %zu\n", newcap);
+        fprintf(stderr, "Expand to %zu\n", newcap);
     }
 }
 
@@ -234,6 +236,6 @@ void list_contract_if_necessary(pirate_list *pirates)
         }
         (*pirates).pirates = realloc((*pirates).pirates, newcap * sizeof(pirate*));
         (*pirates).capacity = newcap;
-        fprintf(stdout, "Contract to %zu\n", newcap);
+        fprintf(stderr, "Contract to %zu\n", newcap);
     }
 }
