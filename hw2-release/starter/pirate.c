@@ -74,7 +74,7 @@ int pirate_compare_name(const pirate *a, const pirate *b)
     }
     else
     {
-        return strcp((*a).name, (*b).name);
+        return strcmp((*a).name, (*b).name);
     }
 }
 
