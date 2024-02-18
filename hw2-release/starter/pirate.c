@@ -1,3 +1,4 @@
+
 #include "pirate.h"
 #include "libhookbook.h"
 #include <string.h>
@@ -12,27 +13,36 @@ pirate *pirate_create(char *name)
 {
     pirate *new_pirate = (pirate *)malloc(sizeof(pirate));
     //if allocation fails 
+    if (strcmp(name, "") ==0){
+            (*new_pirate).name = NULL;
 
+    }
     (*new_pirate).name = strdup(name);
     
     return new_pirate;
 }
 
+
 pirate *pirate_read(FILE *restrict input)
 {
-    char name[127];
     if (input == NULL)
     {
-        printf("Error: File not found\n");
+        return NULL;
     }
-    if(freadln(name, sizeof(name), input) != NULL)
-    {     
-        pirate *p = pirate_create(name);
+    char name[127];
+    if (freadln(name, sizeof(name), input) == NULL)
+    {
+        return NULL;
+    }
+    pirate *p = pirate_create(name);
+    char blank[127];
+    if (freadln(blank, sizeof(blank), input) != NULL)
+    {
+
+        return p;
+    }
+    
     return p;
-    }
-    return NULL;
-
-
 }
 
 void pirate_print(const pirate *p, FILE *restrict output)
@@ -50,10 +60,13 @@ int pirate_compare_name(const pirate *a, const pirate *b)
 {   
     if ((*a).name == (*b).name){   
         return 0;
+    } else if(((*b).name[0] == '\0' || (*b).name == NULL || (*b).name == "")
+    && ((*a).name[0] == '\0' || (*a).name == NULL || (*a).name == "")){
+        return 0;
     }
-    else if ((*a).name[0] == '\0'){
+    else if ((*a).name[0] == '\0' || (*a).name == NULL || (*a).name == ""){
         return 1;
-    }else if ((*b).name[0] == '\0'){
+    }else if ((*b).name[0] == '\0' || (*b).name == NULL || (*b).name == ""){
         return -1;
     } else {
     return strcmp((*a).name, (*b).name);

@@ -72,16 +72,18 @@ void list_contract_if_necessary(pirate_list *pirates);
 pirate_list *list_create()
 {
     pirate_list *list = malloc(sizeof(pirate_list));
+    if (list == NULL)
+    {
+        return NULL;
+    }
     (*list).size = 0;
     (*list).capacity = INITIAL_CAPACITY;
     (*list).pirates = malloc((*list).capacity * sizeof(pirate *));
-
-    if (list == NULL)
+    if ((*list).pirates == NULL)
     {
-        return NULL; // Return NULL if memory allocation fails
+        free(list);
+        return NULL;
     }
-
-
     return list;
 }
 
@@ -201,8 +203,9 @@ void list_destroy(pirate_list *pirates)
 {
     for (size_t i = 0; i < (*pirates).size; i++)
     {
-        pirate_destroy(list_access(pirates, i));
+        pirate_destroy((*pirates).pirates[i]);
     }
+
 
 }
 
@@ -211,7 +214,7 @@ void list_expand_if_necessary(pirate_list *pirates)
     if ((*pirates).size >= (*pirates).capacity)
     {
         size_t newcap = (*pirates).capacity * RESIZE_FACTOR;
-        (*pirates).pirates = realloc((*pirates).pirates, newcap * sizeof(pirate));
+        (*pirates).pirates = realloc((*pirates).pirates, newcap * sizeof(pirate*));
         (*pirates).capacity = newcap;
 
         fprintf(stdout, "Expand to %zu\n", newcap);
@@ -229,7 +232,7 @@ void list_contract_if_necessary(pirate_list *pirates)
         {
             newcap = INITIAL_CAPACITY;
         }
-        (*pirates).pirates = realloc((*pirates).pirates, newcap * sizeof(pirate));
+        (*pirates).pirates = realloc((*pirates).pirates, newcap * sizeof(pirate*));
         (*pirates).capacity = newcap;
         fprintf(stdout, "Contract to %zu\n", newcap);
     }

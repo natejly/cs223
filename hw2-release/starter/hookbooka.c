@@ -20,6 +20,9 @@ int main(int argc, char *argv[])
         fprintf(stderr, "can't open file %s\n", argv[1]);
         return 1;
     }    
+        char name[127];
+
+
     pirate_list *pirates = list_create();
     pirate *next_pirate = pirate_read(file);;
 
@@ -30,7 +33,7 @@ int main(int argc, char *argv[])
 
     }
     
-    // list_sort(pirates);
+    list_sort(pirates);
     for (size_t i = 0; i < list_length(pirates); i++)
     {
         pirate_print(list_access(pirates, i), stdout);
