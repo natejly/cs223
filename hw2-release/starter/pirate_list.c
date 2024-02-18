@@ -72,13 +72,15 @@ void list_contract_if_necessary(pirate_list *pirates);
 pirate_list *list_create()
 {
     pirate_list *list = malloc(sizeof(pirate_list));
+    (*list).size = 0;
+    (*list).capacity = INITIAL_CAPACITY;
+    (*list).pirates = malloc((*list).capacity * sizeof(pirate *));
+
     if (list == NULL)
     {
         return NULL; // Return NULL if memory allocation fails
     }
-    (*list).pirates = malloc(INITIAL_CAPACITY * sizeof(pirate *));
-    (*list).capacity = INITIAL_CAPACITY;
-    (*list).size = 0;
+
 
     return list;
 }
@@ -197,12 +199,11 @@ size_t list_length(const pirate_list *pirates)
 
 void list_destroy(pirate_list *pirates)
 {
-    // for (size_t i = 0; i < (*pirates).size; i++)
-    // {
-    //     pirate_destroy((*pirates).pirates[i]);
-    // }
-    free((*pirates).pirates);
-    free(pirates);
+    for (size_t i = 0; i < (*pirates).size; i++)
+    {
+        pirate_destroy(list_access(pirates, i));
+    }
+
 }
 
 void list_expand_if_necessary(pirate_list *pirates)

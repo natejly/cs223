@@ -12,27 +12,20 @@ pirate *pirate_create(char *name)
 {
     pirate *new_pirate = (pirate *)malloc(sizeof(pirate));
     //if allocation fails 
-    if (new_pirate == NULL){
-        return NULL;
-    }
+
     (*new_pirate).name = strdup(name);
-    if ((*new_pirate).name == NULL) {
-        // free if allocation fails
-        free(new_pirate);
-        return NULL;
-    }
+    
     return new_pirate;
 }
 
 pirate *pirate_read(FILE *restrict input)
 {
-    //null terminator so 128
-    char name[128];
+    char name[127];
     if (input == NULL)
     {
         printf("Error: File not found\n");
     }
-    while (freadln(name, sizeof(name), input) != NULL)
+    if(freadln(name, sizeof(name), input) != NULL)
     {     
         pirate *p = pirate_create(name);
     return p;
@@ -56,14 +49,11 @@ void pirate_print(const pirate *p, FILE *restrict output)
 int pirate_compare_name(const pirate *a, const pirate *b)
 {   
     if ((*a).name == (*b).name){   
-        //names are equal
-        printf("equal");
         return 0;
     }
     else if ((*a).name[0] == '\0'){
         return 1;
     }else if ((*b).name[0] == '\0'){
-
         return -1;
     } else {
     return strcmp((*a).name, (*b).name);
