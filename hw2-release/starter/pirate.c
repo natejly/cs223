@@ -11,14 +11,11 @@
 
 pirate *pirate_create(char *name)
 {
-    pirate *new_pirate = (pirate *)malloc(sizeof(pirate));
-    //if allocation fails 
     if(name == NULL){
         return NULL;
     }
-    if (strcmp(name, "") ==0){
-            (*new_pirate).name = NULL;
-    }
+    pirate *new_pirate = malloc(sizeof(pirate));
+
     (*new_pirate).name = strdup(name);
     
     return new_pirate;
@@ -58,24 +55,12 @@ void pirate_print(const pirate *p, FILE *restrict output)
     fprintf(output, "%s\n", (*p).name);
 }
 
-int pirate_compare_name(const pirate *a, const pirate *b)
-{
-    if ((*a).name == NULL && (*b).name == NULL)
-    {
-        return 0;
-    }
-    else if ((*a).name == NULL)
-    {
-        return 1;
-    }
-    else if ((*b).name == NULL)
-    {
-        return -1;
-    }
-    else
-    {
-        return strcmp((*a).name, (*b).name);
-    }
+int pirate_compare_name(const pirate *a, const pirate *b) {
+        if( (!a && !b)){
+            return 0;
+        }
+            return strcmp((*a).name, (*b).name);
+
 }
 
 void pirate_destroy(pirate *p)

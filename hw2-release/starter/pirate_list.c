@@ -194,6 +194,7 @@ void msort(pirate_list *pirates, int start, int end)
             right++;
         }
     }
+
 }
 
 size_t list_length(const pirate_list *pirates)
