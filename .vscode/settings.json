@@ -64,6 +64,19 @@
     "*.tcc": "c",
     "__tuple": "c",
     "array": "c",
-    "stdio.h": "c"
+    "stdio.h": "c",
+    "__hash_table": "c",
+    "__split_buffer": "c",
+    "bitset": "c",
+    "deque": "c",
+    "initializer_list": "c",
+    "list": "c",
+    "queue": "c",
+    "span": "c",
+    "stack": "c",
+    "unordered_map": "c",
+    "vector": "c",
+    "string_view": "c",
+    "format": "c"
   }
 }

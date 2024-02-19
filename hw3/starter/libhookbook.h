@@ -15,11 +15,11 @@
  */
 
 #include <stdio.h>
-#include "pirate.h"
+
 /**
  * Type of a comparison function.
  */
-typedef int (*compare_fn)(const pirate *, const pirate *);
+typedef int (*compare_fn)(const void *, const void *);
 
 /**
  * Reads the next line of input from stream, discarding the trailing newline
