@@ -25,8 +25,9 @@ int main(int argc, char *argv[])
 
     while (next_pirate != NULL)
     {
-        list_insert(pirates, next_pirate, list_length(pirates));
+        pirate *p = list_insert(pirates, next_pirate, list_length(pirates));
         next_pirate = pirate_read(file);
+        pirate_destroy(p);
 
     }
     
