@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
     {
         pirate_print(list_access(pirates, i), stdout);
     }
-    // list_destroy(pirates);
+    list_destroy(pirates);
     fclose(file);
     return 0;
 

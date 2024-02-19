@@ -208,9 +208,12 @@ void list_destroy(pirate_list *pirates)
     {
         pirate_destroy((*pirates).pirates[i]);
     }
-
-
+    
+    free((*pirates).pirates);
+    
+    free(pirates);
 }
+
 
 void list_expand_if_necessary(pirate_list *pirates)
 {
