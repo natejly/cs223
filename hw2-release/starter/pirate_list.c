@@ -79,11 +79,7 @@ pirate_list *list_create()
     (*list).size = 0;
     (*list).capacity = INITIAL_CAPACITY;
     (*list).pirates = malloc((*list).capacity * sizeof(pirate *));
-    if ((*list).pirates == NULL)
-    {
-        free(list);
-        return NULL;
-    }
+
     return list;
 }
 
@@ -96,18 +92,17 @@ size_t list_index_of(const pirate_list *pirates, const char *name)
             return i;
         }
     }
-    return (*pirates).size + 1;
+    return (*pirates).size+1;
 }
 
 pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
 {
-
     if (idx > (*pirates).size)
     {
-        // out of bounds
         idx = (*pirates).size;
     }
     size_t index = list_index_of(pirates, (*p).name);
+
     if (index <= (*pirates).size)
     {
         return p; 
@@ -120,8 +115,10 @@ pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
         // shift all elements to the right starting at end of list to idx
         (*pirates).pirates[i] = (*pirates).pirates[i - 1];
     }
+    
     (*pirates).pirates[idx] = p;
     (*pirates).size++;
+
     return NULL;
 }
 
@@ -194,7 +191,6 @@ void msort(pirate_list *pirates, int start, int end)
             right++;
         }
     }
-
 }
 
 size_t list_length(const pirate_list *pirates)
@@ -208,12 +204,10 @@ void list_destroy(pirate_list *pirates)
     {
         pirate_destroy((*pirates).pirates[i]);
     }
-    
     free((*pirates).pirates);
-    
     free(pirates);
-}
 
+}
 
 void list_expand_if_necessary(pirate_list *pirates)
 {

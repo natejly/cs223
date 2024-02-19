@@ -14,16 +14,14 @@ char *freadln(char *str, int count, FILE *stream)
     char c = fgetc(stream);
     // skips whitespaces
 
-    if (c == EOF)
+    if (c == EOF)   
     {
         return NULL;
     }
     while (c != '\n' && c != EOF && i < count)
     {
-
         str[i] = c;
         i++;
-
         c = fgetc(stream);
     }
     str[i] = '\0';
