@@ -159,42 +159,49 @@ void list_sort(pirate_list *pirates)
 {
     msort(pirates, 0, list_length(pirates) - 1);
 }
-void msort(pirate_list *pirates, int start, int end)
-{
-    // base case
-    if (start >= end)
-    {
-        return;
+void merge(pirate_list *pirates, int start, int mid, int end) {
+    int left_size = mid - start + 1;
+    int right_size = end - mid;
+    pirate *left[left_size];
+    pirate *right[right_size];
+    for (int i = 0; i < left_size; i++) {
+        left[i] = (*pirates).pirates[start + i];
     }
-    int mid = (start + end) / 2;
-    // recurse on right and left half
-    msort(pirates, start, mid);
-    msort(pirates, mid + 1, end);
-    int left = start;
-    int right = mid + 1;
-    while (left <= mid && right <= end)
-    {
-        if (pirate_compare_name((*pirates).pirates[left], (*pirates).pirates[right]) <= 0)
-        {
-            // if in order step left pointer right
-            left++;
+    for (int j = 0; j < right_size; j++) {
+        right[j] = (*pirates).pirates[mid + 1 + j];
+    }
+    int i = 0; 
+    int j = 0;
+    int k = start; 
+    while (i < left_size && j < right_size) {
+        if (pirate_compare_name(left[i], right[j]) <= 0) {
+            (*pirates).pirates[k] = left[i];
+            i++;
+        } else {
+            (*pirates).pirates[k] = right[j];
+            j++;
         }
-        else
-        {
-            pirate *temp = (*pirates).pirates[right];
-
-            for (int i = right; i > left; i--)
-            {
-                (*pirates).pirates[i] = (*pirates).pirates[i - 1];
-            }
-            (*pirates).pirates[left] = temp;
-            mid++;
-            left++;
-            right++;
-        }
+        k++;
+    }
+    while (i < left_size) {
+        (*pirates).pirates[k] = left[i];
+        i++;
+        k++;
+    }
+    while (j < right_size) {
+        (*pirates).pirates[k] = right[j];
+        j++;
+        k++;
     }
 }
-
+void msort(pirate_list *pirates, int start, int end) {
+    if (start < end) {
+        int mid = (start + end) / 2;
+        msort(pirates, start, mid);
+        msort(pirates, mid + 1, end);
+        merge(pirates, start, mid, end);
+    }
+}
 size_t list_length(const pirate_list *pirates)
 {
     return (*pirates).size;
