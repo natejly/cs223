@@ -95,6 +95,8 @@ size_t list_index_of(const pirate_list *pirates, const char *name)
     return (*pirates).size+1;
 }
 
+
+
 pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
 {
     if (idx > (*pirates).size)

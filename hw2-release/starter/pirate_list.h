@@ -62,7 +62,6 @@ size_t list_index_of(const pirate_list *pirates, const char *name);
  * @assumes neither pirates nor p are NULL, and that p has a name
  */
 pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx);
-
 /**
  * Remove the pirate from the list with name, and return a pointer to it.
  *
@@ -102,6 +101,7 @@ const pirate *list_access(const pirate_list *pirates, size_t idx);
  *  unique in the list
  */
 void list_sort(pirate_list *pirates);
+
 
 void msort(pirate_list *pirates, int start, int end);
 /**
