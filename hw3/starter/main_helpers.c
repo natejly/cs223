@@ -45,9 +45,4 @@ void assignFilenames(int argc, char *argv[], char **profileFile, char **captainF
             *captainFile = argv[2];
         }
     }
-    else
-    {
-        *profileFile = argv[1];
-        *captainFile = argv[2];
-    }
 }
