@@ -9,8 +9,8 @@
  *
  * TO STUDENT: You may add to this file, but do not change anything that is
  *     already here!
- * Modified by: [your name here] on [date of modification]
- * Changelog: [what you added to this file]
+ * Modified by: Nate Ly on 2/20/2024
+ * Changelog: added vessel and treasure to the pirate struct
  */
 
 /**
@@ -20,7 +20,8 @@ typedef struct pirate_t pirate;
 struct pirate_t
 {
     char *name;
-    // TODO: Expand this type definition
+    char *vessel;
+    int treasure;
 };
 
 /**
