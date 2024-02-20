@@ -1,5 +1,5 @@
 #pragma once
-
+#include "pirate.h"
 /**
  * Use this file to encapsulate useful functionality that doesn't belong in
  * either pirate.h or pirate_list.h.
@@ -10,16 +10,21 @@
  *
  * TO STUDENT: You may add to this file, but do not change anything that is
  *     already here!
- * Modified by: [your name here] on [date of modification]
+ * Modified by: Nate Ly 2/21/2024
  * Changelog: [what you added to this file]
+ * changed the type definition per the canvas anouncement 
+ * added max line length definition
  */
 
 #include <stdio.h>
+#define MAX_LINE_LENGTH 127
 
 /**
  * Type of a comparison function.
  */
-typedef int (*compare_fn)(const void *, const void *);
+typedef int (*compare_fn)(const pirate *, const pirate *);
+
+
 
 /**
  * Reads the next line of input from stream, discarding the trailing newline
