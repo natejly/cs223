@@ -48,38 +48,38 @@ void pirate_print(const pirate *p, FILE *restrict output)
 
 int pirate_compare_name(const pirate *a, const pirate *b)
 {
-    if (a->name == NULL && b->name == NULL)
+    if ((*a).name == NULL && (*b).name == NULL)
         return 0;
-    else if (a->name == NULL)
+    else if ((*a).name == NULL)
         return 1;
-    else if (b->name == NULL)
+    else if ((*b).name == NULL)
         return -1;
-    return (strcmp(a->name, b->name));
+    return (strcmp((*a).name, (*b).name));
 }
 
 int pirate_compare_vessel(const pirate *a, const pirate *b)
 {
-    if (a->vessel == NULL && b->vessel == NULL)
+    if ((*a).vessel == NULL && (*b).vessel == NULL)
         return 0;
-    else if (a->vessel == NULL)
+    else if ((*a).vessel == NULL)
         return 1;
-    else if (b->vessel == NULL)
+    else if ((*b).vessel == NULL)
         return -1;
-    return (strcmp(a->vessel, b->vessel));
+    return (strcmp((*a).vessel, (*b).vessel));
 
 }
 
 int pirate_compare_treasure(const pirate *a, const pirate *b)
 {
-    if (a->treasure == -1 && b->treasure == -1)
+    if ((*a).treasure == -1 && (*b).treasure == -1)
         return 0;
-    else if (a->treasure == -1)
+    else if ((*a).treasure == -1)
         return 1;
-    else if (b->treasure == -1)
+    else if ((*b).treasure == -1)
         return -1;
-    else if (a->treasure > b->treasure)
+    else if ((*a).treasure > (*b).treasure)
         return 1;
-    else if (a->treasure < b->treasure)
+    else if ((*a).treasure < (*b).treasure)
         return -1;
     else
         return 0;

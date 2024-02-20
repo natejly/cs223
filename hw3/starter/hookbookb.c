@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
         profileFile = argv[1];
         captainFile = argv[2];
     }
-    assignFilenames(argc, argv, &profileFile, &captainFile, &sortFlag);
+    assignInputs(argc, argv, &profileFile, &captainFile, &sortFlag);
 
     // Open the files
     FILE *profile = fopen(profileFile, "r");

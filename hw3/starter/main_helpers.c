@@ -15,7 +15,7 @@ int isSortFlag(char *flag)
     }
     return 0; // Not a sort flag
 }
-void assignFilenames(int argc, char *argv[], char **profileFile, char **captainFile, char **sortFlag)
+void assignInputs(int argc, char *argv[], char **profileFile, char **captainFile, char **sortFlag)
 {
     // Default sort flag
     *sortFlag = "-n";

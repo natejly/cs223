@@ -24,5 +24,5 @@ int isSortFlag(char *flag);
  * @param sortFlag the pointer to the sort flag
  * @returns void
 */
-void assignFilenames(int argc, char *argv[], char **profileFile, char **captainFile, char **sortFlag);
+void assignInputs(int argc, char *argv[], char **profileFile, char **captainFile, char **sortFlag);
 

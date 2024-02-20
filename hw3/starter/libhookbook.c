@@ -31,4 +31,3 @@ char *freadln(char *restrict str, int count, FILE *restrict stream)
     str[i] = '\0';
     return str;
 }
-
