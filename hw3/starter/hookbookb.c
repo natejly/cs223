@@ -1,9 +1,123 @@
 #include "pirate.h"
 #include "pirate_list.h"
 #include "libhookbook.h"
+#include "skills_list.h"
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+//takes in a string 
+//returns 1 if the string is a valid sort flag
+//returns 2 if the string is an invalid sort flag
+//returns 0 if the string is not a sort flag
+int isSortFlag(char *flag)
+{
+    if (strcmp(flag, "-n") == 0 || strcmp(flag, "-v") == 0 || strcmp(flag, "-t") == 0) //compare to valid flags
+    {
+        return 1; // Valid sort flag
+    }
+    else if (flag[0] == '-')
+    {
+        return 2; // Invalid sort flag 
+    }
+    return 0; // Not a sort flag
+}
 
 int main(int argc, char *argv[])
 {
+    // Declare variables
+    char *profileFile;
+    char *captainFile;
+    // Default sort flag
+    char *sortFlag = "-n";
+
+    // Check if there are enough arguments
+    if (argc < 3)
+    {
+        fprintf(stderr, "Error: Not enough arguments\n");
+        return 1;
+    }
+    // Check if there are too many arguments
+    if (argc > 4)
+    {
+        fprintf(stderr, "Error: Too many arguments\n");
+        return 1;
+    }
+
+    // Make sure 0 or 1 flags are used
+    int flagCount = 0;
+    //go through the arguments and check if they are sort flags and count them
+    for (size_t i = 1; i < argc; i++)
+    {
+        if (isSortFlag(argv[i]) == 1)
+        {
+            flagCount++;
+        }
+        else if (isSortFlag(argv[i]) == 2) //if we see an invalid sort flag, print an error message and return 1
+        {
+            fprintf(stderr, "Error: Invalid sort flag %s\n", argv[i]);
+            return 1;
+        }
+    }
+    //too many flags
+    if (flagCount > 1)
+    {
+        fprintf(stderr, "Error: Too many flags\n");
+        return 1;
+    }
+    //no flags and more than 2 file names
+    if (flagCount == 0 && argc == 4)
+    {
+        fprintf(stderr, "Error: Too many filenames\n");
+        return 1;
+    }
+    // Determine sort flag position and assign file names accordingly
+    // If there are no flags, the first two arguments are file names
+    if (flagCount == 0 && argc == 3)
+    {
+        profileFile = argv[1];
+        captainFile = argv[2];
+    }
+    //first argument is a sort flag
+    else if (isSortFlag(argv[1]) == 1)
+    {
+        sortFlag = argv[1];
+        profileFile = argv[2];
+        captainFile = argv[3];
+    }
+    //second argument is a sort flag
+    else if (isSortFlag(argv[2]) == 1)
+    {
+        sortFlag = argv[2];
+        profileFile = argv[1];
+        captainFile = argv[3];
+    }
+    //third argument is a sort flag
+    else
+    {
+        sortFlag = argv[3];
+        profileFile = argv[1];
+        captainFile = argv[2];
+    }
+    // Open the files
+    FILE *profile = fopen(profileFile, "r");
+    FILE *captain = fopen(captainFile, "r");
+
+    // Check if the files are openable and readable
+    if (profile == NULL)
+    {
+        fprintf(stderr, "Error: Profile file not found or cannot be opened\n");
+        return 1;
+    }
+    if (captain == NULL)
+    {
+        fprintf(stderr, "Error: Captain file not found or cannot be opened\n");
+        return 1;
+    }
+    //testing
+    fprintf(stdout, "Profile file: %s\n", profileFile);
+    fprintf(stdout, "Captain file: %s\n", captainFile);
+    fprintf(stdout, "Sort flag: %s\n", sortFlag);
     /**
      * Your main function must:
      *  1. Take three command-line arguments: the path to a file containing the
@@ -20,4 +134,8 @@ int main(int argc, char *argv[])
      *      in the README
      *  6. Release all resources (files, memory, etc.)
      */
+    return 0;
 }
+// returns true if the flag is a valid sort flag
+// returns false if the flag is not a valid sort flag
+// prints an error message if the flag is not a valid sort flag
