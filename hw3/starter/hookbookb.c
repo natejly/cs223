@@ -2,26 +2,12 @@
 #include "pirate_list.h"
 #include "libhookbook.h"
 #include "skills_list.h"
+#include "main_helpers.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//takes in a string 
-//returns 1 if the string is a valid sort flag
-//returns 2 if the string is an invalid sort flag
-//returns 0 if the string is not a sort flag
-int isSortFlag(char *flag)
-{
-    if (strcmp(flag, "-n") == 0 || strcmp(flag, "-v") == 0 || strcmp(flag, "-t") == 0) //compare to valid flags
-    {
-        return 1; // Valid sort flag
-    }
-    else if (flag[0] == '-')
-    {
-        return 2; // Invalid sort flag 
-    }
-    return 0; // Not a sort flag
-}
+
 
 int main(int argc, char *argv[])
 {
@@ -46,26 +32,26 @@ int main(int argc, char *argv[])
 
     // Make sure 0 or 1 flags are used
     int flagCount = 0;
-    //go through the arguments and check if they are sort flags and count them
+    // go through the arguments and check if they are sort flags and count them
     for (size_t i = 1; i < argc; i++)
     {
         if (isSortFlag(argv[i]) == 1)
         {
             flagCount++;
         }
-        else if (isSortFlag(argv[i]) == 2) //if we see an invalid sort flag, print an error message and return 1
+        else if (isSortFlag(argv[i]) == 2) // if we see an invalid sort flag, print an error message and return 1
         {
             fprintf(stderr, "Error: Invalid sort flag %s\n", argv[i]);
             return 1;
         }
     }
-    //too many flags
+    // too many flags
     if (flagCount > 1)
     {
         fprintf(stderr, "Error: Too many flags\n");
         return 1;
     }
-    //no flags and more than 2 file names
+    // no flags and more than 2 file names
     if (flagCount == 0 && argc == 4)
     {
         fprintf(stderr, "Error: Too many filenames\n");
@@ -78,27 +64,8 @@ int main(int argc, char *argv[])
         profileFile = argv[1];
         captainFile = argv[2];
     }
-    //first argument is a sort flag
-    else if (isSortFlag(argv[1]) == 1)
-    {
-        sortFlag = argv[1];
-        profileFile = argv[2];
-        captainFile = argv[3];
-    }
-    //second argument is a sort flag
-    else if (isSortFlag(argv[2]) == 1)
-    {
-        sortFlag = argv[2];
-        profileFile = argv[1];
-        captainFile = argv[3];
-    }
-    //third argument is a sort flag
-    else
-    {
-        sortFlag = argv[3];
-        profileFile = argv[1];
-        captainFile = argv[2];
-    }
+    assignFilenames(argc, argv, &profileFile, &captainFile, &sortFlag);
+
     // Open the files
     FILE *profile = fopen(profileFile, "r");
     FILE *captain = fopen(captainFile, "r");
@@ -114,7 +81,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Error: Captain file not found or cannot be opened\n");
         return 1;
     }
-    //testing
+    // testing
     fprintf(stdout, "Profile file: %s\n", profileFile);
     fprintf(stdout, "Captain file: %s\n", captainFile);
     fprintf(stdout, "Sort flag: %s\n", sortFlag);

@@ -80,7 +80,6 @@ pirate_list *list_create()
     (*list).size = 0;
     (*list).capacity = INITIAL_CAPACITY;
     (*list).pirates = malloc((*list).capacity * sizeof(pirate *));
-
     return list;
 }
 
@@ -100,7 +99,7 @@ size_t list_index_of(const pirate_list *pirates, const char *name)
             return i;
         }
     }
-    return (*pirates).size+1;
+    return (*pirates).size + 1;
 }
 
 pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
@@ -113,26 +112,23 @@ pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
 
     if (index <= (*pirates).size)
     {
-        return p; 
+        return p;
     }
-
     list_expand_if_necessary(pirates);
-
     for (size_t i = (*pirates).size; i > idx; i--)
     {
         // shift all elements to the right starting at end of list to idx
         (*pirates).pirates[i] = (*pirates).pirates[i - 1];
     }
-    
     (*pirates).pirates[idx] = p;
     (*pirates).size++;
-
     return NULL;
 }
 
 pirate *list_remove(pirate_list *pirates, const char *name)
 {
-    if (name == NULL){
+    if (name == NULL)
+    {
         return NULL;
     }
     size_t index = list_index_of(pirates, name);
@@ -145,7 +141,6 @@ pirate *list_remove(pirate_list *pirates, const char *name)
     for (size_t i = index; i < (*pirates).size - 1; i++)
     {
         (*pirates).pirates[i] = (*pirates).pirates[i + 1];
-
     }
     list_contract_if_necessary(pirates);
     (*pirates).size--;
@@ -169,7 +164,6 @@ void list_sort(pirate_list *pirates)
 size_t list_length(const pirate_list *pirates)
 {
     return (*pirates).size;
-
 }
 
 void list_destroy(pirate_list *pirates)
@@ -187,7 +181,7 @@ void list_expand_if_necessary(pirate_list *pirates)
     if ((*pirates).size >= (*pirates).capacity)
     {
         size_t newcap = (*pirates).capacity * RESIZE_FACTOR;
-        (*pirates).pirates = realloc((*pirates).pirates, newcap * sizeof(pirate*));
+        (*pirates).pirates = realloc((*pirates).pirates, newcap * sizeof(pirate *));
         (*pirates).capacity = newcap;
 
         fprintf(stderr, "Expand to %zu\n", newcap);
@@ -196,7 +190,7 @@ void list_expand_if_necessary(pirate_list *pirates)
 
 void list_contract_if_necessary(pirate_list *pirates)
 {
-        if ((*pirates).capacity > INITIAL_CAPACITY &&
+    if ((*pirates).capacity > INITIAL_CAPACITY &&
         (*pirates).size * RESIZE_FACTOR <= (*pirates).capacity / RESIZE_FACTOR)
     {
         size_t newcap = (*pirates).capacity / RESIZE_FACTOR;
@@ -205,7 +199,7 @@ void list_contract_if_necessary(pirate_list *pirates)
         {
             newcap = INITIAL_CAPACITY;
         }
-        (*pirates).pirates = realloc((*pirates).pirates, newcap * sizeof(pirate*));
+        (*pirates).pirates = realloc((*pirates).pirates, newcap * sizeof(pirate *));
         (*pirates).capacity = newcap;
         fprintf(stderr, "Contract to %zu\n", newcap);
     }
