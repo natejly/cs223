@@ -128,7 +128,7 @@ void list_sort(pirate_list *pirates);
  * @assumes pirates is not NULL
  */
 size_t list_length(const pirate_list *pirates);
-
+void assignCaptains(pirate_list *pirates, FILE *restrict input);
 /**
  * Free all memory owned by the list, including the pirates in the list.
  *

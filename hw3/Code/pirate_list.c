@@ -262,3 +262,19 @@ void list_contract_if_necessary(pirate_list *pirates)
         fprintf(stderr, "Contract to %zu\n", newcap);
     }
 }
+void assignCaptains(pirate_list *pirates, FILE *restrict input)
+{
+    char *currentLine = malloc(sizeof(char) * MAX_LINE_LENGTH);
+    char *freadvalue = freadln(currentLine, MAX_LINE_LENGTH, input);
+    pirate *underling;
+    pirate *captain;
+    while(freadvalue != NULL){
+        underling = list_access(pirates, list_index_of(pirates, currentLine));
+        freadvalue = freadln(currentLine, MAX_LINE_LENGTH, input);
+        captain = list_access(pirates, list_index_of(pirates, currentLine));
+        underling->captain = captain;
+        underling->has_captain = true;
+        freadvalue = freadln(currentLine, MAX_LINE_LENGTH, input);
+    }
+
+}

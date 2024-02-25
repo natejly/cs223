@@ -102,11 +102,12 @@ int main(int argc, char *argv[])
 
     free(next_pirate);
     list_sort(pirates);
+    assignCaptains(pirates, captain);
+
     for (size_t i = 0; i < list_length(pirates); i++)
     {
         pirate_print(list_access(pirates, i), stdout);
     }
-
     // list_destroy(pirates);
     // fclose(profile);
 

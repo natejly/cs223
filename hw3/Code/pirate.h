@@ -30,6 +30,8 @@ struct pirate_t
     int treasure;
     bool has_skills;
     struct skills_list* skills;
+    bool has_captain;
+    pirate *captain;
 };
 
 /**
@@ -128,7 +130,6 @@ int pirate_compare_vessel(const pirate *a, const pirate *b);
  * @assumes neither a nor b are NULL
  */
 int pirate_compare_treasure(const pirate *a, const pirate *b);
-
 /**
  * Frees all memory owned by p. This function claims ownership of p.
  *

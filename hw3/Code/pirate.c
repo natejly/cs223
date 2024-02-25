@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "skills_list.h"
+#include "pirate_list.h"
 pirate *pirate_create(char *name)
 {
     pirate *new_pirate = malloc(sizeof(pirate));
@@ -17,6 +18,7 @@ pirate *pirate_create(char *name)
     new_pirate->has_vessel = false;
     new_pirate->has_treasure = false;
     new_pirate->has_skills = false;
+    new_pirate->has_captain = false;
     skills_list *skills = createSkillsList();
     new_pirate->skills = skills;
     return new_pirate;
@@ -90,7 +92,10 @@ pirate *pirate_read(FILE *restrict input)
 void pirate_print(const pirate *p, FILE *restrict output)
 {
     printf("%s\n", p->name);
-
+    if (p->has_captain)
+    {
+        printf("    Captain: %s (%s)\n", p->captain->name, p->captain->vessel);
+    }
     if (p->has_rank)
     {
         fprintf(output, "    Rank: %s\n", p->rank);
