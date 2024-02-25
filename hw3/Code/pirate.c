@@ -16,26 +16,35 @@ pirate *pirate_create(char *name)
     new_pirate->has_port = false;
     new_pirate->has_vessel = false;
     new_pirate->has_treasure = false;
+    new_pirate->has_skills = false;
+    skills_list *skills = createSkillsList();
+    new_pirate->skills = skills;
     return new_pirate;
 }
 
 pirate *pirate_read(FILE *restrict input)
 {
-    char *currentLine = malloc(sizeof(char) * MAX_LINE_LENGTH);
-    pirate *new_pirate = NULL;
-    char *freadvalue = freadln(currentLine, MAX_LINE_LENGTH, input);
-    // freadval is not null and we are not on an empty line
-    while (freadvalue && *currentLine != '\0')
+
+    char *name = malloc(sizeof(char) * MAX_LINE_LENGTH);
+
+    if (freadln(name, MAX_LINE_LENGTH, input) == NULL)
     {
-        if (currentLine[0] != '\n')
+        free(name);
+        return NULL;
+    }
+    pirate *new_pirate = pirate_create(name);
+    if (new_pirate == NULL)
+    {
+        free(name);
+        return NULL;
+    }
+    char *currentLine = malloc(sizeof(char) * MAX_LINE_LENGTH);
+    char *freadvalue = freadln(currentLine, MAX_LINE_LENGTH, input);
+    while (freadvalue != NULL && currentLine[0] != '\0')
+    {
+        if (currentLine[1] == ':')
         {
-            if (currentLine[1] != ':' && currentLine[0] != '\0')
-            {
-                char *nameHolder = malloc(sizeof(char) * MAX_LINE_LENGTH);
-                strcpy(nameHolder, currentLine);
-                new_pirate = pirate_create(nameHolder);
-            }
-            else if (currentLine[0] == 'r')
+            if (currentLine[0] == 'r')
             {
                 char *rankHolder = malloc(sizeof(char) * MAX_LINE_LENGTH);
                 strcpy(rankHolder, currentLine);
@@ -67,12 +76,14 @@ pirate *pirate_read(FILE *restrict input)
             {
                 char *skillHolder = malloc(sizeof(char) * MAX_LINE_LENGTH);
                 strcpy(skillHolder, &currentLine[2]);
-                // appendNode(new_pirate->skills, skillHolder);
+                addSkill(new_pirate->skills, skillHolder);
+                new_pirate->has_skills = true;
             }
+                    freadvalue = freadln(currentLine, MAX_LINE_LENGTH, input);
+
         }
-        freadvalue = freadln(currentLine, MAX_LINE_LENGTH, input);
+
     }
-    free(currentLine);
     return new_pirate;
 }
 
@@ -96,11 +107,15 @@ void pirate_print(const pirate *p, FILE *restrict output)
     {
         fprintf(output, "    Treasure: %d\n", p->treasure);
     }
+    if (p->has_skills)
+    {
+        printSkillsList(p->skills);
+    }
 }
 
 int pirate_compare_name(const pirate *a, const pirate *b)
 {
-    if (a->name == NULL && *b->name == NULL)
+    if (a->name == NULL && b->name == NULL)
         return 0;
     else if (a->name == NULL)
         return 1;
@@ -122,19 +137,23 @@ int pirate_compare_vessel(const pirate *a, const pirate *b)
 
 int pirate_compare_treasure(const pirate *a, const pirate *b)
 {
+
     if (!a->has_treasure && !b->has_treasure)
         return 0;
     else if (!a->has_treasure)
         return 1;
     else if (!b->has_treasure)
         return -1;
-    return (a->treasure - b->treasure);
+    return b->treasure - a->treasure;
 }
 
 void pirate_destroy(pirate *p)
 {
-    free((*p).name);
-    free((*p).vessel);
-    free((*p).treasure);
+    destroySkillsList(p->skills);
+    free(p->name);
+    free(p->rank);
+    free(p->vessel);
+    free(p->port);
     free(p);
+    
 }

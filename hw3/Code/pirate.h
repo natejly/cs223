@@ -18,7 +18,7 @@
  */
 typedef struct pirate_t pirate;
 struct pirate_t
-{
+{   
     char *name;
     bool has_rank;
     char *rank;
@@ -28,6 +28,7 @@ struct pirate_t
     char *vessel;
     bool has_treasure;
     int treasure;
+    bool has_skills;
     struct skills_list* skills;
 };
 

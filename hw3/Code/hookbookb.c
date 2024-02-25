@@ -82,14 +82,18 @@ int main(int argc, char *argv[])
         return 1;
     }
     // testing
-    fprintf(stdout, "Profile file: %s\n", profileFile);
-    fprintf(stdout, "Captain file: %s\n", captainFile);
-    fprintf(stdout, "Sort flag: %s\n", sortFlag);
 
-    pirate_list *pirates = list_create();
+    compare_fn cmp;
+    if(strcmp(sortFlag, "-v")==0){
+        cmp = pirate_compare_vessel;
+    } else if (strcmp(sortFlag, "-t")==0){
+        cmp = pirate_compare_treasure;
+    } else {
+        cmp = pirate_compare_name;
+    }
+    
+    pirate_list *pirates = list_create_with_cmp(cmp);
     pirate *next_pirate = pirate_read(profile);
-
-
     while (next_pirate != NULL)
     {
         list_insert(pirates, next_pirate, list_length(pirates));
@@ -97,11 +101,12 @@ int main(int argc, char *argv[])
     }
 
     free(next_pirate);
-    // list_sort(pirates);
+    list_sort(pirates);
     for (size_t i = 0; i < list_length(pirates); i++)
     {
         pirate_print(list_access(pirates, i), stdout);
     }
+
     // list_destroy(pirates);
     // fclose(profile);
 

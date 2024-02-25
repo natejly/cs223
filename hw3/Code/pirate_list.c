@@ -65,7 +65,10 @@ void list_expand_if_necessary(pirate_list *pirates);
  *  it.
  * @assumes the pirate list is in the process of having a pirate removed from it.
  */
+
 void list_contract_if_necessary(pirate_list *pirates);
+typedef int (*compare_fn)(const pirate *, const pirate *);
+
 
 /*******************
  * Function bodies *
@@ -178,8 +181,13 @@ void merge(pirate_list *pirates, int start, int mid, int end) {
     int i = 0; 
     int j = 0;
     int k = start; 
+    int ordered = 0;
     while (i < left_size && j < right_size) {
-        if (pirate_compare_name(left[i], right[j]) <= 0) {
+        ordered = pirates->cmp(left[i], right[j]);
+        if (ordered == 0){
+            ordered = pirate_compare_name(left[i], right[j]);
+        }
+        if (ordered <= 0) {
             (*pirates).pirates[k] = left[i];
             i++;
         } else {

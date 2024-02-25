@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include "skills_list.h"
 #include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
 struct node
 {
     char *payload;
@@ -14,7 +16,7 @@ struct node
 
 struct skills_list
 {
-    struct Node *head;
+    struct node *head;
     size_t size;
 };
 
@@ -33,24 +35,27 @@ struct node *newNode(char *payload)
     temp->nextNode = NULL;
     return temp;
 }
-void appendNode(struct skills_list *list, char *payload)
+void addSkill(struct skills_list *list, char *payload)
 {
     struct node *temp = newNode(payload);
-    if (!list->head)
+    struct node *curr = list->head;
+    struct node *prev = NULL;
+    //find place to insert
+    while(curr != NULL && strcmp(curr->payload, payload) < 0){
+        prev = curr;
+        curr = curr->nextNode;
+    }   
+   if (prev == NULL)
     {
-        // NULL is false
-        // head is null set head to temp (initializing)
+        //go at the front if prev is null
+        temp->nextNode = list->head;
         list->head = temp;
     }
     else
     {
-        struct node *last = list->head;
-        while (last->nextNode)
-        {
-            // traversing
-            last = last->nextNode;
-        }
-        last->nextNode = temp;
+        //go between prev and curr
+        temp->nextNode = prev->nextNode;
+        prev->nextNode = temp;
     }
     list->size++;
 }
@@ -67,11 +72,44 @@ void destroySkillsList(struct skills_list *list)
     }
     free(list);
 }
-void printSkillsList(struct skills_list *list){
+
+void printSkillsList(struct skills_list *list)
+{
+    printf("    Skills: ");
     struct node *temp = list->head;
-    while(temp){
-        fprintf(stdout, "%s", temp->payload);
-        temp = temp->nextNode;
+    bool first = true;
+    while (temp)
+    {
+        char *curr = temp->payload;
+        int count = 0;
+        struct node *currnode = list->head;
+        while (currnode)
+        {
+            if (strcmp(currnode->payload, curr) == 0)
+            {
+                count++;
+            }
+            currnode = currnode->nextNode;
+        }
+        if(first)
+        {
+            fprintf(stdout, "%s ", curr);
+
+        }else{
+            fprintf(stdout, "            %s ", curr);
+        }
+
+            for (size_t i = 0; i < count-1; i++)
+        {
+            printf("*");
+        }
+        first = false;
+        printf("\n");
+        while (temp->nextNode && strcmp(temp->nextNode->payload, curr) == 0)
+        {
+            temp = temp->nextNode;
+        }
+                temp = temp->nextNode;
+
     }
-    printf("Null /n");
 }
