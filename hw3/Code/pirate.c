@@ -49,29 +49,29 @@ pirate *pirate_read(FILE *restrict input)
             if (currentLine[0] == 'r')
             {
                 char *rankHolder = malloc(sizeof(char) * MAX_LINE_LENGTH);
-                strcpy(rankHolder, currentLine);
-                new_pirate->rank = &rankHolder[2];
+                strcpy(rankHolder, &currentLine[2]);
+                new_pirate->rank = rankHolder;
                 new_pirate->has_rank = true;
             }
             else if (currentLine[0] == 'v')
             {
                 char *vesselHolder = malloc(sizeof(char) * MAX_LINE_LENGTH);
-                strcpy(vesselHolder, currentLine);
-                new_pirate->vessel = &vesselHolder[2];
+                strcpy(vesselHolder, &currentLine[2]);
+                new_pirate->vessel = vesselHolder;
                 new_pirate->has_vessel = true;
             }
             else if (currentLine[0] == 'p')
             {
                 char *portHolder = malloc(sizeof(char) * MAX_LINE_LENGTH);
-                strcpy(portHolder, currentLine);
-                new_pirate->port = &portHolder[2];
+                strcpy(portHolder, &currentLine[2]);
+                new_pirate->port = portHolder;
                 new_pirate->has_port = true;
             }
             else if (currentLine[0] == 't')
             {
                 char *treasureHolder = malloc(sizeof(char) * MAX_LINE_LENGTH);
-                strcpy(treasureHolder, currentLine);
-                new_pirate->treasure = atoi(&treasureHolder[2]);
+                strcpy(treasureHolder, &currentLine[2]);
+                new_pirate->treasure = atoi(treasureHolder);
                 new_pirate->has_treasure = true;
             }
             else if (currentLine[0] == 's')
@@ -84,8 +84,9 @@ pirate *pirate_read(FILE *restrict input)
                     freadvalue = freadln(currentLine, MAX_LINE_LENGTH, input);
 
         }
-
+        
     }
+    free(currentLine);
     return new_pirate;
 }
 
@@ -172,5 +173,5 @@ void pirate_destroy(pirate *p)
         destroySkillsList(p->skills);
     }
     free(p);
-    
 }
+

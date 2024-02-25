@@ -1,0 +1,13 @@
+==1363301== Memcheck, a memory error detector
+==1363301== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==1363301== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==1363301== Command: ./Hookbook tests/t003/profiles.txt tests/t003/captains.txt
+==1363301== 
+==1363301== 
+==1363301== HEAP SUMMARY:
+==1363301==     in use at exit: 0 bytes in 0 blocks
+==1363301==   total heap usage: 13 allocs, 13 frees, 22,240 bytes allocated
+==1363301== 
+==1363301== All heap blocks were freed -- no leaks are possible
+==1363301== 
+==1363301== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

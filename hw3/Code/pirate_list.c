@@ -276,5 +276,5 @@ void assignCaptains(pirate_list *pirates, FILE *restrict input)
         underling->has_captain = true;
         freadvalue = freadln(currentLine, MAX_LINE_LENGTH, input);
     }
-
+    free(currentLine);
 }
