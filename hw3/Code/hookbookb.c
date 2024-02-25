@@ -86,24 +86,24 @@ int main(int argc, char *argv[])
     fprintf(stdout, "Captain file: %s\n", captainFile);
     fprintf(stdout, "Sort flag: %s\n", sortFlag);
     
-    pirate_list *pirates = list_create();
+    // pirate_list *pirates = list_create();
 
     pirate *next_pirate = pirate_read(profile);
+    pirate_print(next_pirate, stdout);
+    // while (next_pirate != NULL)
+    // {
+    //     // list_insert(pirates, next_pirate, list_length(pirates));
+    //     next_pirate = pirate_read(profile);
 
-    while (next_pirate != NULL)
-    {
-        list_insert(pirates, next_pirate, list_length(pirates));
-        next_pirate = pirate_read(profile);
-
-    }
-    free(next_pirate);
-    list_sort(pirates);
-    for (size_t i = 0; i < list_length(pirates); i++)
-    {
-        pirate_print(list_access(pirates, i), stdout);
-    }
-    // list_destroy(pirates);
-    fclose(profile);
+    // }
+    // free(next_pirate);
+    // list_sort(pirates);
+    // for (size_t i = 0; i < list_length(pirates); i++)
+    // {
+    //     pirate_print(list_access(pirates, i), stdout);
+    // }
+    // // list_destroy(pirates);
+    // fclose(profile);
     return 0;
     /**
      * Your main function must:

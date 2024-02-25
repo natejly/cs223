@@ -12,5 +12,5 @@
  * Type of a list of skills, as an opaque struct.
  */
 typedef struct skills_list_instance_t skills_list;
-
+void appendNode(struct skills_list *list, char *payload);
 // TODO: Define and implement an interface for skills_list

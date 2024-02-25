@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdio.h>
-
+#include <stdbool.h>
 /**
  * Header file for pirate for HookBook B in CPSC 223 SP2024.
  *
@@ -20,10 +20,15 @@ typedef struct pirate_t pirate;
 struct pirate_t
 {
     char *name;
+    bool has_rank;
+    char *rank;
+    bool has_port;
+    char *port;
+    bool has_vessel;
     char *vessel;
+    bool has_treasure;
     int treasure;
-    //add skills list here
-
+    struct skills_list* skills;
 };
 
 /**
