@@ -154,11 +154,23 @@ int pirate_compare_treasure(const pirate *a, const pirate *b)
 
 void pirate_destroy(pirate *p)
 {
-    destroySkillsList(p->skills);
     free(p->name);
-    free(p->rank);
-    free(p->vessel);
-    free(p->port);
+    if (p->has_rank)
+    {
+        free(p->rank);
+    }
+    if (p->has_vessel)
+    {
+        free(p->vessel);
+    }
+    if (p->has_port)
+    {
+        free(p->port);
+    }
+    if (p->has_skills)
+    {
+        destroySkillsList(p->skills);
+    }
     free(p);
     
 }
