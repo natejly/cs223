@@ -12,10 +12,6 @@ pirate *pirate_create(char *name)
 {
     pirate *new_pirate = malloc(sizeof(pirate));
     new_pirate->name = name;
-    new_pirate->port = NULL; 
-    new_pirate->rank = NULL;
-    new_pirate->vessel = NULL;
-    new_pirate->treasure = NULL;
     new_pirate->has_rank = false;
     new_pirate->has_port = false;
     new_pirate->has_vessel = false;
@@ -27,7 +23,9 @@ pirate *pirate_read(FILE *restrict input)
 {
     char *currentLine = malloc(sizeof(char) * MAX_LINE_LENGTH);
     pirate *new_pirate;
+
     while(freadln(currentLine, MAX_LINE_LENGTH, input) && *currentLine != '\0'){
+    
         if(currentLine[1] != ':' && currentLine[0] != '\0'){
             char *nameHolder = malloc(sizeof(char) * MAX_LINE_LENGTH);
             strcpy(nameHolder, currentLine);
@@ -60,10 +58,13 @@ pirate *pirate_read(FILE *restrict input)
         else if (currentLine[0] == 's'){
             char *skillHolder = malloc(sizeof(char) * MAX_LINE_LENGTH);
             strcpy(skillHolder, &currentLine[2]);
-            appendNode(new_pirate->skills, skillHolder);
+            //appendNode(new_pirate->skills, skillHolder);
         }
-    }
     
+    }
+    if (freadln(currentLine, MAX_LINE_LENGTH, input) == NULL){
+        return NULL;
+    }
     return new_pirate;
 }
 
