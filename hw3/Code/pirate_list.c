@@ -83,6 +83,7 @@ pirate_list *list_create()
     list->size = 0;
     list->capacity = INITIAL_CAPACITY;
     list->pirates = malloc(list->capacity * sizeof(pirate *));
+    list->cmp = pirate_compare_name;
     return list;
 }
 
