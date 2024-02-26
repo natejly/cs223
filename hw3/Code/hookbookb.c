@@ -7,7 +7,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 int main(int argc, char *argv[])
 {
     // Declare variables
@@ -36,7 +35,7 @@ int main(int argc, char *argv[])
         {
             flagCount++;
         }
-        else if (isSortFlag(argv[i]) == 2) // if we see an invalid sort flag, print an error message and return 1
+        else if (isSortFlag(argv[i]) == 2) // if invalid sort flag, print error message and return 1
         {
             fprintf(stderr, "Error: Invalid sort flag %s\n", argv[i]);
             return 1;
@@ -54,13 +53,13 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Error: Too many filenames\n");
         return 1;
     }
-    // Determine sort flag position and assign file names accordingly
     // If there are no flags, the first two arguments are file names
     if (flagCount == 0 && argc == 3)
     {
         profileFile = argv[1];
         captainFile = argv[2];
     }
+    //give files and sort flag to the variables
     assignInputs(argc, argv, &profileFile, &captainFile, &sortFlag);
 
     // Open the files
@@ -78,7 +77,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Error: Captain file not found or cannot be opened\n");
         return 1;
     }
-
+    //initialize the compare function 
     compare_fn cmp;
     if(strcmp(sortFlag, "-v")==0){
         cmp = pirate_compare_vessel;
@@ -87,23 +86,25 @@ int main(int argc, char *argv[])
     } else {
         cmp = pirate_compare_name;
     }
+    //create list of pirates
     pirate_list *pirates = list_create_with_cmp(cmp);
     pirate *next_pirate = pirate_read(profile);
+    //create pirate to be removed if can't be inserted
     pirate *toremove;
-
     while (next_pirate != NULL)
-    {
+    {   
+        //insert pirates into the list
         toremove = list_insert(pirates, next_pirate, list_length(pirates));
         if(toremove != NULL){
+            //free pirate if not inserted
             pirate_destroy(toremove);
         }
         next_pirate = pirate_read(profile);
     }
-
     free(next_pirate);
     list_sort(pirates);
+    //assign captains to pirates
     assignCaptains(pirates, captain);
-
     for (size_t i = 0; i < list_length(pirates); i++)
     {
         pirate_print(list_access(pirates, i), stdout);

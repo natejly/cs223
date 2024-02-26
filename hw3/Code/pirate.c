@@ -11,6 +11,7 @@
 #include "pirate_list.h"
 pirate *pirate_create(char *name)
 {
+    // initialize a new pirate and set all the flags to false
     pirate *new_pirate = malloc(sizeof(pirate));
     new_pirate->name = name;
     new_pirate->has_rank = false;
@@ -25,9 +26,7 @@ pirate *pirate_create(char *name)
 
 pirate *pirate_read(FILE *restrict input)
 {
-
     char *name = malloc(sizeof(char) * MAX_LINE_LENGTH);
-
     if (freadln(name, MAX_LINE_LENGTH, input) == NULL)
     {
         free(name);
@@ -36,11 +35,13 @@ pirate *pirate_read(FILE *restrict input)
     pirate *new_pirate = pirate_create(name);
     if (new_pirate == NULL)
     {
+        // free the name if the pirate is null
         free(name);
         return NULL;
     }
     char *currentLine = malloc(sizeof(char) * MAX_LINE_LENGTH);
     char *freadvalue = freadln(currentLine, MAX_LINE_LENGTH, input);
+    // read through the file and set the pirate's attributes
     while (freadvalue != NULL && currentLine[0] != '\0')
     {
         if (currentLine[1] == ':')
@@ -48,8 +49,10 @@ pirate *pirate_read(FILE *restrict input)
             if (currentLine[0] == 'r')
             {
                 char *rankHolder = malloc(sizeof(char) * MAX_LINE_LENGTH);
+                // the & [2] increments pointer by 2 to skip the first two characters
                 strcpy(rankHolder, &currentLine[2]);
                 new_pirate->rank = rankHolder;
+                // making sure to set flags to true
                 new_pirate->has_rank = true;
             }
             else if (currentLine[0] == 'v')
@@ -78,10 +81,8 @@ pirate *pirate_read(FILE *restrict input)
                 addSkill(new_pirate->skills, skillHolder);
                 new_pirate->has_skills = true;
             }
-                freadvalue = freadln(currentLine, MAX_LINE_LENGTH, input);
-
+            freadvalue = freadln(currentLine, MAX_LINE_LENGTH, input);
         }
-        
     }
     free(currentLine);
     return new_pirate;
@@ -92,7 +93,7 @@ void pirate_print(const pirate *p, FILE *restrict output)
     fprintf(output, "%s\n", p->name);
     if (p->has_captain)
     {
-        fprintf(output,"    Captain: %s (%s)\n", p->captain->name, p->captain->vessel);
+        fprintf(output, "    Captain: %s (%s)\n", p->captain->name, p->captain->vessel);
     }
     if (p->has_rank)
     {
@@ -127,16 +128,17 @@ int pirate_compare_name(const pirate *a, const pirate *b)
     return (strcmp(a->name, b->name));
 }
 
-
 int pirate_compare_vessel(const pirate *a, const pirate *b)
 {
     if (!a->has_vessel && !b->has_vessel)
+        // if equal use name to compare
         return pirate_compare_name(a, b);
     else if (!a->has_vessel)
         return 1;
     else if (!b->has_vessel)
         return -1;
-    if(strcmp(a->vessel, b->vessel)==0){
+    if (strcmp(a->vessel, b->vessel) == 0)
+    {
         return pirate_compare_name(a, b);
     }
     return (strcmp(a->vessel, b->vessel));
@@ -144,10 +146,9 @@ int pirate_compare_vessel(const pirate *a, const pirate *b)
 
 int pirate_compare_treasure(const pirate *a, const pirate *b)
 {
-
     if (!a->has_treasure && !b->has_treasure)
+        // if equal use name to compare
         return pirate_compare_name(a, b);
-
     else if (!a->has_treasure)
         return 1;
     else if (!b->has_treasure)
@@ -158,7 +159,6 @@ int pirate_compare_treasure(const pirate *a, const pirate *b)
     }
     return b->treasure - a->treasure;
 }
-
 
 void pirate_destroy(pirate *p)
 {

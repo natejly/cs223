@@ -1,8 +1,5 @@
 #include <string.h>
-// takes in a string
-// returns 1 if the string is a valid sort flag
-// returns 2 if the string is an invalid sort flag
-// returns 0 if the string is not a sort flag
+
 int isSortFlag(char *flag)
 {
     if (strcmp(flag, "-n") == 0 || strcmp(flag, "-v") == 0 || strcmp(flag, "-t") == 0) // compare to valid flags

@@ -7,7 +7,7 @@
  *
  * TO STUDENT: You may add to this file, but do not change anything that is
  *   already here!
- * Modified by: [your name here] on [date of modification]
+ * Modified by: Nate Ly 2/25/2024
  * Changelog: [what you added to this file]
  */
 
@@ -128,6 +128,13 @@ void list_sort(pirate_list *pirates);
  * @assumes pirates is not NULL
  */
 size_t list_length(const pirate_list *pirates);
+/**
+ * Reads in the captains file and assigns the captains to the pirates in the list
+ * based on the pairs of names in the file.
+ * @param pirates the list of pirates to assign captains to
+ * @param input the file to read the captains from
+ * 
+*/
 void assignCaptains(pirate_list *pirates, FILE *restrict input);
 /**
  * Free all memory owned by the list, including the pirates in the list.

@@ -11,9 +11,10 @@
  * TO STUDENT: You may add to this file, but do not change anything that is
  *     already here!
  * Modified by: Nate Ly 2/21/2024
- * Changelog: [what you added to this file]
+ * Changelog: 
  * changed the type definition per the canvas anouncement 
  * added max line length definition
+ * added typedef for compare function
  */
 
 #include <stdio.h>
