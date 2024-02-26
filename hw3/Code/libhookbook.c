@@ -27,6 +27,11 @@ char *freadln(char *restrict str, int count, FILE *restrict stream)
         i++;
         c = fgetc(stream);
     }
+
+    if (c != '\n' && c != EOF) {
+        ungetc(c, stream);
+    }
+
     // add a null terminator to the end of the string
     str[i] = '\0';
     return str;
