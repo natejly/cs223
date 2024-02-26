@@ -171,7 +171,6 @@ void pirate_destroy(pirate *p)
         destroySkillsList(p->skills);
     }
 
-
     free(p);
 }
 
