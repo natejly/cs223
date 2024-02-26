@@ -162,7 +162,7 @@ int pirate_compare_treasure(const pirate *a, const pirate *b)
 
 void pirate_destroy(pirate *p)
 {
-    if (p->name)
+    if (!p->name)
     {
         free(p->name);
     }

@@ -183,12 +183,12 @@ void myqSort(pirate_list *pirates, int left, int right)
         while (i <= j)
         {
             // step through the array from the left to find elements to swap
-            while (i <= j && pirates->cmp(pirates->pirates[i], pivot) < 0)
+            while (i <= j && (pirates->cmp)(pirates->pirates[i], pivot) < 0)
             {
                 i++;
             }
             // step through the array from the right to find elements to swap
-            while (i <= j && pirates->cmp(pirates->pirates[j], pivot) > 0)
+            while (i <= j && (pirates->cmp)(pirates->pirates[j], pivot) > 0)
             {
                 j--;
             }
