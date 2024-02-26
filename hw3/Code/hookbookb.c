@@ -93,9 +93,13 @@ int main(int argc, char *argv[])
     
     pirate_list *pirates = list_create_with_cmp(cmp);
     pirate *next_pirate = pirate_read(profile);
+    pirate *toremove;
     while (next_pirate != NULL)
     {
-        list_insert(pirates, next_pirate, list_length(pirates));
+        toremove = list_insert(pirates, next_pirate, list_length(pirates));
+        if(toremove != NULL){
+            pirate_destroy(toremove);
+        }
         next_pirate = pirate_read(profile);
     }
 
