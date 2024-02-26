@@ -90,7 +90,7 @@ pirate *pirate_read(FILE *restrict input)
 
 void pirate_print(const pirate *p, FILE *restrict output)
 {
-    printf("%s\n", p->name);
+    fprintf(output, "%s\n", p->name);
     if (p->has_captain)
     {
         fprintf(output,"    Captain: %s (%s)\n", p->captain->name, p->captain->vessel);
@@ -131,7 +131,7 @@ int pirate_compare_name(const pirate *a, const pirate *b)
 int pirate_compare_vessel(const pirate *a, const pirate *b)
 {
     if (!a->has_vessel && !b->has_vessel)
-        return -1;
+        return 0;
     else if (!a->has_vessel)
         return 1;
     else if (!b->has_vessel)
@@ -143,7 +143,7 @@ int pirate_compare_treasure(const pirate *a, const pirate *b)
 {
 
     if (!a->has_treasure && !b->has_treasure)
-        return -1;
+        return 0;
     else if (!a->has_treasure)
         return 1;
     else if (!b->has_treasure)
