@@ -19,8 +19,7 @@ pirate *pirate_create(char *name)
     new_pirate->has_treasure = false;
     new_pirate->has_skills = false;
     new_pirate->has_captain = false;
-    struct skills_list *skills = createSkillsList();
-    new_pirate->skills = skills;
+    new_pirate->skills = createSkillsList();
     return new_pirate;
 }
 
@@ -29,7 +28,7 @@ pirate *pirate_read(FILE *restrict input)
 
     char *name = malloc(sizeof(char) * MAX_LINE_LENGTH);
 
-    if (freadln(name, MAX_LINE_LENGTH+1, input) == NULL)
+    if (freadln(name, MAX_LINE_LENGTH, input) == NULL)
     {
         free(name);
         return NULL;
@@ -128,14 +127,18 @@ int pirate_compare_name(const pirate *a, const pirate *b)
     return (strcmp(a->name, b->name));
 }
 
+
 int pirate_compare_vessel(const pirate *a, const pirate *b)
 {
     if (!a->has_vessel && !b->has_vessel)
-        return 0;
+        return pirate_compare_name(a, b);
     else if (!a->has_vessel)
         return 1;
     else if (!b->has_vessel)
         return -1;
+    if(strcmp(a->vessel, b->vessel)==0){
+        return pirate_compare_name(a, b);
+    }
     return (strcmp(a->vessel, b->vessel));
 }
 
@@ -143,13 +146,19 @@ int pirate_compare_treasure(const pirate *a, const pirate *b)
 {
 
     if (!a->has_treasure && !b->has_treasure)
-        return 0;
+        return pirate_compare_name(a, b);
+
     else if (!a->has_treasure)
         return 1;
     else if (!b->has_treasure)
         return -1;
+    if (a->treasure == b->treasure)
+    {
+        return pirate_compare_name(a, b);
+    }
     return b->treasure - a->treasure;
 }
+
 
 void pirate_destroy(pirate *p)
 {
@@ -166,11 +175,7 @@ void pirate_destroy(pirate *p)
     {
         free(p->port);
     }
-    if (p->has_skills)
-    {
-        destroySkillsList(p->skills);
-    }
+    destroySkillsList(p->skills);
 
     free(p);
 }
-
