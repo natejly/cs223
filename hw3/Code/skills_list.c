@@ -36,20 +36,21 @@ void addSkill(struct skills_list *list, char *payload)
     struct node *temp = newNode(payload);
     struct node *curr = list->head;
     struct node *prev = NULL;
-    //find place to insert
-    while(curr != NULL && strcmp(curr->payload, payload) < 0){
+    // find place to insert
+    while (curr != NULL && strcmp(curr->payload, payload) < 0)
+    {
         prev = curr;
         curr = curr->nextNode;
-    }   
-   if (prev == NULL)
+    }
+    if (prev == NULL)
     {
-        //go at the front if prev is null
+        // go at the front if prev is null
         temp->nextNode = list->head;
         list->head = temp;
     }
     else
     {
-        //go between prev and curr
+        // go between prev and curr
         temp->nextNode = prev->nextNode;
         prev->nextNode = temp;
     }
@@ -86,18 +87,21 @@ void printSkillsList(struct skills_list *list, FILE *restrict output)
             }
             currnode = currnode->nextNode;
         }
-        if(first)
+        if (first)
         {
             fprintf(output, "%s", curr);
-        }else{
+        }
+        else
+        {
             fprintf(output, "            %s", curr);
         }
-        if (count>1){
+        if (count > 1)
+        {
             fprintf(output, " ");
         }
-        for (size_t i = 0; i < count-1; i++)
+        for (size_t i = 0; i < count - 1; i++)
         {
-            fprintf(output,"*");
+            fprintf(output, "*");
         }
         first = false;
         fprintf(output, "\n");
@@ -105,6 +109,6 @@ void printSkillsList(struct skills_list *list, FILE *restrict output)
         {
             temp = temp->nextNode;
         }
-                temp = temp->nextNode;
+        temp = temp->nextNode;
     }
 }

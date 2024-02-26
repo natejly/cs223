@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
         profileFile = argv[1];
         captainFile = argv[2];
     }
-    //give files and sort flag to the variables
+    // give files and sort flag to the variables
     assignInputs(argc, argv, &profileFile, &captainFile, &sortFlag);
 
     // Open the files
@@ -77,33 +77,39 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Error: Captain file not found or cannot be opened\n");
         return 1;
     }
-    //initialize the compare function 
+    // initialize the compare function
     compare_fn cmp;
-    if(strcmp(sortFlag, "-v")==0){
+    if (strcmp(sortFlag, "-v") == 0)
+    {
         cmp = pirate_compare_vessel;
-    } else if (strcmp(sortFlag, "-t")==0){
+    }
+    else if (strcmp(sortFlag, "-t") == 0)
+    {
         cmp = pirate_compare_treasure;
-    } else {
+    }
+    else
+    {
         cmp = pirate_compare_name;
     }
-    //create list of pirates
+    // create list of pirates
     pirate_list *pirates = list_create_with_cmp(cmp);
     pirate *next_pirate = pirate_read(profile);
-    //create pirate to be removed if can't be inserted
+    // create pirate to be removed if can't be inserted
     pirate *toremove;
     while (next_pirate != NULL)
-    {   
-        //insert pirates into the list
+    {
+        // insert pirates into the list
         toremove = list_insert(pirates, next_pirate, list_length(pirates));
-        if(toremove != NULL){
-            //free pirate if not inserted
+        if (toremove != NULL)
+        {
+            // free pirate if not inserted
             pirate_destroy(toremove);
         }
         next_pirate = pirate_read(profile);
     }
     free(next_pirate);
     list_sort(pirates);
-    //assign captains to pirates
+    // assign captains to pirates
     assignCaptains(pirates, captain);
     for (size_t i = 0; i < list_length(pirates); i++)
     {
@@ -114,4 +120,3 @@ int main(int argc, char *argv[])
     fclose(captain);
     return 0;
 }
-

@@ -7,7 +7,7 @@
 #include <string.h>
 #include "pirate_list.h"
 #include "pirate.h"
-typedef int (*compare_fn)(const pirate*, const pirate*);
+typedef int (*compare_fn)(const pirate *, const pirate *);
 
 struct pirate_list_instance_t
 {
@@ -70,7 +70,6 @@ void list_expand_if_necessary(pirate_list *pirates);
 
 void list_contract_if_necessary(pirate_list *pirates);
 
-
 /*******************
  * Function bodies *
  *******************/
@@ -90,12 +89,12 @@ pirate_list *list_create()
 
 pirate_list *list_create_with_cmp(compare_fn cmp)
 {
-     pirate_list *list = malloc(sizeof(pirate_list));
+    pirate_list *list = malloc(sizeof(pirate_list));
     if (list == NULL)
     {
         return NULL;
     }
-    //initialize the list and structure members
+    // initialize the list and structure members
     list->size = 0;
     list->capacity = INITIAL_CAPACITY;
     list->pirates = malloc(list->capacity * sizeof(pirate *));
@@ -112,7 +111,7 @@ size_t list_index_of(const pirate_list *pirates, const char *name)
             return i;
         }
     }
-    //return out of bounds index if not in list
+    // return out of bounds index if not in list
     return pirates->size + 1;
 }
 
@@ -126,7 +125,7 @@ pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
 
     if (index <= pirates->size)
     {
-        //return pirate pointer if already in list
+        // return pirate pointer if already in list
         return p;
     }
     list_expand_if_necessary(pirates);
@@ -155,7 +154,7 @@ pirate *list_remove(pirate_list *pirates, const char *name)
 
     for (size_t i = index; i < pirates->size - 1; i++)
     {
-        //shift elements to the left 
+        // shift elements to the left
         pirates->pirates[i] = pirates->pirates[i + 1];
     }
     list_contract_if_necessary(pirates);
@@ -172,35 +171,41 @@ const pirate *list_access(const pirate_list *pirates, size_t idx)
     return pirates->pirates[idx];
 }
 
-void myqSort(pirate_list *pirates, int left, int right) {
-  if (left < right) {
-    //set pivot to mid
-    pirate *pivot = pirates->pirates[(left + right) / 2];
-    int i = left;
-    int j = right;
-    //partition the array
-    while (i <= j) {
-        //step through the array from the left to find elements to swap
-      while (i <= j && pirates->cmp(pirates->pirates[i], pivot) < 0) {
-        i++;
-      }
-      //step through the array from the right to find elements to swap
-      while (i <= j && pirates->cmp(pirates->pirates[j], pivot) > 0) {
-        j--;
-      }
-      if (i <= j) {
-        //swap elements
-        pirate *temp = pirates->pirates[i];
-        pirates->pirates[i] = pirates->pirates[j];
-        pirates->pirates[j] = temp;
-        i++;
-        j--;
-      }
+void myqSort(pirate_list *pirates, int left, int right)
+{
+    if (left < right)
+    {
+        // set pivot to mid
+        pirate *pivot = pirates->pirates[(left + right) / 2];
+        int i = left;
+        int j = right;
+        // partition the array
+        while (i <= j)
+        {
+            // step through the array from the left to find elements to swap
+            while (i <= j && pirates->cmp(pirates->pirates[i], pivot) < 0)
+            {
+                i++;
+            }
+            // step through the array from the right to find elements to swap
+            while (i <= j && pirates->cmp(pirates->pirates[j], pivot) > 0)
+            {
+                j--;
+            }
+            if (i <= j)
+            {
+                // swap elements
+                pirate *temp = pirates->pirates[i];
+                pirates->pirates[i] = pirates->pirates[j];
+                pirates->pirates[j] = temp;
+                i++;
+                j--;
+            }
+        }
+        // recurse
+        myqSort(pirates, left, j);
+        myqSort(pirates, i, right);
     }
-    //recurse
-    myqSort(pirates, left, j);
-    myqSort(pirates, i, right);
-  }
 }
 
 void list_sort(pirate_list *pirates)
@@ -215,7 +220,7 @@ size_t list_length(const pirate_list *pirates)
 
 void list_destroy(pirate_list *pirates)
 {
-    //go though the list and free all pirates
+    // go though the list and free all pirates
     for (size_t i = 0; i < pirates->size; i++)
     {
         pirate_destroy(pirates->pirates[i]);
@@ -228,7 +233,7 @@ void list_expand_if_necessary(pirate_list *pirates)
 {
     if (pirates->size >= pirates->capacity)
     {
-        //if size too large expand the list by resize factor
+        // if size too large expand the list by resize factor
         size_t newcap = pirates->capacity * RESIZE_FACTOR;
         pirates->pirates = realloc(pirates->pirates, newcap * sizeof(pirate *));
         pirates->capacity = newcap;
@@ -239,7 +244,7 @@ void list_expand_if_necessary(pirate_list *pirates)
 
 void list_contract_if_necessary(pirate_list *pirates)
 {
-    //if size too small contract the list by resize factor
+    // if size too small contract the list by resize factor
     if (pirates->capacity > INITIAL_CAPACITY &&
         pirates->size * RESIZE_FACTOR <= pirates->capacity / RESIZE_FACTOR)
     {
@@ -257,20 +262,20 @@ void list_contract_if_necessary(pirate_list *pirates)
 
 void assignCaptains(pirate_list *pirates, FILE *restrict input)
 {
-    //initialize space for current line
+    // initialize space for current line
     char *currentLine = malloc(sizeof(char) * MAX_LINE_LENGTH);
     char *freadvalue = freadln(currentLine, MAX_LINE_LENGTH, input);
     pirate *underling;
     pirate *captain;
-    while(freadvalue != NULL){
-        //assign captains to pirates
+    while (freadvalue != NULL)
+    {
+        // assign captains to pirates
         underling = list_access(pirates, list_index_of(pirates, currentLine));
         freadvalue = freadln(currentLine, MAX_LINE_LENGTH, input);
         captain = list_access(pirates, list_index_of(pirates, currentLine));
         underling->captain = captain;
-        underling->has_captain = true;  
+        underling->has_captain = true;
         freadvalue = freadln(currentLine, MAX_LINE_LENGTH, input);
     }
     free(currentLine);
-
 }
