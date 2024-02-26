@@ -13,7 +13,7 @@ char *freadln(char *restrict str, int count, FILE *restrict stream)
     //set index to 0
     size_t i = 0;
     //get the next character from the stream
-    char c = fgetc(stream);
+    int c = fgetc(stream);
     // if the stream is at EOF, return NULL
     if (c == EOF)   
     {

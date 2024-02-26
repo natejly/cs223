@@ -19,7 +19,7 @@ pirate *pirate_create(char *name)
     new_pirate->has_treasure = false;
     new_pirate->has_skills = false;
     new_pirate->has_captain = false;
-    skills_list *skills = createSkillsList();
+    struct skills_list *skills = createSkillsList();
     new_pirate->skills = skills;
     return new_pirate;
 }
@@ -29,7 +29,7 @@ pirate *pirate_read(FILE *restrict input)
 
     char *name = malloc(sizeof(char) * MAX_LINE_LENGTH);
 
-    if (freadln(name, MAX_LINE_LENGTH, input) == NULL)
+    if (freadln(name, MAX_LINE_LENGTH+1, input) == NULL)
     {
         free(name);
         return NULL;
