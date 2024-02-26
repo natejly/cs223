@@ -22,5 +22,12 @@ int isSortFlag(char *flag);
  * @param sortFlag the pointer to the sort flag
  * @returns void
 */
-void assignInputs(int argc, char *argv[], char **profileFile, char **captainFile, char **sortFlag);
+int assignInputs(int argc, char *argv[], char **profileFile, char **captainFile, char **sortFlag);
+
+/**
+ * returns the correct compare function based on the sort flag
+ * @param sortFlag the sort flag
+ * @returns the correct compare function
+*/
+compare_fn getCompareFN(char *sortFlag);
 
