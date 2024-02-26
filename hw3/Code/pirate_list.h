@@ -106,7 +106,14 @@ pirate *list_remove(pirate_list *pirates, const char *name);
  * @assumes pirates is not NULL
  */
 const pirate *list_access(const pirate_list *pirates, size_t idx);
-
+/**
+ * Generic quicksort to sort the list of pirates 
+ * @param pirates the list to sort
+ * @param left the left index
+ * @param right the right index
+ * @return void
+*/
+void myQsort(pirate_list *pirates, int left, int right);
 /**
  * Sort the list of pirates in the order defined by the comparison function
  *  for pirates, as previously set by list_set_cmp(pirates).
