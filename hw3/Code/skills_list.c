@@ -17,13 +17,11 @@ struct node
 struct skills_list
 {
     struct node *head;
-    size_t size;
 };
 
 struct skills_list *createSkillsList()
 {
     struct skills_list *list = malloc(sizeof(struct skills_list));
-    list->size = 0;
     list->head = NULL;
     return list;
 }
@@ -57,7 +55,6 @@ void addSkill(struct skills_list *list, char *payload)
         temp->nextNode = prev->nextNode;
         prev->nextNode = temp;
     }
-    list->size++;
 }
 void destroySkillsList(struct skills_list *list)
 {
