@@ -15,7 +15,9 @@ int main(int argc, char *argv[])
     // Default sort flag
     char *sortFlag = "-n";    
     // give files and sort flag to the variables
-    assignInputs(argc, argv, &profileFile, &captainFile, &sortFlag);
+    if (assignInputs(argc, argv, &profileFile, &captainFile, &sortFlag)==1){
+        return 1;
+    }
 
     // Open the files
     FILE *profile = fopen(profileFile, "r");
