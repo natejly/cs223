@@ -80,6 +80,7 @@
     "format": "c",
     "stdlib.h": "c",
     "typeinfo": "c",
-    "chrono": "c"
+    "chrono": "c",
+    "stdbool.h": "c"
   }
 }
