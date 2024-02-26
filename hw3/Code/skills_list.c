@@ -70,12 +70,13 @@ void destroySkillsList(struct skills_list *list)
         free(current);
         current = next;
     }
+
     free(list);
 }
 
-void printSkillsList(struct skills_list *list)
+void printSkillsList(struct skills_list *list, FILE *restrict output)
 {
-    printf("    Skills: ");
+    fprintf(output, "    Skills: ");
     struct node *temp = list->head;
     bool first = true;
     while (temp)
@@ -93,18 +94,18 @@ void printSkillsList(struct skills_list *list)
         }
         if(first)
         {
-            fprintf(stdout, "%s ", curr);
+            fprintf(output, "%s ", curr);
 
         }else{
-            fprintf(stdout, "            %s ", curr);
+            fprintf(output, "            %s ", curr);
         }
 
             for (size_t i = 0; i < count-1; i++)
         {
-            printf("*");
+            fprintf(output,"*");
         }
         first = false;
-        printf("\n");
+        fprintf(output, "\n");
         while (temp->nextNode && strcmp(temp->nextNode->payload, curr) == 0)
         {
             temp = temp->nextNode;

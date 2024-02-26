@@ -228,7 +228,7 @@ void list_destroy(pirate_list *pirates)
 {
     for (size_t i = 0; i < (*pirates).size; i++)
     {
-        pirate_destroy((*pirates).pirates[i]);
+        pirate_destroy(pirates->pirates[i]);
     }
     free((*pirates).pirates);
     free(pirates);
@@ -274,7 +274,9 @@ void assignCaptains(pirate_list *pirates, FILE *restrict input)
         captain = list_access(pirates, list_index_of(pirates, currentLine));
         underling->captain = captain;
         underling->has_captain = true;
+        
         freadvalue = freadln(currentLine, MAX_LINE_LENGTH, input);
     }
     free(currentLine);
+
 }

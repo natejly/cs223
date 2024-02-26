@@ -1,5 +1,5 @@
 #pragma once
-
+#include <stdio.h>
 /**
  * Header file for skills_list for HookBook B in CPSC 223 SP2024.
  *
@@ -19,5 +19,5 @@ struct node *newNode(char *payload);
 
 void addSkill(struct skills_list *list, char *payload);
 void destroySkillsList(struct skills_list *list);
-void printSkillsList(struct skills_list *list);
+void printSkillsList(struct skills_list *list, FILE *restrict output);
 // TODO: Define and implement an interface for skills_list

@@ -1,7 +1,6 @@
 #include "pirate.h"
 #include "pirate_list.h"
 #include "libhookbook.h"
-#include "skills_list.h"
 #include "main_helpers.h"
 #include <stdbool.h>
 #include <stdio.h>
@@ -110,6 +109,7 @@ int main(int argc, char *argv[])
     }
     list_destroy(pirates);
     fclose(profile);
+    fclose(captain);
 
     /**
      * Your main function must:

@@ -27,7 +27,7 @@ struct pirate_t
     bool has_vessel;
     char *vessel;
     bool has_treasure;
-    int treasure;
+    int *treasure;
     bool has_skills;
     struct skills_list* skills;
     bool has_captain;
