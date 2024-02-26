@@ -167,57 +167,34 @@ const pirate *list_access(const pirate_list *pirates, size_t idx)
     return (*pirates).pirates[idx];
 }
 
-void merge(pirate_list *pirates, int start, int mid, int end) {
-    int left_size = mid - start + 1;
-    int right_size = end - mid;
-    pirate *left[left_size];
-    pirate *right[right_size];
-    for (int i = 0; i < left_size; i++) {
-        left[i] = (*pirates).pirates[start + i];
-    }
-    for (int j = 0; j < right_size; j++) {
-        right[j] = (*pirates).pirates[mid + 1 + j];
-    }
-    int i = 0; 
-    int j = 0;
-    int k = start; 
-    int ordered = 0;
-    while (i < left_size && j < right_size) {
-        ordered = pirates->cmp(left[i], right[j]);
-        if (ordered == 0){
-            ordered = pirate_compare_name(left[i], right[j]);
-        }
-        if (ordered <= 0) {
-            (*pirates).pirates[k] = left[i];
-            i++;
-        } else {
-            (*pirates).pirates[k] = right[j];
-            j++;
-        }
-        k++;
-    }
-    while (i < left_size) {
-        (*pirates).pirates[k] = left[i];
+void qSort(pirate_list *pirates, int left, int right) {
+  if (left < right) {
+    pirate *pivot = pirates->pirates[(left + right) / 2];
+    int i = left;
+    int j = right;
+    while (i <= j) {
+      while (pirates->cmp(pirates->pirates[i], pivot) < 0) {
         i++;
-        k++;
+      }
+      while (pirates->cmp(pirates->pirates[j], pivot) > 0) {
+        j--;
+      }
+      if (i <= j) {
+        pirate *temp = pirates->pirates[i];
+        pirates->pirates[i] = pirates->pirates[j];
+        pirates->pirates[j] = temp;
+        i++;
+        j--;
+      }
     }
-    while (j < right_size) {
-        (*pirates).pirates[k] = right[j];
-        j++;
-        k++;
-    }
+    qSort(pirates, left, j);
+    qSort(pirates, i, right);
+  }
 }
-void msort(pirate_list *pirates, int start, int end) {
-    if (start < end) {
-        int mid = (start + end) / 2;
-        msort(pirates, start, mid);
-        msort(pirates, mid + 1, end);
-        merge(pirates, start, mid, end);
-    }
-}
+
 void list_sort(pirate_list *pirates)
 {
-    msort(pirates, 0, list_length(pirates) - 1);
+    qSort(pirates, 0, list_length(pirates) - 1);
 }
 size_t list_length(const pirate_list *pirates)
 {
