@@ -167,16 +167,16 @@ const pirate *list_access(const pirate_list *pirates, size_t idx)
     return (*pirates).pirates[idx];
 }
 
-void qSort(pirate_list *pirates, int left, int right) {
+void myqSort(pirate_list *pirates, int left, int right) {
   if (left < right) {
     pirate *pivot = pirates->pirates[(left + right) / 2];
     int i = left;
     int j = right;
     while (i <= j) {
-      while (pirates->cmp(pirates->pirates[i], pivot) < 0) {
+      while (i <= j && pirates->cmp(pirates->pirates[i], pivot) < 0) {
         i++;
       }
-      while (pirates->cmp(pirates->pirates[j], pivot) > 0) {
+      while (i <= j && pirates->cmp(pirates->pirates[j], pivot) > 0) {
         j--;
       }
       if (i <= j) {
@@ -187,15 +187,16 @@ void qSort(pirate_list *pirates, int left, int right) {
         j--;
       }
     }
-    qSort(pirates, left, j);
-    qSort(pirates, i, right);
+    myqSort(pirates, left, j);
+    myqSort(pirates, i, right);
   }
 }
 
 void list_sort(pirate_list *pirates)
 {
-    qSort(pirates, 0, list_length(pirates) - 1);
+    myqSort(pirates, 0, list_length(pirates) - 1);
 }
+
 size_t list_length(const pirate_list *pirates)
 {
     return (*pirates).size;
@@ -239,6 +240,7 @@ void list_contract_if_necessary(pirate_list *pirates)
         fprintf(stderr, "Contract to %zu\n", newcap);
     }
 }
+
 void assignCaptains(pirate_list *pirates, FILE *restrict input)
 {
     char *currentLine = malloc(sizeof(char) * MAX_LINE_LENGTH);
@@ -250,8 +252,7 @@ void assignCaptains(pirate_list *pirates, FILE *restrict input)
         freadvalue = freadln(currentLine, MAX_LINE_LENGTH, input);
         captain = list_access(pirates, list_index_of(pirates, currentLine));
         underling->captain = captain;
-        underling->has_captain = true;
-        
+        underling->has_captain = true;  
         freadvalue = freadln(currentLine, MAX_LINE_LENGTH, input);
     }
     free(currentLine);

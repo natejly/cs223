@@ -18,14 +18,12 @@ struct skills_list
 {
     struct node *head;
 };
-
 struct skills_list *createSkillsList()
 {
     struct skills_list *list = malloc(sizeof(struct skills_list));
     list->head = NULL;
     return list;
 }
-
 struct node *newNode(char *payload)
 {
     struct node *temp = malloc(sizeof(struct node));
@@ -70,7 +68,6 @@ void destroySkillsList(struct skills_list *list)
 
     free(list);
 }
-
 void printSkillsList(struct skills_list *list, FILE *restrict output)
 {
     fprintf(output, "    Skills: ");
@@ -92,7 +89,6 @@ void printSkillsList(struct skills_list *list, FILE *restrict output)
         if(first)
         {
             fprintf(output, "%s", curr);
-
         }else{
             fprintf(output, "            %s", curr);
         }
@@ -110,6 +106,5 @@ void printSkillsList(struct skills_list *list, FILE *restrict output)
             temp = temp->nextNode;
         }
                 temp = temp->nextNode;
-
     }
 }

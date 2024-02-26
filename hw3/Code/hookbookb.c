@@ -15,7 +15,6 @@ int main(int argc, char *argv[])
     char *captainFile;
     // Default sort flag
     char *sortFlag = "-n";
-
     // Check if there are enough arguments
     if (argc < 3)
     {
@@ -28,7 +27,6 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Error: Too many arguments\n");
         return 1;
     }
-
     // Make sure 0 or 1 flags are used
     int flagCount = 0;
     // go through the arguments and check if they are sort flags and count them
@@ -80,7 +78,6 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Error: Captain file not found or cannot be opened\n");
         return 1;
     }
-    // testing
 
     compare_fn cmp;
     if(strcmp(sortFlag, "-v")==0){
@@ -90,10 +87,10 @@ int main(int argc, char *argv[])
     } else {
         cmp = pirate_compare_name;
     }
-    
     pirate_list *pirates = list_create_with_cmp(cmp);
     pirate *next_pirate = pirate_read(profile);
     pirate *toremove;
+
     while (next_pirate != NULL)
     {
         toremove = list_insert(pirates, next_pirate, list_length(pirates));
@@ -114,25 +111,6 @@ int main(int argc, char *argv[])
     list_destroy(pirates);
     fclose(profile);
     fclose(captain);
-
-    /**
-     * Your main function must:
-     *  1. Take three command-line arguments: the path to a file containing the
-     *      pirates' profiles, the path to a file containing pirate/captain
-     *      pairs, and the sort order.
-     *  2. Open the profiles file and read from it the list of pirate profiles,
-     *      appearing as specified in the README, and store them in a
-     *      pirate_list*
-     *  3. Open the captains file and read from it the list of pirate/captain
-     *      pairs, appearing as specified in the README
-     *  4. Sort the list in the order defined by the sort-flag command-line
-     *      argument
-     *  5. Print the sorted list to stdout, conforming to the format described
-     *      in the README
-     *  6. Release all resources (files, memory, etc.)
-     */
-
+    return 0;
 }
-// returns true if the flag is a valid sort flag
-// returns false if the flag is not a valid sort flag
-// prints an error message if the flag is not a valid sort flag
+
