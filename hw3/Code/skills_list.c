@@ -4,10 +4,10 @@
  * Author: Nate Ly
  */
 #include <stdlib.h>
-#include "skills_list.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include "skills_list.h"
 struct node
 {
     char *payload;

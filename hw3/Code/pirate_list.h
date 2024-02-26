@@ -8,7 +8,7 @@
  * TO STUDENT: You may add to this file, but do not change anything that is
  *   already here!
  * Modified by: Nate Ly 2/25/2024
- * Changelog: [what you added to this file]
+ * Changelog: added assigncaptains function
  */
 
 #include <stdlib.h>

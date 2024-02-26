@@ -8,7 +8,6 @@
 #include "pirate_list.h"
 #include "pirate.h"
 typedef int (*compare_fn)(const pirate *, const pirate *);
-
 struct pirate_list_instance_t
 {
     pirate **pirates;

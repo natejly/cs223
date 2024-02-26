@@ -27,7 +27,7 @@ char *freadln(char *restrict str, int count, FILE *restrict stream)
         i++;
         c = fgetc(stream);
     }
-
+    //make sure not to skip first char of new line
     if (c != '\n' && c != EOF) {
         ungetc(c, stream);
     }

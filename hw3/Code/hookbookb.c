@@ -1,11 +1,11 @@
-#include "pirate.h"
-#include "pirate_list.h"
-#include "libhookbook.h"
-#include "main_helpers.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "pirate.h"
+#include "pirate_list.h"
+#include "libhookbook.h"
+#include "main_helpers.h"
 
 int main(int argc, char *argv[])
 {

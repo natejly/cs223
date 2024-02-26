@@ -1,11 +1,9 @@
 #pragma once
 /**
  * Header file for main_helpers for HookBook B in CPSC 223 SP2024.
- *
- * Author: Nate Ly
- *
-
- * Modified by: Nate Ly 
+ * 
+ * Created by: Nate Ly 
+ * 
  * Changelog: 2/20/2024 created header file for main_helpers
  */
 /**
