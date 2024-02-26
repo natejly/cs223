@@ -94,10 +94,10 @@ void printSkillsList(struct skills_list *list, FILE *restrict output)
         }
         if(first)
         {
-            fprintf(output, "%s", curr);
+            fprintf(output, "%s ", curr);
 
         }else{
-            fprintf(output, "            %s", curr);
+            fprintf(output, "            %s ", curr);
         }
 
             for (size_t i = 0; i < count-1; i++)
