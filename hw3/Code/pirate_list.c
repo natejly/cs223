@@ -8,7 +8,6 @@
 #include "pirate_list.h"
 #include "pirate.h"
 typedef int (*compare_fn)(const pirate *, const pirate *);
-
 struct pirate_list_instance_t
 {
     pirate **pirates;
@@ -170,41 +169,28 @@ const pirate *list_access(const pirate_list *pirates, size_t idx)
     }
     return pirates->pirates[idx];
 }
-
+int partition(const pirate_list *pirates, int left, int right){
+    pirate *pivot = pirates->pirates[right];
+    int i = left - 1;
+    for (size_t j = left; j < right; j++){
+        if (pirates->cmp(pirates->pirates[j], pivot) < 0){ //<=??
+            i++;
+            pirate *temp = pirates->pirates[i];
+            pirates->pirates[i] = pirates->pirates[j];
+            pirates->pirates[j] = temp;
+        }
+    }
+    pirate *temp = pirates->pirates[i + 1];
+    pirates->pirates[i + 1] = pirates->pirates[right];
+    pirates->pirates[right] = temp;
+    return i + 1;
+}
 void myqSort(pirate_list *pirates, int left, int right)
 {
-    if (left < right)
-    {
-        // set pivot to mid
-        pirate *pivot = pirates->pirates[(left + right) / 2];
-        int i = left;
-        int j = right;
-        // partition the array
-        while (i <= j)
-        {
-            // step through the array from the left to find elements to swap
-            while (i <= j && (pirates->cmp)(pirates->pirates[i], pivot) < 0)
-            {
-                i++;
-            }
-            // step through the array from the right to find elements to swap
-            while (i <= j && (pirates->cmp)(pirates->pirates[j], pivot) > 0)
-            {
-                j--;
-            }
-            if (i <= j)
-            {
-                // swap elements
-                pirate *temp = pirates->pirates[i];
-                pirates->pirates[i] = pirates->pirates[j];
-                pirates->pirates[j] = temp;
-                i++;
-                j--;
-            }
-        }
-        // recurse
-        myqSort(pirates, left, j);
-        myqSort(pirates, i, right);
+    if (left < right){
+        int partitionidx = partition(pirates, left, right);
+        myqSort(pirates, left, partitionidx - 1);
+        myqSort(pirates, partitionidx + 1, right);
     }
 }
 
@@ -270,9 +256,14 @@ void assignCaptains(pirate_list *pirates, FILE *restrict input)
     while (freadvalue != NULL)
     {
         // assign captains to pirates
-        underling = list_access(pirates, list_index_of(pirates, currentLine));
+        int underlingidx = list_index_of(pirates, currentLine);
+        int captainidx = list_index_of(pirates, currentLine);
+        if(underlingidx >= list_length(pirates) || captainidx >= list_length(pirates)){
+            break;
+        }
+        underling = list_access(pirates, underlingidx);
         freadvalue = freadln(currentLine, MAX_LINE_LENGTH, input);
-        captain = list_access(pirates, list_index_of(pirates, currentLine));
+        captain = list_access(pirates, captainidx);
         underling->captain = captain;
         underling->has_captain = true;
         freadvalue = freadln(currentLine, MAX_LINE_LENGTH, input);

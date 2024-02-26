@@ -1,40 +1,121 @@
-#include <stdio.h>
-#include <assert.h>
-#include <string.h>
-#include "pirate_list.h"
 #include "pirate.h"
+#include "pirate_list.h"
+#include "libhookbook.h"
+#include "main_helpers.h"
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-int compare_pirates_by_name(const pirate *a, const pirate *b) {
-    return strcmp(a->name, b->name);
-}
+int main(int argc, char *argv[])
+{
+    // Declare variables
+    char *profileFile;
+    char *captainFile;
+    // Default sort flag
+    char *sortFlag = "-n";
+    // Check if there are enough arguments
+    if (argc < 3)
+    {
+        fprintf(stderr, "Error: Not enough arguments\n");
+        return 1;
+    }
+    // Check if there are too many arguments
+    if (argc > 4)
+    {
+        fprintf(stderr, "Error: Too many arguments\n");
+        return 1;
+    }
+    // Make sure 0 or 1 flags are used
+    int flagCount = 0;
+    // go through the arguments and check if they are sort flags and count them
+    for (size_t i = 1; i < argc; i++)
+    {
+        if (isSortFlag(argv[i]) == 1)
+        {
+            flagCount++;
+        }
+        else if (isSortFlag(argv[i]) == 2) // if invalid sort flag, print error message and return 1
+        {
+            fprintf(stderr, "Error: Invalid sort flag %s\n", argv[i]);
+            return 1;
+        }
+    }
+    // too many flags
+    if (flagCount > 1)
+    {
+        fprintf(stderr, "Error: Too many flags\n");
+        return 1;
+    }
+    // no flags and more than 2 file names
+    if (flagCount == 0 && argc == 4)
+    {
+        fprintf(stderr, "Error: Too many filenames\n");
+        return 1;
+    }
+    // If there are no flags, the first two arguments are file names
+    if (flagCount == 0 && argc == 3)
+    {
+        profileFile = argv[1];
+        captainFile = argv[2];
+    }
+    // give files and sort flag to the variables
+    assignInputs(argc, argv, &profileFile, &captainFile, &sortFlag);
 
-void test_pirate_sort() {
-    pirate_list *plist = list_create_with_cmp(pirate_compare_name);
-    assert(plist != NULL);
+    // Open the files
+    FILE *profile = fopen(profileFile, "r");
+    FILE *captain = fopen(captainFile, "r");
 
-    pirate *p1 = pirate_create("b");
-    pirate *p2 = pirate_create("a");
-    pirate *p3 = pirate_create("c");
-
-    list_insert(plist, p1, list_length(plist));
-    list_insert(plist, p2, list_length(plist));
-    list_insert(plist, p3, list_length(plist));
-
-    list_sort(plist);
-
-    assert(list_access(plist, 0) == p2);
-    assert(list_access(plist, 1) == p1);
-    assert(list_access(plist, 2) == p3);
-
-
-
-    list_destroy(plist);
-
-    printf("test_pirate_sort passed\n");
-}
-
-int main() {
-    test_pirate_sort();
+    // Check if the files are openable and readable
+    if (profile == NULL)
+    {
+        fprintf(stderr, "Error: Profile file not found or cannot be opened\n");
+        return 1;
+    }
+    if (captain == NULL)
+    {
+        fprintf(stderr, "Error: Captain file not found or cannot be opened\n");
+        return 1;
+    }
+    // initialize the compare function
+    compare_fn cmp;
+    if (strcmp(sortFlag, "-v") == 0)
+    {
+        cmp = pirate_compare_vessel;
+    }
+    else if (strcmp(sortFlag, "-t") == 0)
+    {
+        cmp = pirate_compare_treasure;
+    }
+    else
+    {
+        cmp = pirate_compare_name;
+    }
+    // create list of pirates
+    pirate_list *pirates = list_create_with_cmp(cmp);
+    pirate *next_pirate = pirate_read(profile);
+    // create pirate to be removed if can't be inserted
+    pirate *toremove;
+    while (next_pirate != NULL)
+    {
+        // insert pirates into the list
+        toremove = list_insert(pirates, next_pirate, list_length(pirates));
+        if (toremove != NULL)
+        {
+            // free pirate if not inserted
+            pirate_destroy(toremove);
+        }
+        next_pirate = pirate_read(profile);
+    }
+    free(next_pirate);
+    list_sort(pirates);
+    assignCaptains(pirates, captain);
+    for (size_t i = 0; i < list_length(pirates); i++)
+    {
+        pirate_print(list_access(pirates, i), stdout);
+    }
+    list_destroy(pirates);
+    fclose(profile);
+    fclose(captain);
     return 0;
 }
-//gcc -o test test.c pirate.c pirate_list.c skills_list.c libhookbook.c -Wall -std=c99

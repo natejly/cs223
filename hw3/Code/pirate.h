@@ -18,7 +18,8 @@
  */
 typedef struct pirate_t pirate;
 struct pirate_t
-{   
+{       
+    bool has_name;
     char *name;
     bool has_rank;
     char *rank;

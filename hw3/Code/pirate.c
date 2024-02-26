@@ -93,7 +93,13 @@ void pirate_print(const pirate *p, FILE *restrict output)
     fprintf(output, "%s\n", p->name);
     if (p->has_captain)
     {
-        fprintf(output, "    Captain: %s (%s)\n", p->captain->name, p->captain->vessel);
+        if(p->captain->has_vessel){
+            fprintf(output, "    Captain: %s (%s)\n", p->captain->name, p->captain->vessel);
+
+        }else{
+            fprintf(output, "    Captain: %s\n", p->captain->name);
+        }
+
     }
     if (p->has_rank)
     {
