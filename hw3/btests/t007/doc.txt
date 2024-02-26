@@ -1,1 +1,0 @@
-"chase" 90 times, "Chase" 10 times, unsorted order 

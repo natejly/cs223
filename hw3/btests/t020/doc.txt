@@ -1,1 +1,0 @@
-Repeated 'a' strings of various lengths, YES duplicates

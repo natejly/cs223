@@ -1,6 +1,0 @@
-Expand to 50
-Expand to 100
-Expand to 200
-Expand to 400
-Expand to 800
-Expand to 1600
