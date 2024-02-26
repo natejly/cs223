@@ -8,6 +8,7 @@
 #include "pirate_list.h"
 #include "pirate.h"
 typedef int (*compare_fn)(const pirate *, const pirate *);
+
 struct pirate_list_instance_t
 {
     pirate **pirates;
@@ -256,14 +257,9 @@ void assignCaptains(pirate_list *pirates, FILE *restrict input)
     while (freadvalue != NULL)
     {
         // assign captains to pirates
-        int underlingidx = list_index_of(pirates, currentLine);
-        int captainidx = list_index_of(pirates, currentLine);
-        if(underlingidx >= list_length(pirates) || captainidx >= list_length(pirates)){
-            break;
-        }
-        underling = list_access(pirates, underlingidx);
+        underling = list_access(pirates, list_index_of(pirates, currentLine));
         freadvalue = freadln(currentLine, MAX_LINE_LENGTH, input);
-        captain = list_access(pirates, captainidx);
+        captain = list_access(pirates, list_index_of(pirates, currentLine));
         underling->captain = captain;
         underling->has_captain = true;
         freadvalue = freadln(currentLine, MAX_LINE_LENGTH, input);

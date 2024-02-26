@@ -10,8 +10,6 @@ Hookbook : hookbookb.o libhookbook.o pirate_list.o pirate.o main_helpers.o skill
 test : test.o libhookbook.o pirate_list.o pirate.o main_helpers.o skills_list.o main_helpers.o
 	gcc -o test test.c pirate.c pirate_list.c skills_list.c main_helpers.c libhookbook.c -Wall -std=c99
 
-# TODO: You must complete this rule to compile Hookbook, including 
-#   dependencies
 
 clean :
 	$(RM) Hookbook

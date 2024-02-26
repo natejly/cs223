@@ -1,11 +1,22 @@
-asdfghsdfgsdf 
-p:port royal1
+jack sparrow
+r:captain
+v:the black pearl
+p:tortuga
+t:12
 
-nabwegwgwegme2
+william turner
 p:port royal
+s:smithing
+s:smithing
+s:fencing
+s:fencing
+s:fencing
+s:fencing
 
-d
+elizabeth swan
+r:queen
+t:367
+v:the flying dutchman
 p:port royal
-
-h
-p:port royal
+s:leadership
+s:subterfuge
