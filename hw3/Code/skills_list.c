@@ -61,6 +61,7 @@ void destroySkillsList(struct skills_list *list)
     struct node *next;
     while (current)
     {
+        //walk and destroy
         next = current->nextNode;
         free(current->payload);
         free(current);
@@ -107,6 +108,7 @@ void printSkillsList(struct skills_list *list, FILE *restrict output)
         fprintf(output, "\n");
         while (temp->nextNode && strcmp(temp->nextNode->payload, curr) == 0)
         {
+            //skipping repeated skills so they're only printed once
             temp = temp->nextNode;
         }
         temp = temp->nextNode;

@@ -1,3 +1,6 @@
+/**
+ * Driver file for hookbook pset
+*/
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,11 +21,9 @@ int main(int argc, char *argv[])
     if (assignInputs(argc, argv, &profileFile, &captainFile, &sortFlag)==1){
         return 1;
     }
-
     // Open the files
     FILE *profile = fopen(profileFile, "r");
     FILE *captain = fopen(captainFile, "r");
-
     // Check if the files are openable and readable
     if (profile == NULL)
     {

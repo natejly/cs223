@@ -5,6 +5,7 @@
  * Created by: Nate Ly 
  * 
  * Changelog: 2/20/2024 created header file for main_helpers
+ * 2/26/2024 put code from main function in 
  */
 /**
  * takes in a string and checks if it is a valid sort flag according to the readme

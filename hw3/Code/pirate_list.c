@@ -80,9 +80,11 @@ pirate_list *list_create()
     {
         return NULL;
     }
+    // initialize list and struct members
     list->size = 0;
     list->capacity = INITIAL_CAPACITY;
     list->pirates = malloc(list->capacity * sizeof(pirate *));
+    // default compare
     list->cmp = pirate_compare_name;
     return list;
 }
@@ -104,6 +106,7 @@ pirate_list *list_create_with_cmp(compare_fn cmp)
 
 size_t list_index_of(const pirate_list *pirates, const char *name)
 {
+    // walk through pirates to find matching one
     for (size_t i = 0; i < pirates->size; i++)
     {
         if (strcmp((pirates->pirates[i])->name, name) == 0)
@@ -119,6 +122,7 @@ pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
 {
     if (idx > pirates->size)
     {
+        // insert at end 
         idx = pirates->size;
     }
     size_t index = list_index_of(pirates, p->name);
@@ -148,6 +152,7 @@ pirate *list_remove(pirate_list *pirates, const char *name)
     size_t index = list_index_of(pirates, name);
     if (index >= pirates->size)
     {
+        // return nothing if not in list
         return NULL;
     }
     pirate *toremove = pirates->pirates[index];
@@ -159,6 +164,7 @@ pirate *list_remove(pirate_list *pirates, const char *name)
     }
     list_contract_if_necessary(pirates);
     pirates->size--;
+    //return pointer so we can free later
     return toremove;
 }
 
@@ -170,11 +176,12 @@ const pirate *list_access(const pirate_list *pirates, size_t idx)
     }
     return pirates->pirates[idx];
 }
+// generic partition function
 int partition(const pirate_list *pirates, int left, int right){
     pirate *pivot = pirates->pirates[right];
     int i = left - 1;
     for (size_t j = left; j < right; j++){
-        if (pirates->cmp(pirates->pirates[j], pivot) < 0){ //<=??
+        if (pirates->cmp(pirates->pirates[j], pivot) < 0){ 
             i++;
             pirate *temp = pirates->pirates[i];
             pirates->pirates[i] = pirates->pirates[j];
@@ -186,9 +193,11 @@ int partition(const pirate_list *pirates, int left, int right){
     pirates->pirates[right] = temp;
     return i + 1;
 }
+// generic quicksort
 void myqSort(pirate_list *pirates, int left, int right)
 {
     if (left < right){
+        //recurse here
         int partitionidx = partition(pirates, left, right);
         myqSort(pirates, left, partitionidx - 1);
         myqSort(pirates, partitionidx + 1, right);

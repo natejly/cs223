@@ -1,3 +1,6 @@
+/**
+ * Implementation file for main_helpers.h
+*/
 #include <string.h>
 #include <stdio.h>
 #include "pirate_list.h"

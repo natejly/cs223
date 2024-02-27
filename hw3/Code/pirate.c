@@ -168,7 +168,7 @@ int pirate_compare_treasure(const pirate *a, const pirate *b)
 
 void pirate_destroy(pirate *p)
 {
-
+    //freeing all atributes iff they exist
         free(p->name);
 
     if (p->has_rank)

@@ -25,8 +25,6 @@
  */
 typedef int (*compare_fn)(const pirate *, const pirate *);
 
-
-
 /**
  * Reads the next line of input from stream, discarding the trailing newline
  *  character if there is one, and stores the line in the array pointed to by

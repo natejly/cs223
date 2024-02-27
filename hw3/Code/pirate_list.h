@@ -12,7 +12,6 @@
  */
 
 #include <stdlib.h>
-
 #include "pirate.h"
 #include "libhookbook.h"
 
@@ -106,6 +105,15 @@ pirate *list_remove(pirate_list *pirates, const char *name);
  * @assumes pirates is not NULL
  */
 const pirate *list_access(const pirate_list *pirates, size_t idx);
+
+/**
+ * returns an index to base partition off for quicksort
+ * @param pirates the list to partition
+ * @param left the left index
+ * @param right the right index
+*/
+int partition(const pirate_list *pirates, int left, int right);
+
 /**
  * Generic quicksort to sort the list of pirates 
  * @param pirates the list to sort
@@ -114,6 +122,7 @@ const pirate *list_access(const pirate_list *pirates, size_t idx);
  * @return void
 */
 void myQsort(pirate_list *pirates, int left, int right);
+
 /**
  * Sort the list of pirates in the order defined by the comparison function
  *  for pirates, as previously set by list_set_cmp(pirates).
@@ -135,6 +144,7 @@ void list_sort(pirate_list *pirates);
  * @assumes pirates is not NULL
  */
 size_t list_length(const pirate_list *pirates);
+
 /**
  * Reads in the captains file and assigns the captains to the pirates in the list
  * based on the pairs of names in the file.
@@ -143,6 +153,7 @@ size_t list_length(const pirate_list *pirates);
  * 
 */
 void assignCaptains(pirate_list *pirates, FILE *restrict input);
+
 /**
  * Free all memory owned by the list, including the pirates in the list.
  *

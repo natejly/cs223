@@ -5,7 +5,6 @@
  *
  * Author: Nate Ly
  */
-
 #include "libhookbook.h"
 
 char *freadln(char *restrict str, int count, FILE *restrict stream)
