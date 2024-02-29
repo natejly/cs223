@@ -59,6 +59,7 @@
   "files.associations": {
     "*.rmd": "rmarkdown",
     "*.Rmd": "rmd",
-    "numbers": "c"
+    "numbers": "c",
+    "pirate_list.h": "c"
   }
 }
