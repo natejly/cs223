@@ -1,0 +1,38 @@
+#!/usr/bin/perl
+#
+#      makewarn [program]+
+#
+#  Check for warning messages when making the specified program(s) with the
+#  -std=c17 -pedantic -Wall -Werror flags, or for an attempt to circumvent the check.
+$ME = "makewarn";
+
+$| = 1;    # Force immediate write
+
+print "***** Checking for warning messages *****\n";
+print "Making @ARGV\n";
+
+# $ENV{PATH} = "/c/cs323/bin/Wall:$ENV{PATH}";    # Add /c/cs323/bin/Wall to PATH
+$CFLAGS = "-std=c17 -pedantic -Wall -Werror";    # Flags added by Wall/gcc
+$MAKE   = "hash gcc cc ; make";                  # How to invoke make using Wall
+
+$CORRECTED = "Makefile.CORRECTED";    # Name of corrected makefile
+if ( -r $CORRECTED ) {                #  to use if it exists
+    $MAKE = "$MAKE -f $CORRECTED";
+    print("$ME: using corrected Makefile\n");
+}
+
+@rpt    = `$MAKE @ARGV 2>&1`;         # Make the program(s)
+$status = $?;
+print @rpt;                           # Print output from make
+
+$nWarn = grep ( m{warning:}, @rpt );  # Flag existence of warnings
+if ( $nWarn > 0 ) {
+    print("$ME: warning messages from $CFLAGS\n");
+}
+
+@rpt = `grep -E "/gcc|/cc" [Mm]akefile`;    # Flag circumvention of Wall
+if ( @rpt > 0 ) {
+    print("$ME: possible circumvention of $CFLAGS\n");
+}
+
+exit( $status != 0 );

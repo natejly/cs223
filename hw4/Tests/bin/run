@@ -1,0 +1,219 @@
+#!/usr/bin/perl
+#
+   $usage = "run [ -cpu=N | -wall=N | -fsize=N[km] | -dsize=N[km]      \n"
+	   ."    | -stdout[=FILE] | -stderr[=FILE] | -cd=DIR | -newpg  \n"
+	   ."    | NAME=VALUE | -unsetenv=NAME | -verbose ]* cmd arguments*";
+#
+#  Execute the command CMD.  Write a message to stdout and stderr if CMD
+#  terminates with a SIGBUS, SIGSEGV, SIGXCPU, SIGXFSZ, or SIGINT signal.
+#  Return the low-order bits of the termination status, which contain the
+#  number of the signal (if any) that caused the program to stop.  Return
+#  SIGKILL if unexpected problems.
+#
+#  Options:
+#    -cpu=N          Limit cpu-time to N seconds
+#    -wall=N         Limit wall-clock time to N seconds
+#    -fsize=N[km]    Limit file size to N [kilo/mega]bytes (default k)
+#    -dsize=N[km]    Limit data size to N [kilo/mega]bytes (default k)
+#    -desc=N         Limit #file descriptors
+#    -stdout[=FILE]  Redirect stdout to FILE (default /dev/null)
+#    -stderr[=FILE]  Redirect stderr to FILE (default /dev/null)
+#    -cd=DIR         cd to DIR before executing
+#    -newpg          Create new process group
+#    NAME=VALUE      Set environment variable NAME to VALUE before executing
+#    -unsetenv=NAME  Undefine environment variable NAME before executing
+#    -verbose        Echo command being executed
+#
+#  Note: -stderr=-stdout redirects stderr to wherever stdout has been
+#    redirected, but -stdout=-stderr redirects stdout to original stderr
+
+my %Signo;                                      # Map signal name to number
+my @Signame;                                    # Map signal number to name
+my %Sigmsg;                                     # Map signal name to message
+&initSignals;                                   # Initialize signal maps
+
+while ($arg = shift @ARGV) {
+   if ($arg =~ /^-cpu=(\d+)$/) {                # -cpu=N
+      $cpu = $1;
+
+   } elsif ($arg =~ /^-wall=(\d+)$/) {          # -wall=N
+      $wall = $1;
+
+   } elsif ($arg =~ /^-fsize=(\d+)m$/) {        # -fsize=Nm
+      $fsize = $1 * 1024*1024;
+
+   } elsif ($arg =~ /^-fsize=(\d+)k?$/) {       # -fsize=Nk or -fsize=N
+      $fsize = $1 * 1024;
+
+   } elsif ($arg =~ /^-dsize=(\d+)m$/) {        # -dsize=Nm
+      $dsize = $1 * 1024*1024;
+
+   } elsif ($arg =~ /^-dsize=(\d+)k?$/) {       # -dsize=Nk or -dsize=N
+      $dsize = $1 * 1024;
+
+   } elsif ($arg =~ /^-desc=(\d+)$/) {          # -desc=N
+      $desc = $1;
+
+   } elsif ($arg =~ /^-stdout=(.+)$/) {         # -stdout=[FILE|-stderr]
+      $stdout = $1;
+      $stdout = "&STDERR"
+	 if ($1 eq "-stderr");
+
+   } elsif ($arg eq "-stdout") {                # -stdout
+      $stdout = "/dev/null";
+
+   } elsif ($arg =~ /^-stderr=(.+)$/) {         # -stderr=[FILE|-stdout]
+      $stderr = $1;
+      $stderr = "&STDOUT"
+	 if ($1 eq "-stdout");
+
+   } elsif ($arg eq "-stderr") {                # -stderr
+      $stderr = "/dev/null";
+
+   } elsif ($arg eq "-newpg") {                 # -newpg
+      setpgrp (0, $$);
+
+   } elsif ($arg =~ /^-cd=(.+)$/) {             # -cd=DIR
+      $directory = $1;
+
+   } elsif ($arg =~ /^(\w+)=(.*)$/) {           # NAME=VALUE
+      $ENV{$1} = $2;
+
+   } elsif ($arg =~ /^-unsetenv=(\w+)$/) {      # -unsetenv=NAME
+      delete $ENV{$1};
+
+   } elsif ($arg eq "-verbose") {               # -verbose
+      $verbose++;
+
+   } else {
+      unshift @ARGV, $arg;
+      last;
+   }
+}
+
+if (@ARGV == 0) {                               # No command to execute
+   print STDERR  "$usage\n";
+   kill ($Signo{'KILL'}, $$);
+}
+
+$| = 1;                                         # Always flush stdout
+print STDOUT "@ARGV\n"                          # Echo command
+   if (defined $verbose);
+
+$SIG{'HUP'} = $SIG{'INT'} = $SIG{'QUIT'}        # Ignore signals
+	    = $SIG{'TERM'} = 'IGNORE';
+
+if (! defined ($pid = fork)) {                  # Create child process
+   print STDERR "run: fork failed\n";
+   kill ($Signo{'KILL'}, $$);
+}
+
+if ($pid == 0) {                                # Child process
+   $SIG{'HUP'} = $SIG{'INT'} = $SIG{'QUIT'}     #   Allow signals
+	       = $SIG{'TERM'} = 'DEFAULT';
+   if (defined $cpu) {                          #   Limit cpu-time
+      &limitCpuTime ($cpu);
+   }
+   if (defined $wall) {                         #   Limit wall-clock time
+      &limitWallClock ($wall);
+   }
+   if (defined $fsize) {                        #   Limit file size
+      &limitFileSize ($fsize);
+   }
+   if (defined $dsize) {                        #   Limit data size
+      &limitHeapSize ($dsize);
+   }
+   if (defined $desc) {                         #   Limit #descriptors
+      &limitDescriptors ($desc);
+   }
+   if (defined $stdout) {                       #   Redirect stdout
+      close (STDOUT);
+      open (STDOUT, ">$stdout");
+   }
+   if (defined $stderr) {                       #   Redirect stderr
+      close (STDERR);
+      open (STDERR, ">$stderr");
+   }
+   if (defined $directory) {                    #   Move to $directory
+      chomp ($cwd = `pwd`);                     #     Make relative command
+      $ARGV[0] =~ s{^([^/])}{$cwd/$1};          #       name absolute
+      chdir ($directory);
+   }
+   if (! -x $ARGV[0]) {
+      print STDERR "run: $ARGV[0] not executable\n";
+      kill ($Signo{'KILL'}, $$);
+   }
+   exec @ARGV;                                  #   Execute command
+   print STDERR "run: exec '@ARGV' failed\n";
+   kill ($Signo{'KILL'}, $$);
+}
+
+waitpid ($pid, 0);                              # Wait for child to die
+$signal = $? & 127;                             # ... & report exit status
+$status = $? >> 8;
+
+exit $status                                    # Normal termination
+   if ($signal == 0);
+
+$msg = $Sigmsg{$Signame[$signal]};              # Get message for signal
+$msg = "signal SIG$Signame[$signal] = $signal"
+   if (! defined $msg);
+						    
+print STDOUT "run '@ARGV': $msg\n";             # Pollute stdout and
+print STDERR "run '@ARGV': $msg\n";             # ... and stderr as well
+kill ($signal, $$);                             # Die with same exit signal
+
+
+##########
+# Initialize %Signo, @Signame, and %Sigmsg
+use Config;
+sub initSignals {
+   my ($name, $i);
+
+   foreach $name (split (' ', $Config{sig_name})) {
+      $Signo{$name} = $i;
+      $Signame[$i] = $name;
+      $i++;
+   }
+
+   $Sigmsg{'ABRT'} = "abort";
+   $Sigmsg{'ALRM'} = "wallclock limit exceeded";
+   $Sigmsg{'BUS'}  = "bus error";
+   $Sigmsg{'FPE'}  = "floating exception";
+   $Sigmsg{'ILL'}  = "illegal instruction";
+   $Sigmsg{'PIPE'} = "broken pipe";
+   $Sigmsg{'SEGV'} = "segmentation fault";
+   $Sigmsg{'XCPU'} = "cputime limit exceeded";
+   $Sigmsg{'XFSZ'} = "filesize limit exceeded";
+   $Sigmsg{'KILL'} = "killed";
+}
+
+
+##########
+# Limit CPU-time, wall-clock-time, file-size, and/or heap-size
+use BSD::Resource;
+
+sub limitCpuTime { # (time in seconds)
+   my ($cpu) = @_;
+   setrlimit (RLIMIT_CPU, $cpu, $cpu+1);
+}
+
+sub limitWallClock { # (time in seconds)
+   my ($wall) = @_;
+   alarm ($wall);
+}
+
+sub limitFileSize { # (size in bytes)
+   my ($size) = @_;
+   setrlimit (RLIMIT_FSIZE, $size, $size);
+}
+
+sub limitHeapSize { # (size in bytes)
+   my ($size) = @_;
+   setrlimit (RLIMIT_AS, $size, $size);
+}
+
+sub limitDescriptors { # (#descriptors)
+   my ($desc) = @_;
+   setrlimit (RLIMIT_NOFILE, $desc, $desc);
+}

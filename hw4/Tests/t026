@@ -1,0 +1,35 @@
+#!/bin/bash
+# gmap_get expected time
+
+trap "/usr/bin/killall -q -u $USER ./GmapUnit 2>/dev/null" 0 1 2 3 9 15
+trap "/bin/rm -f $STDERR" 0 1 2 3 9 15
+if [ ! -x ./GmapUnit ]; then
+  echo './GmapUnit is missing or not executable'
+  echo './GmapUnit is missing or not executable' 1>&2
+  exit 1
+fi
+
+if [ -e i_count.txt ]; then
+  rm i_count.txt
+fi
+
+if compgen -G "cachegrind.out.\*" >/dev/null; then
+  rm cachegrind.out.*
+fi
+
+for N in 1000 5000 25000; do
+  for ON in 0 1; do
+    $BIN/run -stdout=stdout.out -stderr=/dev/null /usr/bin/valgrind --tool=cachegrind --trace-children=yes --log-file=valgrind.out ./GmapUnit 18 $N $ON </dev/null
+    COMPLETE=$(grep "I \+refs" valgrind.out)
+    if [ "$COMPLETE" == "" ]; then
+      echo "FAIL: test did not complete"
+      exit
+    fi
+
+    tail -q -n 1 cachegrind.out.* | cut -d' ' -f 2 | sed "s/,//g" | paste -sd+ | bc >>i_count.txt
+    rm cachegrind.out.*
+  done
+done
+cat stdout.out
+$BIN/big_oh.py -message t026 -linear 3000 1000 5000 25000 <i_count.txt
+rm i_count.txt

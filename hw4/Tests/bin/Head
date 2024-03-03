@@ -1,0 +1,33 @@
+#!/usr/bin/perl
+#
+#    Head [-h HEIGHT] [-w WIDTH] [file]*
+#
+# Copy up to HEIGHT lines (default 10) from files specified (or stdin if none)
+# to stdout, truncating lines at WIDTH characters (default 160) and appending
+# newlines as needed.
+
+$height = 10;
+$height = $ENV{"HEAD_HEIGHT"}
+   if (exists $ENV{"HEAD_HEIGHT"});
+
+$width = 160;
+$height = $ENV{"HEAD_WIDTH"}
+   if (exists $ENV{"HEAD_WIDTH"});
+
+while (@ARGV) {
+   if ($ARGV[0] eq "-h") {
+       $height = $ARGV[1];
+       shift; shift;
+   } elsif ($ARGV[0] eq "-w") {
+       $width = $ARGV[1];
+       shift; shift;
+   } else {
+       last;
+   }
+}
+
+for ($i = 0; $i < $height && ($line = <>); $i++) {
+   chomp ($line);
+   $line = substr ($line, 0, $width);
+   print "$line\n";
+}

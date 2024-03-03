@@ -1,0 +1,12 @@
+#!/bin/bash
+# gmap_remove nonexistent key
+
+trap "/usr/bin/killall -q -u $USER ./GmapUnit 2>/dev/null" 0 1 2 3 9 15
+trap "/bin/rm -f $STDERR" 0 1 2 3 9 15
+if [ ! -x ./GmapUnit ]; then
+  echo './GmapUnit is missing or not executable'
+  echo './GmapUnit is missing or not executable' 1>&2
+  exit 1
+fi
+
+$BIN/run -stderr=/dev/null ./GmapUnit 10 </dev/null
