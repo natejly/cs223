@@ -81,6 +81,7 @@
     "stdlib.h": "c",
     "typeinfo": "c",
     "chrono": "c",
-    "stdbool.h": "c"
+    "stdbool.h": "c",
+    "entry.h": "c"
   }
 }
