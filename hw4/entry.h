@@ -7,7 +7,7 @@ typedef struct entry
 {
   char *id;
   int *distribution;
-  entry *next;
+  struct entry *next;
 } entry;
 
 /**

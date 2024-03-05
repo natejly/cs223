@@ -142,16 +142,16 @@ const void **gmap_keys(gmap *m){
 }
 
 void gmap_destroy(gmap *m){
-    for(size_t i = 0; i < m->capacity; i++){
-        if(m->table[i].id){
-            m->free(m->table[i].id);
-            m->free(m->table[i].distribution);
-        }
-    }
-    free(m->table);
-    free(m->capacity);
-    free(m->hash);
-    free(m->compare);
-    free(m->copy);
-    free(m);
+    // for(size_t i = 0; i < m->capacity; i++){
+    //     if(m->table[i].id){
+    //         m->free(m->table[i].id);
+    //         m->free(m->table[i].distribution);
+    //     }
+    // }
+    // // free(m->table);
+    // // free(m->capacity);
+    // // free(m->hash);
+    // // free(m->compare);
+    // // free(m->copy);
+    // // m->free(m);
 }
