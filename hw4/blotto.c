@@ -16,8 +16,7 @@ int main(int argc, char *argv[])
     int *battlefields = malloc(num_battles * sizeof(int));
 
     entry current_entry = entry_read(stdin, MAX_ID, num_battles);
-    //print currenty entry attributes
-
+    
     return 0;
 
 }

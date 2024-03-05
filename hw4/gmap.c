@@ -27,7 +27,7 @@ struct _gmap
     void *(*copy)(const void *);
     void (*free)(void *);
 };
-//might want to use load factor
+//might want to use load factor 
 void gmap_embiggen(gmap *m){
     if(m->size >= m->capacity){
         size_t newcap = m->capacity * 2;
@@ -56,20 +56,28 @@ gmap *gmap_create(void *(*cp)(const void *), int (*comp)(const void *, const voi
         return NULL;
     }
     gmap *m = malloc(sizeof(gmap));
-    if(m == NULL){
-        return NULL;
+    if (m != NULL)
+    {
+        // remember the functions used to manipulate the keys
+        m->copy = cp;
+        m->compare = comp;
+        m->hash = h;
+        m->free = f;
+
+        // initialize the table
+        m->table = malloc(sizeof(entry) * GMAP_INITIAL_CAPACITY);
+        m->capacity = (m->table != NULL ? GMAP_INITIAL_CAPACITY : 0);
+        m->size = 0;
     }
-    m->table = malloc(sizeof(entry) * GMAP_INITIAL_CAPACITY);
-    m->capacity = GMAP_INITIAL_CAPACITY;
-    m->size = 0;
-    m->hash = h;
-    m->compare = comp;
-    m->copy = cp;
-    m->free = f;
     return m;
 }
 
 size_t gmap_size(const gmap *m){
+        if (m == NULL)
+    {
+        return 0;
+    }
+
     return m->size;
 }
 
@@ -106,21 +114,34 @@ void *gmap_put(gmap *m, const void *key, void *value){
 }
 
 void *gmap_remove(gmap *m, const void *key){
-    size_t index = m->hash(key) % m->capacity;
-    entry *bucket = &m->table[index];
-    while(bucket->id && m->compare(bucket->id, key) != 0){
-        bucket = bucket->next;
+size_t index = m->hash(key) % m->capacity;
+entry *bucket = &m->table[index];
+entry *prev = NULL; 
+if(bucket->id == NULL){
+    return NULL;
+}
+while(bucket && bucket->id && m->compare(bucket->id, key) != 0){
+    prev = bucket;
+    bucket = bucket->next;
+}
+if(bucket == NULL || bucket->id == NULL){
+    return NULL;
+}  
+    void *toremove = bucket->distribution;
+    if (prev){
+        prev->next = bucket->next;
     }
-    if(bucket->id == NULL){
-        return NULL;
-    } else {
-        void *toremove = bucket->distribution;
-        bucket->id = NULL;
-        bucket->distribution = NULL;
-        m->size--;
-        gmap_emsmallen(m);
-        return toremove;
+    else{
+        //first element
+        m->table[index] = *bucket->next; 
     }
+    free(bucket->id);
+    free(bucket->distribution);
+    free(bucket);
+    m->size--;
+    gmap_emsmallen(m);
+    return toremove;
+
     
 }
 
@@ -153,7 +174,7 @@ void gmap_for_each(gmap *m, void (*f)(const void *, void *, void *), void *arg){
         entry *bucket = &m->table[i];
         while(bucket->id){
             f(bucket->id, bucket->distribution, arg);
-            bucket->id = bucket->next;
+            bucket = bucket->next;
         }
     }
     
@@ -169,6 +190,7 @@ const void **gmap_keys(gmap *m){
             keys_index++;
         }
     }
+    return keys;
 }
 
 void gmap_destroy(gmap *m){
