@@ -76,24 +76,44 @@ size_t gmap_size(const gmap *m){
 void *gmap_put(gmap *m, const void *key, void *value){
     size_t index = m->hash(key) % m->capacity;
     entry *bucket = &m->table[index];
-    //if key is already in the map
-    if(bucket->id && m->compare(bucket->id, key) == 0){
-        void *old_value = bucket->distribution;
+    //bucket is empty
+    if(bucket->id == NULL){
+        bucket->id = m->copy(key);
         bucket->distribution = value;
-        return old_value;
+        bucket->next = NULL;
+        m->size++;
+        gmap_embiggen(m);
+        return NULL;
     }
-     //if key is not in the map then we add
-    gmap_embiggen(m);
-    m->table[index].id = m->copy(key);
-    m->table[index].distribution = value;
+    //else go through linked list and check for duplicates
+    entry *current = bucket;
+    while(current){
+        if(m->compare(current->id, key) == 0){
+            void *to_remove = current->distribution;
+            current->distribution = value;
+            return to_remove;
+        }
+        current = current->next;
+    }
+    //no duplicates found so add to end of list 
+    current->next = malloc(sizeof(entry));
+    current->next->id = m->copy(key);
+    current->next->distribution = value;
+    current->next->next = NULL;
     m->size++;
+    gmap_embiggen(m);
     return NULL;
 }
 
 void *gmap_remove(gmap *m, const void *key){
     size_t index = m->hash(key) % m->capacity;
     entry *bucket = &m->table[index];
-    if(bucket->id && m->compare(bucket->id, key) == 0){
+    while(bucket->id && m->compare(bucket->id, key) != 0){
+        bucket = bucket->next;
+    }
+    if(bucket->id == NULL){
+        return NULL;
+    } else {
         void *toremove = bucket->distribution;
         bucket->id = NULL;
         bucket->distribution = NULL;
@@ -101,29 +121,39 @@ void *gmap_remove(gmap *m, const void *key){
         gmap_emsmallen(m);
         return toremove;
     }
+    
 }
 
 bool gmap_contains_key(const gmap *m, const void *key){
     size_t index = m->hash(key) % m->capacity;
     entry *bucket = &m->table[index];
-    if(m->compare(bucket->id, key) == 0){
-        return true;
+    while(bucket->id && m->compare(bucket->id, key) != 0){
+        bucket = bucket->next;
     }
+    return bucket->distribution != NULL;
 
 }
 
 void *gmap_get(gmap *m, const void *key){
     size_t index = m->hash(key) % m->capacity;
     entry *bucket = &m->table[index];
-    if(m->compare(bucket->id, key) == 0){
+    while(bucket->id && m->compare(bucket->id, key) != 0){
+        bucket = bucket->next;
+    }
+    if(bucket->id == NULL){
+        return NULL;
+    } else {
         return bucket->distribution;
     }
 }
 
 void gmap_for_each(gmap *m, void (*f)(const void *, void *, void *), void *arg){
-    for(size_t i = 0; i < m->capacity; i++){
-        if(m->table[i].id){
-            f(m->table[i].id, m->table[i].distribution, arg);
+    for (size_t i = 0; i < m->capacity; i++)
+    {
+        entry *bucket = &m->table[i];
+        while(bucket->id){
+            f(bucket->id, bucket->distribution, arg);
+            bucket->id = bucket->next;
         }
     }
     
