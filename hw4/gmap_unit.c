@@ -925,10 +925,10 @@ void test_remove_collision(void)
     *bos_value = 11;
     int *btr_value = malloc(sizeof(int));
     *btr_value = 12;
-
     gmap_put(m, "BWI", bwi_value);
     gmap_put(m, "BOS", bos_value);
     gmap_put(m, "BTR", btr_value);
+    
     gmap_remove(m, "BOS");
 
     if (gmap_contains_key(m, "BOS"))

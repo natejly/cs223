@@ -19,13 +19,13 @@ void gmap_embiggen(gmap *m);
 void gmap_emsmallen(gmap *m);
 typedef struct node
 {
-  void *key;
+    void *key;
     void *value;
-  struct node *next;
+    struct node *next;
 } node;
 typedef struct linked_list
 {
-  node *head;
+    node *head;
 } linked_list;
 struct _gmap
 {
@@ -51,23 +51,39 @@ struct node *newNode(void *key, void *value)
     temp->next = NULL;
     return temp;
 }
-//might want to use load factor 
-void gmap_embiggen(gmap *m){
-    if(m->size >= m->capacity){
+// might want to use load factor
+void gmap_embiggen(gmap *m)
+{
+
+    if (m->size >= m->capacity)
+    {
         size_t newcap = m->capacity * 2;
-        m->table = realloc(m->table, newcap * sizeof(node *));
+        linked_list **new_list = calloc(m->table, newcap * sizeof(linked_list *));
+        for(size_t i = 0; i< m->capacity; i++){
+            linked_list *list = m->table[i];
+            if(list){
+                size_t newindex = m->hash(list->head->key) % newcap;
+                new_list[newindex] = list;
+                //remove ownership?
+                m->table[i] = NULL;
+            }
+        }
         m->capacity = newcap;
+        m->table = new_list;
+        fprintf(stderr, "expanded to %zu",newcap);
+
     }
 }
-void gmap_emsmallen(gmap *m){
-    if (m->size > GMAP_INITIAL_CAPACITY && m->size * 2 <= m->capacity/2)
+void gmap_emsmallen(gmap *m)
+{
+    if (m->size > GMAP_INITIAL_CAPACITY && m->size * 2 <= m->capacity / 2)
     {
-        size_t newcap = m->capacity/2;
+        size_t newcap = m->capacity / 2;
         if (newcap < GMAP_INITIAL_CAPACITY)
         {
             newcap = GMAP_INITIAL_CAPACITY;
         }
-        m->table = realloc(m->table, newcap * sizeof(node *));
+        m->table = realloc(m->table, newcap * sizeof(linked_list *));
         m->capacity = newcap;
     }
 }
@@ -96,8 +112,9 @@ gmap *gmap_create(void *(*cp)(const void *), int (*comp)(const void *, const voi
     return m;
 }
 
-size_t gmap_size(const gmap *m){
-        if (m == NULL)
+size_t gmap_size(const gmap *m)
+{
+    if (m == NULL)
     {
         return 0;
     }
@@ -105,26 +122,32 @@ size_t gmap_size(const gmap *m){
     return m->size;
 }
 
-void *gmap_put(gmap *m, const void *key, void *value){
+void *gmap_put(gmap *m, const void *key, void *value)
+{
     size_t index = m->hash(key) % m->capacity;
     // if index is empty, create a new linked list
-    if (m->table[index] == NULL) {
+    if (m->table[index] == NULL)
+    {
         m->table[index] = linked_list_create();
     }
     // if there is no head, initialize the head
-    if (m->table[index]->head == NULL) {
+    if (m->table[index]->head == NULL)
+    {
         m->table[index]->head = newNode(m->copy(key), value);
         m->size++;
         gmap_embiggen(m);
         return NULL;
-    } 
+    }
     linked_list *list = m->table[index];
     node *current = list->head;
-    while(current){
-        if(m->compare(current->key, key) == 0){
-            void *old_value = current->value;
+    // traverse list to find matching node
+    while (current->next)
+    {
+        if (m->compare(current->key, key) == 0)
+        {
+            void *toremove = current->value;
             current->value = value;
-            return old_value;
+            return toremove;
         }
         current = current->next;
     }
@@ -133,48 +156,63 @@ void *gmap_put(gmap *m, const void *key, void *value){
     m->size++;
     gmap_embiggen(m);
     return NULL;
-        }
+}
 
 void *gmap_remove(gmap *m, const void *key)
 {
     size_t index = m->hash(key) % m->capacity;
     node *prev = NULL;
-    node *current = m->table[index]->head;
-
-        while(current && m->compare(current->key, key) != 0){        
-            prev = current;
-        current = current->next;}
-            //at start of list
-            
-            if(prev == NULL){
-                m->table[index]->head = current->next;
-                m->size--;
-                gmap_emsmallen(m);
-            }else if (current->next){
+    if (!m->table[index])
+    {
+        return NULL;
+    }
+    linked_list *list = m->table[index];
+    node *current = list->head;
+    if (current && m->compare(current->key, key) == 0)
+    {
+        // at start of list
+        list->head = current->next;
+        m->size--;
+        gmap_emsmallen(m);
+        free(current);
+        return current->value;
+    }
+    // traverse to end or node to remove
+    while (current)
+    {
+        if (m->compare(current->key, key) == 0)
+        {
+            if (!current)
+            {
+                return NULL;
+            }
+            else
+            {
                 prev->next = current->next;
                 m->size--;
                 gmap_emsmallen(m);
-            }else{
-                prev->next = NULL;
-                m->size--;
-                gmap_emsmallen(m);
+                free(current);
+                return current->value;
             }
         }
+        prev = current;
+        current = current->next;
+    }
+}
 
-
-
-
-
-
-bool gmap_contains_key(const gmap *m, const void *key){
+bool gmap_contains_key(const gmap *m, const void *key)
+{
     size_t index = m->hash(key) % m->capacity;
-    if (m->table[index] == NULL) {
-        return false; 
+    if (m->table[index] == NULL)
+    {
+        return false;
     }
     node *current = m->table[index]->head;
-    while(current){
+    while (current)
+    {
 
-        if(m->compare(key, current->key) == 0){
+        if (m->compare(key, current->key) == 0)
+        {
             return current->value != NULL;
         }
         current = current->next;
@@ -182,35 +220,42 @@ bool gmap_contains_key(const gmap *m, const void *key){
     return false;
 }
 
-void *gmap_get(gmap *m, const void *key){
+void *gmap_get(gmap *m, const void *key)
+{
     size_t index = m->hash(key) % m->capacity;
     node *current = m->table[index]->head;
-    while(current){
-        if(m->compare(current->key, key) == 0){
+    while (current)
+    {
+        if (m->compare(current->key, key) == 0)
+        {
             return current->value;
         }
         current = current->next;
     }
-    return NULL;}
+    return NULL;
+}
 
-
-void gmap_for_each(gmap *m, void (*f)(const void *, void *, void *), void *arg){
+void gmap_for_each(gmap *m, void (*f)(const void *, void *, void *), void *arg)
+{
     for (size_t i = 0; i < m->capacity; i++)
     {
         node *bucket = m->table[i]->head;
-        while(bucket->key){
+        while (bucket->key)
+        {
             f(bucket->key, bucket->value, arg);
             bucket = bucket->next;
         }
     }
-    
 }
 
-const void **gmap_keys(gmap *m){
+const void **gmap_keys(gmap *m)
+{
     size_t keys_index = 0;
     const void **keys = malloc(sizeof(void *) * m->size);
-    for(size_t i = 0; i < m->capacity; i++){
-        if(m->table[i]->head->key){
+    for (size_t i = 0; i < m->capacity; i++)
+    {
+        if (m->table[i]->head->key)
+        {
             keys[keys_index] = m->table[i]->head->key;
             keys_index++;
         }
@@ -218,7 +263,8 @@ const void **gmap_keys(gmap *m){
     return keys;
 }
 
-void gmap_destroy(gmap *m){
+void gmap_destroy(gmap *m)
+{
     // for(size_t i = 0; i < m->capacity; i++){
     //     if(m->table[i].id){
     //         m->free(m->table[i].id);
@@ -233,21 +279,26 @@ void gmap_destroy(gmap *m){
     // // m->free(m);
 }
 
-void gmap_print(gmap *m) {
-    if (m == NULL) {
+void gmap_print(gmap *m)
+{
+    if (m == NULL)
+    {
         printf("Map is NULL\n");
         return;
     }
 
     printf("Map contents:\n");
-    for (size_t i = 0; i < m->capacity; i++) {
+    for (size_t i = 0; i < m->capacity; i++)
+    {
         linked_list *bucket = m->table[i];
-        if (bucket == NULL || bucket->head == NULL) {
+        if (bucket == NULL || bucket->head == NULL)
+        {
             continue; // Skip empty buckets
         }
         node *current = bucket->head;
-        while (current != NULL) {
-            printf("Key: %s, Value: %zu\n", current->key, current->value);
+        while (current != NULL)
+        {
+            printf("Key: %c, Value: %d\n", current->key, current->value);
             current = current->next;
         }
     }

@@ -83,6 +83,9 @@
     "chrono": "c",
     "stdbool.h": "c",
     "entry.h": "c",
-    "string.h": "c"
+    "string.h": "c",
+    "__locale": "c",
+    "skills_list.h": "c",
+    "variant": "c"
   }
 }
