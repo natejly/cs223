@@ -13,6 +13,7 @@
 
 struct _gmap;
 typedef struct _gmap gmap;
+typedef struct skills_list_instance_t skills_list;
 
 /**
  * Used for gmap_put to report an allocation error through its return value.
@@ -130,5 +131,11 @@ const void **gmap_keys(gmap *m);
  * @param m a pointer to a map, or NULL
  */
 void gmap_destroy(gmap *m);
+/**
+ * Prints the given map.  There is no effect if the given pointer is NULL.
+ * @param m a pointer to a map, or NULL
+
+*/
+void gmap_print(gmap *m);
 
 #endif

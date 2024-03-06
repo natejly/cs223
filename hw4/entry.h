@@ -9,7 +9,10 @@ typedef struct entry
   int *distribution;
   struct entry *next;
 } entry;
-
+typedef struct entry_list
+{
+  entry *head;
+} entry_list;
 /**
  * Reads a Blotto entry from the given source.  The entry should
  * be in the format

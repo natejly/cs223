@@ -124,3 +124,12 @@ void entry_destroy(entry *e)
         e->distribution = NULL;
     }
 }
+entry_list *entry_list_create()
+{
+    entry_list *list = malloc(sizeof(entry_list));
+    if (list != NULL)
+    {
+        list->head = NULL;
+    }
+    return list;
+}

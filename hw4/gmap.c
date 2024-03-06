@@ -113,37 +113,29 @@ void *gmap_put(gmap *m, const void *key, void *value){
     return NULL;
 }
 
-void *gmap_remove(gmap *m, const void *key){
+void *gmap_remove(gmap *m, const void *key)
+{
 size_t index = m->hash(key) % m->capacity;
-entry *bucket = &m->table[index];
-entry *prev = NULL; 
-if(bucket->id == NULL){
-    return NULL;
-}
-while(bucket && bucket->id && m->compare(bucket->id, key) != 0){
-    prev = bucket;
-    bucket = bucket->next;
-}
-if(bucket == NULL || bucket->id == NULL){
-    return NULL;
-}  
-    void *toremove = bucket->distribution;
-    if (prev){
-        prev->next = bucket->next;
+entry *current = &m->table[index];
+entry *prev = NULL;
+// Traverse the linked list and look for the node to remove
+while (current != NULL) {
+    if (m->compare(current->id, key) == 0) {
+            printf("index is %d\n", index);
+            printf("key is %d\n", *current->id);
+            printf("value is %d\n", *current->distribution);
+        // remove first node
+        if (prev == NULL) {
+                m->table[index] = current->next;
+                
+            } 
+        }   
     }
-    else{
-        //first element
-        m->table[index] = *bucket->next; 
-    }
-    free(bucket->id);
-    free(bucket->distribution);
-    free(bucket);
-    m->size--;
-    gmap_emsmallen(m);
-    return toremove;
 
-    
+    prev = current;
+    current = current->next;
 }
+
 
 bool gmap_contains_key(const gmap *m, const void *key){
     size_t index = m->hash(key) % m->capacity;
@@ -206,4 +198,18 @@ void gmap_destroy(gmap *m){
     // // free(m->compare);
     // // free(m->copy);
     // // m->free(m);
+}
+
+void gmap_print(gmap *m){
+    for (size_t index = 0; index < m->capacity; index++) {
+        if(m->table[index].id != NULL){
+        printf("Contents of linked list at index %zu:\n", index);
+        entry *bucket = &m->table[index];
+        while (bucket != NULL) {
+            printf("%d ", bucket->distribution[0]);
+            bucket = bucket->next;
+        }
+        printf("\n");
+    }
+    }
 }

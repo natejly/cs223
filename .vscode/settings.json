@@ -82,6 +82,7 @@
     "typeinfo": "c",
     "chrono": "c",
     "stdbool.h": "c",
-    "entry.h": "c"
+    "entry.h": "c",
+    "string.h": "c"
   }
 }
