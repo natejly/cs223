@@ -360,7 +360,6 @@ void test_contains(size_t n)
     char **not_keys = make_words("worte", n);
 
     add_keys(m, keys, n, 0);
-
     for (int i = 0; i < n; i++)
     {
         if (!gmap_contains_key(m, keys[i]))
