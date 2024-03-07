@@ -72,10 +72,12 @@ void gmap_embiggen(gmap *m)
                 current = current->next;
             }
             }
+        
             }
         m->table = temp->table;
         m->capacity = temp->capacity;
         m->size = temp->size;
+        gmap_destroy(temp);
         }
 }
 void gmap_emsmallen(gmap *m)
@@ -304,19 +306,24 @@ void gmap_destroy(gmap *m)
     }
     for (size_t i = 0; i < m->capacity; i++)
     {
-        linked_list *list = m->table[i];
+    linked_list *list = m->table[i];
         if (list)
         {
-            struct node *current = list->head;
-            struct node *next;
-            while (current)
-            {
-                //walk and destroy
-                next = current->next;
-                free(current);
-                current = next;
-            }
-            free(list);
+         node *current = list->head;
+         node *next;
+        while (current)
+    {
+        //walk and destroy
+        next = current->next;
+        if(current->key)
+            free(current->key);
+        // if(current->value)
+        //     free(current->value);
+        free(current);
+        current = next;
+    }
+
+    free(list);
         }
     }
     free(m->table);

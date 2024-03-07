@@ -732,7 +732,6 @@ void test_uses_hash(size_t n)
     *value = 42;
     printf("And now a message from your friendly local hash function: ");
     gmap_put(m, "magic", value);
-
     gmap_destroy(m);
     free_words(keys, n);
     free(values);
