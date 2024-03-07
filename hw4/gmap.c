@@ -60,6 +60,9 @@ void gmap_embiggen(gmap *m)
         size_t newcap = m->capacity * 2;
         gmap *temp = gmap_create(m->copy, m->compare, m->hash, m->free);
         temp->table = malloc(newcap * sizeof(linked_list *));
+        for(size_t i = 0; i < newcap; i++){
+            temp->table[i]= NULL;
+        }
         temp->capacity = newcap;
 
         //readd all elements to new list with new hash
