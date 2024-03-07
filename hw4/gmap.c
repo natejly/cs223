@@ -52,6 +52,7 @@ struct node *newNode(void *key, void *value)
     return temp;
 }
 // might want to use load factor
+
 void gmap_embiggen(gmap *m)
 {
     if (m->size >= m->capacity / 2)
@@ -72,17 +73,13 @@ void gmap_embiggen(gmap *m)
                 current = current->next;
             }
             }
-        
             }
-        if (m->table != NULL) {
-        free(m->table);
-    }
         m->table = temp->table;
         m->capacity = temp->capacity;
         m->size = temp->size;
-        gmap_destroy(temp);
         }
 }
+
 void gmap_emsmallen(gmap *m)
 {
     if (m->size > GMAP_INITIAL_CAPACITY && m->size <= m->capacity / 4)
@@ -102,9 +99,6 @@ void gmap_emsmallen(gmap *m)
             }
             }
             }
-        if (m->table != NULL) {
-    free(m->table);
-}
         m->table = temp->table;
         m->capacity = temp->capacity;
         m->size = temp->size;
@@ -207,8 +201,10 @@ void *gmap_remove(gmap *m, const void *key)
         list->head = current->next;
         m->size--;
         gmap_emsmallen(m);
+        void *value = current->value;
+        free(current->key);
         free(current);
-        return current->value;
+        return value;
     }
     // traverse to end or node to remove
     while (current)
@@ -224,8 +220,10 @@ void *gmap_remove(gmap *m, const void *key)
                 prev->next = current->next;
                 m->size--;
                 gmap_emsmallen(m);
-                free(current);
-                return current->value;
+        void *value = current->value;
+        free(current->key);
+        free(current);
+        return value;
             }
         }
         prev = current;

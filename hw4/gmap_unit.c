@@ -594,7 +594,6 @@ void test_keys_survive_embiggen(size_t n1, size_t n2)
 
     // get the current keysb2
     returned_keys = (const char **)gmap_keys(m);
-    fprintf(stderr, "test_keys_survive_embiggen\n");
 
     if (returned_keys == NULL)
     {
