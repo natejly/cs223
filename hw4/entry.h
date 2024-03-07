@@ -9,6 +9,15 @@ typedef struct entry
   int *distribution;
   struct entry *next;
 } entry;
+/**
+ * Reads a line from the given stream into the given string. 
+ * Returns NULL if the stream is at EOF, otherwise returns the string.
+ *
+ * @param str a pointer to a string, non-NULL
+ * @param count the number of characters in the string, positive
+ * @param stream a file, non-NULL
+ */
+char *freadln(char *restrict str, int count, FILE *restrict stream);
 
 /**
  * Reads a Blotto entry from the given source.  The entry should
