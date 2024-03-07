@@ -74,6 +74,9 @@ void gmap_embiggen(gmap *m)
             }
         
             }
+        if (m->table != NULL) {
+        free(m->table);
+    }
         m->table = temp->table;
         m->capacity = temp->capacity;
         m->size = temp->size;
@@ -99,6 +102,9 @@ void gmap_emsmallen(gmap *m)
             }
             }
             }
+        if (m->table != NULL) {
+    free(m->table);
+}
         m->table = temp->table;
         m->capacity = temp->capacity;
         m->size = temp->size;
@@ -125,6 +131,10 @@ gmap *gmap_create(void *(*cp)(const void *), int (*comp)(const void *, const voi
         m->table = malloc(sizeof(linked_list *) * GMAP_INITIAL_CAPACITY);
         m->capacity = (m->table != NULL ? GMAP_INITIAL_CAPACITY : 0);
         m->size = 0;
+        for (size_t i = 0; i <  m->capacity; i++)
+            {
+                m->table[i] = NULL;
+            }
     }
     return m;
 }
@@ -149,9 +159,10 @@ void *gmap_put(gmap *m, const void *key, void *value)
     {
         m->table[index] = linked_list_create();
     }
-    linked_list *list = m->table[index];
-    node *current = list->head;
+    node *current = NULL;
     node *prev = NULL;
+    linked_list *list = m->table[index];
+    current = list->head;
     // traverse list to check for matching node
     while (current)
     {
