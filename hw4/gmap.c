@@ -298,7 +298,31 @@ const void **gmap_keys(gmap *m)
 
 void gmap_destroy(gmap *m)
 {
-
+    if (m == NULL)
+    {
+        return;
+    }
+    for (size_t i = 0; i < m->capacity; i++)
+    {
+        linked_list *list = m->table[i];
+        if (list)
+        {
+            struct node *current = list->head;
+            struct node *next;
+            while (current)
+            {
+                //walk and destroy
+                next = current->next;
+                m->free(current->key);
+                m->free(current->value);
+                free(current);
+                current = next;
+            }
+            free(list);
+        }
+    }
+    free(m->table);
+    free(m);
 }
 
 void gmap_print(gmap *m)
