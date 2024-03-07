@@ -63,11 +63,11 @@ void gmap_embiggen(gmap *m)
 
         //readd all elements to new list with new hash
         for(size_t i = 0; i < m->capacity; i++){
-        fprintf(stderr, "i: %zu\n", i);
             linked_list *list = m->table[i];
             if(list){
             node *current = list->head;
             while(current){
+                //do I have to copy the key
                 gmap_put(temp, current->key, current->value);
                 current = current->next;
             }
@@ -80,15 +80,26 @@ void gmap_embiggen(gmap *m)
 }
 void gmap_emsmallen(gmap *m)
 {
-    if (m->size > GMAP_INITIAL_CAPACITY && m->size * 2 <= m->capacity / 2)
+    if (m->size > GMAP_INITIAL_CAPACITY && m->size <= m->capacity / 4)
     {
-        size_t newcap = m->capacity / 2;
-        if (newcap < GMAP_INITIAL_CAPACITY)
-        {
-            newcap = GMAP_INITIAL_CAPACITY;
-        }
-        m->table = realloc(m->table, newcap * sizeof(linked_list *));
-        m->capacity = newcap;
+        size_t newcap = m->capacity/2;
+        gmap *temp = gmap_create(m->copy, m->compare, m->hash, m->free);
+        temp->table = malloc(newcap * sizeof(linked_list *));
+        temp->capacity = newcap;
+        //readd all elements to new list with new hash
+        for(size_t i = 0; i < m->capacity; i++){
+            linked_list *list = m->table[i];
+            if(list){
+            node *current = list->head;
+            while(current){
+                gmap_put(temp, current->key, current->value);
+                current = current->next;
+            }
+            }
+            }
+        m->table = temp->table;
+        m->capacity = temp->capacity;
+        m->size = temp->size;
     }
 }
 
@@ -128,6 +139,8 @@ size_t gmap_size(const gmap *m)
 
 void *gmap_put(gmap *m, const void *key, void *value)
 {
+    gmap_embiggen(m);
+
     size_t index = m->hash(key) % m->capacity;
     // if list is empty, create a linked list
     if (m->table[index] == NULL)
@@ -151,24 +164,6 @@ void *gmap_put(gmap *m, const void *key, void *value)
     }
     // if we got here prev is the last node in the list
     // m->size++;
-    gmap_embiggen(m);
-    index = m->hash(key) % m->capacity;
-
-    list = m->table[index];
-    //list->head doesn't exist
-    if(!list){
-        list = linked_list_create();
-        m->table[index] = list;
-    }
-    current = list->head;
-    prev = NULL;
-    // walk to end of list
-    // rehashed if embiggened so then need to reassign index
-    while (current)
-    {
-        prev = current;
-        current = current->next;
-    }
 
     node *new = newNode(m->copy(key), value);
     m->size++;
@@ -264,25 +259,38 @@ void gmap_for_each(gmap *m, void (*f)(const void *, void *, void *), void *arg)
 {
     for (size_t i = 0; i < m->capacity; i++)
     {
-        node *bucket = m->table[i]->head;
-        while (bucket->key)
+        linked_list *list = m->table[i];
+        if (list == NULL)
         {
-            f(bucket->key, bucket->value, arg);
-            bucket = bucket->next;
+            continue; 
+        }
+        node *current = list->head;
+        while (current)
+        {
+            f(current->key, current->value, arg);
+            current = current->next;
         }
     }
 }
 
 const void **gmap_keys(gmap *m)
 {
-    size_t keys_index = 0;
-    const void **keys = malloc(sizeof(void *) * m->size);
+    //do we need to resize the array? no we don't you're an idiot
+    const void **keys = malloc(m->size * sizeof(void *));
+    size_t keysindex = 0;
+    //traverse table
     for (size_t i = 0; i < m->capacity; i++)
     {
-        if (m->table[i]->head->key)
+        //traverse linked list
+        linked_list *list = m->table[i];
+        if (list){
+        node *current = list->head;
+        while (current)
         {
-            keys[keys_index] = m->table[i]->head->key;
-            keys_index++;
+            keys[keysindex] = current->key;
+            keysindex++;
+            current = current->next;
+        }
         }
     }
     return keys;
@@ -290,18 +298,7 @@ const void **gmap_keys(gmap *m)
 
 void gmap_destroy(gmap *m)
 {
-    // for(size_t i = 0; i < m->capacity; i++){
-    //     if(m->table[i].id){
-    //         m->free(m->table[i].id);
-    //         m->free(m->table[i].distribution);
-    //     }
-    // }
-    // // free(m->table);
-    // // free(m->capacity);
-    // // free(m->hash);
-    // // free(m->compare);
-    // // free(m->copy);
-    // // m->free(m);
+
 }
 
 void gmap_print(gmap *m)

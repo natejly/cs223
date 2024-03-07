@@ -567,7 +567,6 @@ void test_for_each(size_t n)
     int sum = 0;
     gmap *m = make_map("", n, 2);
     gmap_for_each(m, sum_keys_and_values, &sum);
-
     if (sum != n * (n - 1) / 2 + 2 * n)
     {
         printf("FAILED -- sum of keys and values is %d\n", sum);
@@ -592,8 +591,9 @@ void test_keys_survive_embiggen(size_t n1, size_t n2)
         goto destroy_keys;
     }
 
-    // get the current keys
+    // get the current keysb2
     returned_keys = (const char **)gmap_keys(m);
+    fprintf(stderr, "test_keys_survive_embiggen\n");
 
     if (returned_keys == NULL)
     {
