@@ -54,25 +54,29 @@ struct node *newNode(void *key, void *value)
 // might want to use load factor
 void gmap_embiggen(gmap *m)
 {
-
-    if (m->size >= m->capacity)
+    if (m->size >= m->capacity / 2)
     {
         size_t newcap = m->capacity * 2;
-        linked_list **new_list = calloc(m->table, newcap * sizeof(linked_list *));
-        for(size_t i = 0; i< m->capacity; i++){
+        gmap *temp = gmap_create(m->copy, m->compare, m->hash, m->free);
+        temp->table = malloc(newcap * sizeof(linked_list *));
+        temp->capacity = newcap;
+
+        //readd all elements to new list with new hash
+        for(size_t i = 0; i < m->capacity; i++){
+        fprintf(stderr, "i: %zu\n", i);
             linked_list *list = m->table[i];
             if(list){
-                size_t newindex = m->hash(list->head->key) % newcap;
-                new_list[newindex] = list;
-                //remove ownership?
-                m->table[i] = NULL;
+            node *current = list->head;
+            while(current){
+                gmap_put(temp, current->key, current->value);
+                current = current->next;
             }
+            }
+            }
+        m->table = temp->table;
+        m->capacity = temp->capacity;
+        m->size = temp->size;
         }
-        m->capacity = newcap;
-        m->table = new_list;
-        fprintf(stderr, "expanded to %zu",newcap);
-
-    }
 }
 void gmap_emsmallen(gmap *m)
 {
@@ -125,23 +129,16 @@ size_t gmap_size(const gmap *m)
 void *gmap_put(gmap *m, const void *key, void *value)
 {
     size_t index = m->hash(key) % m->capacity;
-    // if index is empty, create a new linked list
+    // if list is empty, create a linked list
     if (m->table[index] == NULL)
     {
         m->table[index] = linked_list_create();
     }
-    // if there is no head, initialize the head
-    if (m->table[index]->head == NULL)
-    {
-        m->table[index]->head = newNode(m->copy(key), value);
-        m->size++;
-        gmap_embiggen(m);
-        return NULL;
-    }
     linked_list *list = m->table[index];
     node *current = list->head;
-    // traverse list to find matching node
-    while (current->next)
+    node *prev = NULL;
+    // traverse list to check for matching node
+    while (current)
     {
         if (m->compare(current->key, key) == 0)
         {
@@ -149,12 +146,40 @@ void *gmap_put(gmap *m, const void *key, void *value)
             current->value = value;
             return toremove;
         }
+        prev = current;
         current = current->next;
     }
-    // if the key is not present, add it to the end of the list
-    current->next = newNode(m->copy(key), value);
-    m->size++;
+    // if we got here prev is the last node in the list
+    // m->size++;
     gmap_embiggen(m);
+    index = m->hash(key) % m->capacity;
+
+    list = m->table[index];
+    //list->head doesn't exist
+    if(!list){
+        list = linked_list_create();
+        m->table[index] = list;
+    }
+    current = list->head;
+    prev = NULL;
+    // walk to end of list
+    // rehashed if embiggened so then need to reassign index
+    while (current)
+    {
+        prev = current;
+        current = current->next;
+    }
+
+    node *new = newNode(m->copy(key), value);
+    m->size++;
+    if (prev == NULL)
+    {
+        list->head = new;
+    }
+    else
+    {
+        prev->next = new;
+    }
     return NULL;
 }
 

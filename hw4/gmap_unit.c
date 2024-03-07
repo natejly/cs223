@@ -495,14 +495,13 @@ void test_large_map(size_t n, size_t (*hash)(const void *))
     gmap *m = gmap_create(duplicate, compare_keys, hash, free);
     char **keys = make_words("word", n);
     char **not_keys = make_words("wort", n);
-
     for (int i = 0; i < n; i++)
     {
         int *value = malloc(sizeof(int));
         *value = n - i;
+
         gmap_put(m, keys[i], value);
     }
-
     if (gmap_size(m) != n)
     {
         printf("FAILED -- size is %lu; should be %lu\n", gmap_size(m), n);
