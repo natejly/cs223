@@ -319,7 +319,7 @@ void gmap_destroy(gmap *m)
         if (list)
         {
          node *current = list->head;
-         node *next;
+         void *next;
         while (current)
     {
         //walk and destroy
