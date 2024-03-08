@@ -331,7 +331,7 @@ void gmap_destroy(gmap *m)
         //walk and destroy
         next = current->next;
         if(current->key){
-        free(current->key);
+        m->free(current->key);
 
         }
         // if(current->value)

@@ -56,7 +56,7 @@ print "\n$TYPE test script for $NAME ($DATE)\n\n";
 # &limitHeapSize (1000000);                    # Limit size of heap
 &limitProcesses(1000);      # Limit #processes
 
-# my $where   = "/c/cs$CLASS/hw$HWK/Tests";    # Where to find test files (Zoo)
+# my $where   = "/c/cs$CLASACS/hw$HWK/Tests";    # Where to find test files (Zoo)
 my $where = realpath( File::Spec->rel2abs( dirname(__FILE__) ) );
 $ENV{WHERE} = $where;
 
