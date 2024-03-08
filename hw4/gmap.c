@@ -56,9 +56,11 @@ struct node *newNode(void *key, void *value)
 void gmap_embiggen(gmap *m)
 {
     if (m->size >= m->capacity / 2)
-    {
+    {   
+        gmap swap;
         size_t newcap = m->capacity * 2;
         gmap *temp = gmap_create(m->copy, m->compare, m->hash, m->free);
+        free(temp->table);
         temp->table = malloc(newcap * sizeof(linked_list *));
         for(size_t i = 0; i < newcap; i++){
             temp->table[i]= NULL;
@@ -77,13 +79,13 @@ void gmap_embiggen(gmap *m)
             }
             }
             }
-
-        m->table = temp->table;
-        m->capacity = temp->capacity;
-        m->size = temp->size;
-        
+        swap = *m;
+        *m = *temp;
+        *temp = swap;   
+        gmap_destroy(temp);
         }
 }
+      
 
 void gmap_emsmallen(gmap *m)
 {
@@ -128,7 +130,7 @@ gmap *gmap_create(void *(*cp)(const void *), int (*comp)(const void *, const voi
 
         // initialize the table
         m->table = malloc(sizeof(linked_list *) * GMAP_INITIAL_CAPACITY);
-        m->capacity = (m->table != NULL ? GMAP_INITIAL_CAPACITY : 0);
+        m->capacity = GMAP_INITIAL_CAPACITY;
         m->size = 0;
         for (size_t i = 0; i <  m->capacity; i++)
             {
@@ -176,7 +178,6 @@ void *gmap_put(gmap *m, const void *key, void *value)
     }
     // if we got here prev is the last node in the list
     // m->size++;
-
     node *new = newNode(m->copy(key), value);
     m->size++;
     if (prev == NULL)
@@ -323,16 +324,16 @@ void gmap_destroy(gmap *m)
     linked_list *list = m->table[i];
         if (list)
         {
-         node *current = list->head;
-         void *next;
+        node *current = list->head;
+        node *next = NULL;
         while (current)
     {
         //walk and destroy
         next = current->next;
-        if(current->key)
-            free(current->key);
-        // if(current->value)
-        //     free(current->value);
+        if(current->key){
+        free(current->key);
+
+        }
         free(current);
         current = next;
     }
