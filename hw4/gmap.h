@@ -131,11 +131,5 @@ const void **gmap_keys(gmap *m);
  * @param m a pointer to a map, or NULL
  */
 void gmap_destroy(gmap *m);
-/**
- * Prints the given map.  There is no effect if the given pointer is NULL.
- * @param m a pointer to a map, or NULL
-
-*/
-void gmap_print(gmap *m);
 
 #endif
