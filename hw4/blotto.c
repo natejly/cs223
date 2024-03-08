@@ -55,8 +55,12 @@ int main(int argc, char *argv[])
             
             }
         }
+        if(player1_score > player2_score){
         fprintf(stdout, "%s %.1f - %s %.1f\n", player1, player1_score, player2, player2_score);
-
+        }else{
+        fprintf(stdout, "%s %.1f - %s %.1f\n", player2, player2_score, player1, player1_score);
+        
+        }
      }
     return 0;
     //whoever wins gets the point
