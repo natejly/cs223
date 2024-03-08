@@ -87,13 +87,14 @@ void gmap_embiggen(gmap *m)
             }
             }
 
-        //    gmap swap = *m;
+           gmap swap = *m;
             *m = *temp;
-            // *temp = swap;
-            // gmap_destroy(temp);
+            *temp = swap;
+        // gmap_destroy(temp);
+    }
 
         }
-}
+
 void gmap_emsmallen(gmap *m)
 {
     if (m->size > GMAP_INITIAL_CAPACITY && m->size <= m->capacity / 4)
