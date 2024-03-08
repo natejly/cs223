@@ -15,11 +15,13 @@ int main(int argc, char *argv[])
     int num_battles = argc - 1;
     int *battlefields = malloc(num_battles * sizeof(int));
     gmap *map = gmap_create(duplicate, compare_keys, hash29, free);
-    entry current_entry = entry_read(stdin, MAX_ID, num_battles);
-    while(current_entry.id[0] != '\0'){
-    gmap_put(map, current_entry.id, current_entry.distribution);
+    entry *current_entry = malloc(sizeof(entry));
+    *current_entry = entry_read(stdin, MAX_ID, num_battles);
 
-    current_entry = entry_read(stdin, MAX_ID, num_battles);
+    while(current_entry->id[0] != '\0'){
+    gmap_put(map, current_entry->id, current_entry->distribution);
+    entry_destroy(current_entry);
+    *current_entry = entry_read(stdin, MAX_ID, num_battles);
     }
     //reading in the battlefields
     for(int i = 0; i < num_battles; i++){
@@ -58,6 +60,11 @@ int main(int argc, char *argv[])
         fprintf(stdout, "%s %.1f - %s %.1f\n", player1, player1_score, player2, player2_score);
 
      }
+     entry_destroy(current_entry);
+     free(current_entry);
+    gmap_destroy(map);
+    free(battlefields);
+    free(line);
     return 0;
     //whoever wins gets the point
     //if it's a tie we split the point

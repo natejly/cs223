@@ -324,7 +324,7 @@ void gmap_destroy(gmap *m)
     linked_list *list = m->table[i];
         if (list)
         {
-        node *current = list->head;
+         node *current = list->head;
         node *next = NULL;
         while (current)
     {
@@ -334,6 +334,8 @@ void gmap_destroy(gmap *m)
         free(current->key);
 
         }
+        // if(current->value)
+        //      free(current->value);
         free(current);
         current = next;
     }
