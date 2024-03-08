@@ -77,9 +77,11 @@ void gmap_embiggen(gmap *m)
             }
             }
             }
+
         m->table = temp->table;
         m->capacity = temp->capacity;
         m->size = temp->size;
+        
         }
 }
 
