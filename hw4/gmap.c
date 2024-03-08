@@ -71,19 +71,19 @@ void gmap_embiggen(gmap *m)
         for(size_t i = 0; i < m->capacity; i++){
             linked_list *list = m->table[i];
             if(list){
-            node *current = list->head;
-            while(current){
-                //do I have to copy the key
-                gmap_put(temp, current->key, current->value);
-                current = current->next;
+                node *current = list->head;
+                while(current){
+                    //do I have to copy the key
+                    gmap_put2(temp, current->key, current->value);
+                    current = current->next;
+                }   
             }
-            }
-            }
+        }
         swap = *m;
         *m = *temp;
         *temp = swap;   
         gmap_destroy(temp);
-        }
+    }
 }
       
 
@@ -154,6 +154,44 @@ void *gmap_put(gmap *m, const void *key, void *value)
 {
     gmap_embiggen(m);
 
+    size_t index = m->hash(key) % m->capacity;
+    // if list is empty, create a linked list
+    if (m->table[index] == NULL)
+    {
+        m->table[index] = linked_list_create();
+    }
+    node *current = NULL;
+    node *prev = NULL;
+    linked_list *list = m->table[index];
+    current = list->head;
+    // traverse list to check for matching node
+    while (current)
+    {
+        if (m->compare(current->key, key) == 0)
+        {
+            void *toremove = current->value;
+            current->value = value;
+            return toremove;
+        }
+        prev = current;
+        current = current->next;
+    }
+    // if we got here prev is the last node in the list
+    // m->size++;
+    node *new = newNode(m->copy(key), value);
+    m->size++;
+    if (prev == NULL)
+    {
+        list->head = new;
+    }
+    else
+    {
+        prev->next = new;
+    }
+    return NULL;
+}
+void *gmap_put2(gmap *m, const void *key, void *value)
+{
     size_t index = m->hash(key) % m->capacity;
     // if list is empty, create a linked list
     if (m->table[index] == NULL)
