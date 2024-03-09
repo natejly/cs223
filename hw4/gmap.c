@@ -17,6 +17,9 @@ void gmap_embiggen(gmap *m);
  * @param m a pointer to a map, non-NULL
  */
 void gmap_emsmallen(gmap *m);
+void *gmap_put_nocopy(gmap *m, const void *key, void *value);
+void gmap_destroynk(gmap *m);
+
 typedef struct node
 {
     void *key;
@@ -50,7 +53,7 @@ struct node *newNode(gmap *m, void *key, void *value)
     {
         return NULL;
     }
-    temp->key = m->copy(key);
+    temp->key = key;
     temp->value = value;
     temp->next = NULL;
     return temp;
@@ -82,7 +85,8 @@ void gmap_embiggen(gmap *m)
                 while (current)
                 {
                     // do I have to copy the key
-                    gmap_put(temp, current->key, current->value);
+                    gmap_put_nocopy(temp, current->key, current->value);
+                    
                     prev = current;
                     current = current->next;
                 }
@@ -93,7 +97,7 @@ void gmap_embiggen(gmap *m)
         *m = *temp;
         *temp = swap;
         //losing keys here
-        gmap_destroy(temp);
+        gmap_destroynk(temp);
     }
 }
 
@@ -136,13 +140,10 @@ gmap *gmap_create(void *(*cp)(const void *), int (*comp)(const void *, const voi
     gmap *m = malloc(sizeof(gmap));
     if (m != NULL)
     {
-        // remember the functions used to manipulate the keys
         m->copy = cp;
         m->compare = comp;
         m->hash = h;
         m->free = f;
-
-        // initialize the table
         m->table = malloc(sizeof(linked_list *) * GMAP_INITIAL_CAPACITY);
         m->capacity = GMAP_INITIAL_CAPACITY;
         m->size = 0;
@@ -191,8 +192,11 @@ void *gmap_put(gmap *m, const void *key, void *value)
         current = current->next;
     }
     // copy returns a poitner to a deep copy
-    node *new = newNode(m, key, value);
+    void *copy = m->copy(key);
+    if(copy){
+    node *new = newNode(m, copy, value);
     m->size++;
+    
     if (prev == NULL)
     {
         m->table[index]->head = new;
@@ -202,7 +206,52 @@ void *gmap_put(gmap *m, const void *key, void *value)
         prev->next = new;
     }
     return NULL;
+    }
+    return NULL;
 }
+void *gmap_put_nocopy(gmap *m, const void *key, void *value)
+{
+    gmap_embiggen(m);
+
+    size_t index = m->hash(key) % m->capacity;
+    // if list is empty, create a linked list
+    if (m->table[index] == NULL)
+    {
+        m->table[index] = linked_list_create();
+    }
+    node *current = NULL;
+    node *prev = NULL;
+    linked_list *list = m->table[index];
+    current = list->head;
+    // traverse list to check for matching node
+    while (current)
+    {
+        if (m->compare(current->key, key) == 0)
+        {
+            void *toremove = current->value;
+            current->value = value;
+            return toremove;
+        }
+        prev = current;
+        current = current->next;
+    }
+    // copy returns a poitner to a deep copy
+
+    node *new = newNode(m, key, value);
+    m->size++;
+    
+    if (prev == NULL)
+    {
+        m->table[index]->head = new;
+    }
+    else
+    {
+        prev->next = new;
+    }
+    return NULL;
+
+}
+
 void *gmap_remove(gmap *m, const void *key)
 {
     size_t index = m->hash(key) % m->capacity;
@@ -327,33 +376,72 @@ const void **gmap_keys(gmap *m)
     }
     return keys;
 }
-
 void gmap_destroy(gmap *m)
 {
     if (m == NULL)
     {
         return;
     }
-    for (size_t i = 0; i < m->capacity; i++)
+
+    // Traverse the table
+    for (int i = 0; i < m->capacity; i++)
     {
+        // Traverse the linked list at table[i]
         linked_list *list = m->table[i];
-        if (list)
+        if(list)
         {
             node *current = list->head;
-            node *next = NULL;
-            while (current)
+            while (current != NULL)
             {
-                // walk and destroy
-                next = current->next;
-                // freeing key here doen'st make s
+                node *next = current->next;
                 m->free(current->key);
                 free(current);
                 current = next;
             }
-
+            // Move to the next linked list
             free(list);
         }
+
     }
+
+    // free the table
     free(m->table);
+
+    // free the gmap struct
     free(m);
 }
+
+void gmap_destroynk(gmap *m)
+{
+    if (m == NULL)
+    {
+        return;
+    }
+
+    // Traverse the table
+    for (int i = 0; i < m->capacity; i++)
+    {
+        // Traverse the linked list at table[i]
+        linked_list *list = m->table[i];
+        if(list)
+        {
+            node *current = list->head;
+            while (current != NULL)
+            {
+                node *next = current->next;
+                free(current);
+                current = next;
+            }
+            // Move to the next linked list
+            free(list);
+        }
+
+    }
+
+    // free the table
+    free(m->table);
+
+    // free the gmap struct
+    free(m);
+}
+
