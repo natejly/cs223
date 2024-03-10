@@ -8,11 +8,17 @@
 #include "entry.h"
 #define GMAP_INITIAL_CAPACITY 100
 /**
- * Resizes the array holding the elements in the given map.
+ * Enlargens the array holding the elements in the given map.
  *
  * @param m a pointer to a map, non-NULL
  */
 void gmap_embiggen(gmap *m);
+/**
+ * Shrinks the array holding the elements in the given map.
+ *
+ * @param m a pointer to a map, non-NULL
+ */
+void gmap_shrink(gmap *m);
 /**
  * puts elements in the array same as gmap_put but does not copy keys
  * @param m a pointer to a map
@@ -122,7 +128,48 @@ void gmap_embiggen(gmap *m)
         gmap_destroynk(temp);
     }
 }
-
+void gmap_shrink(gmap *m)
+{
+    // does embiggen if we are using more than half of the table
+    if (m->size <= m->capacity / 4 && m->capacity > GMAP_INITIAL_CAPACITY)
+    {
+        size_t newcap = m->capacity /2 ;
+        // create a new gmap
+        gmap *temp = gmap_create(m->copy, m->compare, m->hash, m->free);
+        // release its table and replace with one half the size
+        free(temp->table);
+        temp->table = malloc(newcap * sizeof(linked_list *));
+        // initialize to none
+        for (size_t i = 0; i < newcap; i++)
+        {
+            temp->table[i] = NULL;
+        }
+        temp->capacity = newcap;
+        // readd all elements to new list with new hash
+        for (size_t i = 0; i < m->capacity; i++)
+        {
+            linked_list *list = m->table[i];
+            if (list)
+            { // traversing linked list
+                node *current = list->head;
+                node *prev = NULL;
+                while (current)
+                {
+                    // not copying keys
+                    gmap_put_nocopy(temp, current->key, current->value);
+                    prev = current;
+                    current = current->next;
+                }
+            }
+        }
+        // swaping the temp map with the old map
+        gmap swap = *m;
+        *m = *temp;
+        *temp = swap;
+        // free the temp map
+        gmap_destroynk(temp);
+    }
+}
 gmap *gmap_create(void *(*cp)(const void *), int (*comp)(const void *, const void *), size_t (*h)(const void *), void (*f)(void *))
 {
     if (h == NULL || cp == NULL || comp == NULL || f == NULL)
@@ -266,6 +313,8 @@ void *gmap_remove(gmap *m, const void *key)
         // free found node and return value
         free(current->key);
         free(current);
+        //check if we need to shrink
+        gmap_shrink(m);
         return value;
     }
     while (current)
@@ -285,6 +334,7 @@ void *gmap_remove(gmap *m, const void *key)
                 void *value = current->value;
                 free(current->key);
                 free(current);
+                gmap_shrink(m);
                 return value;
             }
         }
