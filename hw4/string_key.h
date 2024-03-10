@@ -1,3 +1,5 @@
+// Nate Ly, CS223 Pset #4 (Blotto), 3/10/2024
+// Header file for processing key information
 #ifndef __STRING_KEY_H__
 #define __STRING_KEY_H__
 

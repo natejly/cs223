@@ -1,5 +1,6 @@
+// Nate Ly, CS223 Pset #4 (Blotto), 3/10/2024
+// given entry read file to implement entry.h
 #include "entry.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -28,8 +29,9 @@ char *freadln(char *restrict str, int count, FILE *restrict stream)
         i++;
         c = fgetc(stream);
     }
-    //make sure not to skip first char of new line
-    if (c != '\n' && c != EOF) {
+    // make sure not to skip first char of new line
+    if (c != '\n' && c != EOF)
+    {
         ungetc(c, stream);
     }
 
@@ -135,7 +137,7 @@ entry entry_read(FILE *in, int max_id, int battlefields)
             // empty id and battlefields = 0 means end-of-input
             free(result.distribution);
             result.distribution = NULL;
-    }
+        }
     }
     return result;
 }

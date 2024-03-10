@@ -1,6 +1,7 @@
+// Nate Ly, CS223 Pset #4 (Blotto), 3/10/2024
+// given header file for entry.c
 #ifndef __ENTRY_H__
 #define __ENTRY_H__
-
 #include <stdio.h>
 
 typedef struct entry
@@ -10,7 +11,7 @@ typedef struct entry
   struct entry *next;
 } entry;
 /**
- * Reads a line from the given stream into the given string. 
+ * Reads a line from the given stream into the given string.
  * Returns NULL if the stream is at EOF, otherwise returns the string.
  *
  * @param str a pointer to a string, non-NULL

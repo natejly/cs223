@@ -1,3 +1,5 @@
+// Nate Ly, CS223 Pset #4 (Blotto), 3/10/2024
+// given file to implement unit funcitons in gmap_test_functions.h
 #include <stdlib.h>
 #include <string.h>
 
