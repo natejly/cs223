@@ -135,9 +135,8 @@ entry entry_read(FILE *in, int max_id, int battlefields)
             // empty id and battlefields = 0 means end-of-input
             free(result.distribution);
             result.distribution = NULL;
-        }
     }
-
+    }
     return result;
 }
 
