@@ -1,3 +1,5 @@
+// Nate Ly, CS223 Pset #4 (Blotto), 3/10/2024
+// driver file for blotto
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,11 +11,13 @@
 
 int main(int argc, char *argv[])
 {
+    // check if inputs are valid
     if (validInput(argc) == 1)
     {
         return 1;
     }
     int num_battles = argc - 1;
+    // create gmap
     gmap *map = gmap_create(duplicate, compare_keys, hash29, free);
     entry current_entry = entry_read(stdin, MAX_ID, num_battles);
     // Check if we have an input

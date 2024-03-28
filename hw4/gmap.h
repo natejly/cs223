@@ -1,3 +1,6 @@
+// Nate Ly, CS223 Pset #4 (Blotto), 3/10/2024
+//header file for a gmap abstract data structure to be implmented
+//in gmap.c
 #ifndef __GMAP_H__
 #define __GMAP_H__
 

@@ -1,3 +1,6 @@
+// Nate Ly, CS223 Pset #4 (Blotto), 3/10/2024
+// given header file for testing unit cases to be implemented
+// in gmap_test_functions.c
 #ifndef __GMAP_TEST_FXNS__
 #define __GMAP_TEST_FXNS__
 

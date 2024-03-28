@@ -1,3 +1,4 @@
+# // Nate Ly, CS223 Pset #4 (Blotto), 3/10/2024
 CC = gcc 
 CFLAGS = -std=c17 -Wall -pedantic -g
 

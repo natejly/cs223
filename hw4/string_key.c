@@ -1,3 +1,5 @@
+// Nate Ly, CS223 Pset #4 (Blotto), 3/10/2024
+// implementation for string_key.h
 #include <string.h>
 
 #include "string_key.h"

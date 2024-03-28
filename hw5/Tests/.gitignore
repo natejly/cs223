@@ -1,0 +1,6 @@
+output/
+*.o
+unittest
+train-conductor
+core*
+*~

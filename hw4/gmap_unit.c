@@ -1,3 +1,5 @@
+// Nate Ly, CS223 Pset #4 (Blotto), 3/10/2024
+// file containing unit tests implementation
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -84,7 +86,7 @@ void gmap_unit_free_value(const void *key, void *value, void *arg);
 
 int main(int argc, char **argv)
 {
-    
+
     int test = 0;
     size_t n = 0;
     int on = 0;
@@ -578,7 +580,7 @@ void test_for_each(size_t n)
     gmap_destroy(m);
     PRINT_PASSED;
 }
-//defined returned_keys earlier so no error
+// defined returned_keys earlier so no error
 void test_keys_survive_embiggen(size_t n1, size_t n2)
 {
     gmap *m = gmap_create(duplicate, compare_keys, java_hash_string, free);
@@ -926,7 +928,7 @@ void test_remove_collision(void)
     gmap_put(m, "BWI", bwi_value);
     gmap_put(m, "BOS", bos_value);
     gmap_put(m, "BTR", btr_value);
-    
+
     gmap_remove(m, "BOS");
 
     if (gmap_contains_key(m, "BOS"))
