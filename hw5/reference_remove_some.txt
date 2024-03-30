@@ -1,0 +1,30 @@
+Cuba A
+ 29 ~~ Havana A
+ 29 ~~ Jamaica U
+ 29 ~~ Kingston U
+ 29 ~~ Hispaniola A
+ 29 ~~ Port-au-Prince A
+ 29 ~~ Santo Domingo U
+ 29 ~~ Puerto Rico A
+ 29 ~~ San Juan A
+ 29 ~~ Trinidad U
+ 29 ~~ Barbados A
+ 29 ~~ Bridgetown U
+ 29 ~~ Bahamas U
+ 29 ~~ Nassau A
+ 29 ~~ Saint Lucia U
+ 29 ~~ Kingstown U
+ 29 ~~ Grenada A
+ 29 ~~ Antigua and Barbuda U
+ 29 ~~ St. John's A
+ 29 ~~ Dominica U
+ 29 ~~ Aruba A
+ 29 ~~ Curacao A
+ 29 ~~ Cockburn Town A
+ 29 ~~ Cayman Islands U
+ 29 ~~ Anguilla A
+ 29 ~~ The Valley A
+ 29 ~~ Plymouth U
+ 29 ~~ Martinique U
+ 29 ~~ Saint Maarten U
+ 29
