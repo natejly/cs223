@@ -3,12 +3,12 @@
  * CPSC 223 Pset 5
  *
  * Implementation of the Island class
+ * TO STUDENT: Don't forget to remove // TODO before you submit!
  *
- * Author: Nate Ly
+ * Author: [YOUR NAME HERE]
  */
 
 #include "Island.h"
-#include <string>
 
 // Default Constructor (Implemented for you)
 Island::Island()
@@ -19,17 +19,18 @@ Island::Island()
 
 Island::Island(string name, bool access)
 {
-    this->name = name;
-    this->access = access;
+    // TODO: Implement parameterized constructor
 }
 
 bool Island::isEqual(Island other)
 {
-    return (this->name.compare(other.name) == 0) && (this->access == other.access);
+    // TODO: Implement this
+
+    // TODO: Remove this line, which is here only so the starter code compiles.
+    return false;
 }
 
 void Island::print(ostream &outfile)
-{   
-    char accessChar = this->access ? 'A' : 'U';
-    outfile << this->name << " " << accessChar << endl;
+{
+    // TODO: Implement this
 }

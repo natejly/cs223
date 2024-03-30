@@ -6,6 +6,9 @@
  *
  * Interface for Linked List of Islands
  *
+ * TO STUDENT: You may ONLY modify this file by adding private members!
+ * The only exception is the TODO on line 30, which is part of an optional
+ *  additional activity.
  */
 
 #include "NodeType.h"
@@ -156,7 +159,4 @@ public:
     void print(ostream &out);
 
 private:
-    NodeType* head;
-    NodeType* currPos;
-    int length;
 };

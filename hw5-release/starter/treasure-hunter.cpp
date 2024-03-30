@@ -99,7 +99,6 @@ int readAllIslands(string islands_filename, string outfile_name, LinkedList &isl
     // Read in original list from file
     ifstream infile;
     infile.open(islands_filename.c_str());
-    cerr << "Reading from file " << islands_filename << endl;
     if (!infile.is_open())
     {
         cerr << "Could not add islands from file" << endl;
