@@ -1,0 +1,30 @@
+Cuba-Y
+Havana-Y
+Jamaica-N
+Kingston-N
+Hispaniola-Y
+Port-au-Prince-Y
+Santo Domingo-N
+Puerto Rico-Y
+San Juan-Y
+Trinidad-N
+Barbados-Y
+Bridgetown-N
+Bahamas-N
+Nassau-Y
+Saint Lucia-N
+Kingstown-N
+Grenada-Y
+Antigua and Barbuda-N
+St. John's-Y
+Dominica-N
+Aruba-Y
+Curacao-Y
+Cockburn Town-Y
+Cayman Islands-N
+Anguilla-Y
+The Valley-Y
+Plymouth-N
+Martinique-N
+Saint Maarten-N
+Barbuda-N

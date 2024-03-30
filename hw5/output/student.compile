@@ -1,0 +1,4 @@
+g++ -c -o treasure-hunter.o treasure-hunter.cpp -std=c++11 -Wall -Wextra -g
+g++ -c -o Island.o Island.cpp -std=c++11 -Wall -Wextra -g
+g++ -c -o LinkedList.o LinkedList.cpp -std=c++11 -Wall -Wextra -g
+g++ -o treasure-hunter treasure-hunter.o Island.o LinkedList.o
