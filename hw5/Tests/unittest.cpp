@@ -41,6 +41,8 @@ int test7_num_failed(bool print);
 int test8_num_failed(bool print);
 int test9_num_failed(bool print);
 int test10_num_failed(bool print);
+int test11_num_failed(bool print);
+int test12_num_failed(bool print);
 bool check_e(int test, char part, int input, int expected, bool print);
 bool check_a(int test, char part, bool assertion, bool print);
 void printPass(int test);
@@ -110,6 +112,14 @@ int main()
 		printPass(10);
 	else
 		printFail(10, test10_num_failed(false), 2);
+	if (test11_num_failed(true) == 0)
+		printPass(11);
+	else
+		printFail(11, test10_num_failed(false), 2);
+	if (test12_num_failed(true) == 0)
+		printPass(12);
+	else
+		printFail(12, test12_num_failed(false), 2);
 
 	cout.rdbuf(orig_buf);
 }
@@ -479,6 +489,70 @@ int test10_num_failed(bool print)
 		failed++;
 
 	return failed;
+}
+// test for assignment overload
+int test11_num_failed(bool print)
+{
+	cerr <<  endl;
+
+	LinkedList list1;
+	LinkedList list2;
+
+	// Populate list1 with islands
+	list1.insertIsland(Island("island1", true));
+	list1.insertIsland(Island("island2", true));
+	list1.insertIsland(Island("island3", true));
+
+	list2 = list1;
+	cerr << "list1:" << endl;
+	list1.print(cerr);
+	cerr << "copy of list1:" << endl;
+	list2.print(cerr);
+	list1.removeIsland(Island("island3", true));
+	cerr << "removed island 3 from origional list:" << endl;
+	list1.print(cerr);
+	cerr << "coppied list:" << endl;
+	list2.print(cerr);
+
+	return 0;
+	int failed = 0;
+	if (print)
+	{
+		return failed;
+	}
+	return failed;
+}
+// test for copy
+int test12_num_failed(bool print)
+{
+	cerr <<  endl;
+
+	LinkedList list1;
+
+	// Populate list1 with islands
+	list1.insertIsland(Island("island1", true));
+	list1.insertIsland(Island("island2", true));
+	list1.insertIsland(Island("island3", true));
+
+	LinkedList list2(list1);
+	cerr << "list1:" << endl;
+	list1.print(cerr);
+	cerr << "copy of list1:" << endl;
+	list2.print(cerr);
+	list1.removeIsland(Island("island3", true));
+	cerr << "removed island 3 from origional list:" << endl;
+	list1.print(cerr);
+	cerr << "coppied list:" << endl;
+	list2.print(cerr);
+
+	return 0;
+	int failed = 0;
+	if (print)
+	{
+		return failed;
+	}
+	return failed;
+
 }
 
 // UTILITIES //
