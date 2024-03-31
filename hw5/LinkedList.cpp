@@ -36,26 +36,24 @@ LinkedList::~LinkedList()
     this->currPos = NULL;
     this->length = 0;
 }
-
 // Assignment operator overload.
 LinkedList &LinkedList::operator=(const LinkedList &rhs)
 {
     if(this == &rhs){
         return *this;
     }
-    //delete wipe the old list
-    delete this;
-    *this = LinkedList();
     if(rhs.head == NULL){
         return *this;
     }
+    makeEmpty();
     // initialize pointers starting at head to walk lists
-    NodeType *currNode = head;
+    NodeType *currNode = NULL;
     NodeType *rhsNode = rhs.head;
     // copy rhs head to this head
     head = new NodeType();
     head->info = rhsNode->info;
     head->next = NULL;
+    currNode = head;
     // step to next node in RHS and walk and copy
     rhsNode = rhsNode->next;
     while(rhsNode != NULL){
@@ -65,11 +63,9 @@ LinkedList &LinkedList::operator=(const LinkedList &rhs)
         rhsNode = rhsNode->next;
         currNode->next = NULL;
     }
+    this->length = rhs.length;
     return *this;
-
-
 }
-
 // Copy constructor
 LinkedList::LinkedList(const LinkedList &other)
 {
@@ -77,13 +73,13 @@ LinkedList::LinkedList(const LinkedList &other)
         return;
     }
     // initialize pointers starting at heads 
-    head = NULL;
-    NodeType *currNode = head;
+    NodeType *currNode = NULL;
     NodeType *tempNode = other.head;
     // initilaize this head and copy other head
     head = new NodeType();
     head->info = tempNode->info;
     head->next = NULL;
+    currNode = head;
     //step to next node in other and copy into this
     tempNode = tempNode->next;
     // repeat untill we reach end of list
@@ -95,6 +91,7 @@ LinkedList::LinkedList(const LinkedList &other)
         tempNode = tempNode->next;
         currNode->next = NULL;
     }
+    length = other.length;
 
 
 }
@@ -161,7 +158,7 @@ Island LinkedList::getNextIsland()
 
 void LinkedList::resetCurrPos()
 {
-        this->currPos = NULL;
+    this->currPos = NULL;
 }
 
 void LinkedList::makeEmpty()
