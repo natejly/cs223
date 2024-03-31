@@ -316,7 +316,6 @@ int test6_num_failed(bool print)
 	list.insertIsland(s3);
 	list.insertIsland(s4);
 	list.insertIsland(s5);
-
 	list.removeIsland(s5);
 
 	Island temp;
@@ -471,9 +470,8 @@ int test10_num_failed(bool print)
 	list.insertIsland(s3);
 	list.insertIsland(s4);
 	list.insertIsland(s5);
-
+	
 	list.makeEmpty();
-
 	if (check_e(test, part++, list.getLength(), 0, print))
 		failed++;
 
