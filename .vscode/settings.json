@@ -86,6 +86,7 @@
     "string.h": "c",
     "__locale": "c",
     "skills_list.h": "c",
-    "variant": "c"
+    "variant": "c",
+    "iosfwd": "cpp"
   }
 }

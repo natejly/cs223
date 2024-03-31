@@ -30,6 +30,12 @@ bool Island::isEqual(Island other)
 
 void Island::print(ostream &outfile)
 {   
-    char accessChar = this->access ? 'A' : 'U';
-    outfile << this->name << " " << accessChar << endl;
+    char access;
+    if(this->access){
+        access = 'A';
+    } else
+    {
+        access = 'U';
+    }
+    outfile << this->name << " " << access;
 }

@@ -14,8 +14,8 @@ using namespace std;
 // Default constructor
 LinkedList::LinkedList()
 {
-    this->head = nullptr;
-    this->currPos = nullptr;
+    this->head = NULL;
+    this->currPos = NULL;
     this->length = 0;
 }
 
@@ -23,82 +23,80 @@ LinkedList::LinkedList()
 LinkedList::~LinkedList()
 {
     NodeType *curr = this->head;
-    NodeType *next = nullptr;
-    while (curr != nullptr)
+    NodeType *next = NULL;
+    // walk and destroy
+    while (curr != NULL)
     {
         next = curr->next;
         delete curr;
         curr = next;
     }
-    this->head = nullptr;
-    this->currPos = nullptr;
+    // resetting members
+    this->head = NULL;
+    this->currPos = NULL;
     this->length = 0;
 }
 
 // Assignment operator overload.
 LinkedList &LinkedList::operator=(const LinkedList &rhs)
 {
-    if(this == &rhs)
-    {
+    if(this == &rhs){
         return *this;
     }
-    *this = LinkedList(rhs);
-    *this->head = *rhs.head;
-    *this->currPos = *rhs.currPos;
-    this->length = rhs.length;
-    //copying the linked nodes 
-    NodeType *rhsCurr = rhs.head;
-    NodeType *copyCurr = nullptr;
-    while(rhsCurr != nullptr){
-        //making new node and copying the attributes
-        NodeType *nodeCopy = new NodeType();
-        nodeCopy->info = rhsCurr->info;
-        nodeCopy->next = nullptr;
-        //if head null set new node to head
-        if(this->head == nullptr){
-            this->head = nodeCopy;
-        }
-        //append to end of linked list
-        else{
-            copyCurr->next = nodeCopy;
-        }
-        //go next node
-        copyCurr = nodeCopy;
-        rhsCurr = rhsCurr->next;
-
+    //delete wipe the old list
+    delete this;
+    *this = LinkedList();
+    if(rhs.head == NULL){
+        return *this;
     }
-    
+    // initialize pointers starting at head to walk lists
+    NodeType *currNode = head;
+    NodeType *rhsNode = rhs.head;
+    // copy rhs head to this head
+    head = new NodeType();
+    head->info = rhsNode->info;
+    head->next = NULL;
+    // step to next node in RHS and walk and copy
+    rhsNode = rhsNode->next;
+    while(rhsNode != NULL){
+        currNode->next = new NodeType();
+        currNode = currNode->next;
+        currNode->info = rhsNode->info;
+        rhsNode = rhsNode->next;
+        currNode->next = NULL;
+    }
     return *this;
 
-    
+
 }
 
 // Copy constructor
 LinkedList::LinkedList(const LinkedList &other)
 {
-    this->head = nullptr;
-    this->currPos = nullptr;
-    this->length = 0;
-    NodeType *otherCurr = other.head;
-    NodeType *copyCurr = nullptr;
-    while(otherCurr != nullptr){
-        //making new node and copying the attributes
-        NodeType *nodeCopy = new NodeType();
-        nodeCopy->info = otherCurr->info;
-        nodeCopy->next = nullptr;
-        //if head null set new node to head
-        if(this->head == nullptr){
-            this->head = nodeCopy;
-        }
-        //append to end of linked list
-        else{
-            copyCurr->next = nodeCopy;
-        }
-        //go next node
-        copyCurr = nodeCopy;
-        otherCurr = otherCurr->next;
-
+    if (other.head == nullptr){
+        return;
     }
+    // initialize pointers starting at heads 
+    head = NULL;
+    NodeType *currNode = head;
+    NodeType *tempNode = other.head;
+    // initilaize this head and copy other head
+    head = new NodeType();
+    head->info = tempNode->info;
+    head->next = NULL;
+    //step to next node in other and copy into this
+    tempNode = tempNode->next;
+    // repeat untill we reach end of list
+    while (tempNode != NULL)
+    {
+        currNode->next = new NodeType();
+        currNode = currNode->next;
+        currNode->info = tempNode->info;
+        tempNode = tempNode->next;
+        currNode->next = NULL;
+    }
+
+
 }
 
 int LinkedList::getLength() const
@@ -108,93 +106,95 @@ int LinkedList::getLength() const
 
 bool LinkedList::isCurrPosNull() const
 {
-    return this->currPos == nullptr;
+    return this->currPos == NULL;
 }
 
 void LinkedList::insertIsland(Island is)
 {
     NodeType *newNode = new NodeType();
     newNode->info = is;
-    newNode->next = nullptr;
-    //if at head then set head to new node
-    if(this->head == nullptr){
-        this->head = newNode;
-    }
-    else{
-        //add to end of linked list
-        NodeType *curr = this->head;
-        while(curr->next != nullptr){
-            curr = curr->next;
-        }
-        curr->next = newNode;
-    }
+    newNode->next = this->head;
+    this->head = newNode;
     this->length++;
     this->currPos = newNode;
 }
-
 void LinkedList::removeIsland(Island is)
 {
     NodeType *curr = this->head;
-    while(curr->next != nullptr){
-        //if found island
-        if(curr->next->info.isEqual(is)){
-            //if node is head
-            if(curr == this->head){
-                NodeType *temp = this->head;
-                this->head = this->head->next;
-                delete temp;
-                this->length--;
-                return;
+    NodeType *prev = NULL; // Keep track of the previous node
+
+    while (curr != NULL) {
+        if (curr->info.isEqual(is)) {
+            // If the node to be removed is the head
+            if (prev == NULL) {
+                this->head = curr->next;
+
+            } else {
+                prev->next = curr->next;
             }
-            NodeType *temp = curr->next;
-            //skip node to be deleted
-            curr->next = curr->next->next;
-            delete temp;
+            if (this->currPos == curr) {
+                    resetCurrPos();
+                }
+            delete curr;
             this->length--;
             return;
         }
+        prev = curr;
         curr = curr->next;
     }
 }
 
+
+
+
 Island LinkedList::getNextIsland()
 {   
     //if we not indexed set to head
-    if(this->currPos == nullptr){
+    if(this->currPos == NULL){
         this->currPos = this->head;
     }
     //make temp node to return
-    NodeType *currPos = this->currPos;
-    this->currPos = currPos->next;
-    return currPos->info;
-
+    NodeType *temp = this->currPos;
+    this->currPos = this->currPos->next;
+    return temp->info;
 }
 
 void LinkedList::resetCurrPos()
 {
-        this->currPos = nullptr;
+        this->currPos = NULL;
 }
 
 void LinkedList::makeEmpty()
 {
-    delete this;
+    NodeType *curr = this->head;
+    NodeType *next = NULL;
+    while (curr != NULL)
+    {
+        next = curr->next;
+        delete curr;
+        curr = next;
+    }
+    this->head = NULL;
+    this->currPos = NULL;
+    this->length = 0;
+    resetCurrPos();
 }
 
 void LinkedList::print(ostream &out)
 {
     NodeType *curr = this->head;
-    while(curr != nullptr){
+    int stops = this->length - 1;
+    while(curr != NULL)
+    {
         curr->info.print(out);
-        out << " " << this->length;
-        if(curr->next != nullptr){
-            out << " ~~ ";
-        }
-        else{
-            out << endl;
+        out << " ";
+        out << stops;
+        stops--;
+        if(stops >= 0){
+        out << " ~~ ";
         }
         curr = curr->next;
     }
-    if(this->head == nullptr){
-        out << endl;
-    }
+    out << endl;
 }
+
