@@ -497,6 +497,7 @@ int test11_num_failed(bool print)
 
 	LinkedList list1;
 	LinkedList list2;
+	list2.insertIsland(Island("feef", true));
 
 	// Populate list1 with islands
 	list1.insertIsland(Island("island1", true));
