@@ -10,7 +10,6 @@
 #include "LinkedList.h"
 #include "NodeType.h"
 using namespace std;
-#include <iostream>
 // Default constructor
 LinkedList::LinkedList()
 {
@@ -45,6 +44,7 @@ LinkedList &LinkedList::operator=(const LinkedList &rhs)
     if(rhs.head == nullptr || rhs.length == 0){
         return *this;
     }
+    //clear old list
     makeEmpty();
     // initialize pointers starting at head to walk both lists
     NodeType *currNode = nullptr;
@@ -61,10 +61,10 @@ LinkedList &LinkedList::operator=(const LinkedList &rhs)
     // step to next node in RHS and walk and copy
     rhsNode = rhsNode->next;
     while(rhsNode != nullptr){
-        // check if we update currentPos
         currNode->next = new NodeType();
         currNode = currNode->next;
         currNode->info = rhsNode->info;
+        // check if we update currentPos
         if(rhsNode == rhs.currPos){
             this->currPos = currNode;
         }
