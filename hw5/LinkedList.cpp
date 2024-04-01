@@ -64,7 +64,6 @@ LinkedList &LinkedList::operator=(const LinkedList &rhs)
         currNode->next = nullptr;
     }
     this->length = rhs.length;
-    this->currPos = rhs.currPos;
     return *this;
 }
 // Copy constructor
@@ -93,7 +92,6 @@ LinkedList::LinkedList(const LinkedList &other)
         currNode->next = nullptr;
     }
     length = other.length;
-    currPos = other.currPos;
 }
 
 int LinkedList::getLength() const
