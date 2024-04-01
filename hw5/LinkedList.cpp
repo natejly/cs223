@@ -14,8 +14,8 @@ using namespace std;
 // Default constructor
 LinkedList::LinkedList()
 {
-    this->head = NULL;
-    this->currPos = NULL;
+    this->head = nullptr;
+    this->currPos = nullptr;
     this->length = 0;
 }
 
@@ -23,17 +23,17 @@ LinkedList::LinkedList()
 LinkedList::~LinkedList()
 {
     NodeType *curr = this->head;
-    NodeType *next = NULL;
+    NodeType *next = nullptr;
     // walk and destroy
-    while (curr != NULL)
+    while (curr != nullptr)
     {
         next = curr->next;
         delete curr;
         curr = next;
     }
     // resetting members
-    this->head = NULL;
-    this->currPos = NULL;
+    this->head = nullptr;
+    this->currPos = nullptr;
     this->length = 0;
 }
 // Assignment operator overload.
@@ -42,28 +42,29 @@ LinkedList &LinkedList::operator=(const LinkedList &rhs)
     if(this == &rhs){
         return *this;
     }
-    if(rhs.head == NULL){
+    if(rhs.head == nullptr || rhs.length == 0){
         return *this;
     }
     makeEmpty();
-    // initialize pointers starting at head to walk lists
-    NodeType *currNode = NULL;
+    // initialize pointers starting at head to walk both lists
+    NodeType *currNode = nullptr;
     NodeType *rhsNode = rhs.head;
     // copy rhs head to this head
     head = new NodeType();
     head->info = rhsNode->info;
-    head->next = NULL;
+    head->next = nullptr;
     currNode = head;
     // step to next node in RHS and walk and copy
     rhsNode = rhsNode->next;
-    while(rhsNode != NULL){
+    while(rhsNode != nullptr){
         currNode->next = new NodeType();
         currNode = currNode->next;
         currNode->info = rhsNode->info;
         rhsNode = rhsNode->next;
-        currNode->next = NULL;
+        currNode->next = nullptr;
     }
     this->length = rhs.length;
+    this->currPos = rhs.currPos;
     return *this;
 }
 // Copy constructor
@@ -73,27 +74,26 @@ LinkedList::LinkedList(const LinkedList &other)
         return;
     }
     // initialize pointers starting at heads 
-    NodeType *currNode = NULL;
+    NodeType *currNode = nullptr;
     NodeType *tempNode = other.head;
     // initilaize this head and copy other head
     head = new NodeType();
     head->info = tempNode->info;
-    head->next = NULL;
+    head->next = nullptr;
     currNode = head;
     //step to next node in other and copy into this
     tempNode = tempNode->next;
     // repeat untill we reach end of list
-    while (tempNode != NULL)
+    while (tempNode != nullptr)
     {
         currNode->next = new NodeType();
         currNode = currNode->next;
         currNode->info = tempNode->info;
         tempNode = tempNode->next;
-        currNode->next = NULL;
+        currNode->next = nullptr;
     }
     length = other.length;
-
-
+    currPos = other.currPos;
 }
 
 int LinkedList::getLength() const
@@ -103,7 +103,7 @@ int LinkedList::getLength() const
 
 bool LinkedList::isCurrPosNull() const
 {
-    return this->currPos == NULL;
+    return this->currPos == nullptr;
 }
 
 void LinkedList::insertIsland(Island is)
@@ -113,17 +113,16 @@ void LinkedList::insertIsland(Island is)
     newNode->next = this->head;
     this->head = newNode;
     this->length++;
-    this->currPos = newNode;
 }
 void LinkedList::removeIsland(Island is)
 {
     NodeType *curr = this->head;
-    NodeType *prev = NULL; // Keep track of the previous node
+    NodeType *prev = nullptr; // Keep track of the previous node
 
-    while (curr != NULL) {
+    while (curr != nullptr) {
         if (curr->info.isEqual(is)) {
             // If the node to be removed is the head
-            if (prev == NULL) {
+            if (prev == nullptr) {
                 this->head = curr->next;
 
             } else {
@@ -141,13 +140,12 @@ void LinkedList::removeIsland(Island is)
     }
 }
 
-
-
-
 Island LinkedList::getNextIsland()
-{   
+{   if(this->head == nullptr || this->length == 0){
+    return Island();
+}
     //if we not indexed set to head
-    if(this->currPos == NULL){
+    if(this->currPos == nullptr){
         this->currPos = this->head;
     }
     //make temp node to return
@@ -158,21 +156,21 @@ Island LinkedList::getNextIsland()
 
 void LinkedList::resetCurrPos()
 {
-    this->currPos = NULL;
+    this->currPos = nullptr;
 }
 
 void LinkedList::makeEmpty()
 {
     NodeType *curr = this->head;
-    NodeType *next = NULL;
-    while (curr != NULL)
+    NodeType *next = nullptr;
+    while (curr != nullptr)
     {
         next = curr->next;
         delete curr;
         curr = next;
     }
-    this->head = NULL;
-    this->currPos = NULL;
+    this->head = nullptr;
+    this->currPos = nullptr;
     this->length = 0;
     resetCurrPos();
 }
@@ -181,7 +179,7 @@ void LinkedList::print(ostream &out)
 {
     NodeType *curr = this->head;
     int stops = this->length - 1;
-    while(curr != NULL)
+    while(curr != nullptr)
     {
         curr->info.print(out);
         out << " ";

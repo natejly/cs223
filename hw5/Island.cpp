@@ -10,7 +10,6 @@
 #include "Island.h"
 #include <string>
 
-// Default Constructor (Implemented for you)
 Island::Island()
 {
     this->name = "NoName";
@@ -25,7 +24,7 @@ Island::Island(string name, bool access)
 
 bool Island::isEqual(Island other)
 {
-    return (this->name.compare(other.name) == 0) && (this->access == other.access);
+    return (this->name.compare(other.getName()) == 0) && (this->access == other.hasBerth());
 }
 
 void Island::print(ostream &outfile)
