@@ -1,7 +1,7 @@
 #pragma once
 /*
  * NodeType.h
- * CPSC 223 Pset 5
+ * Nate Ly, CPSC 223 Pset 5, 3/31/24
  *
  *
  * Small struct that is part of a Linked List class.

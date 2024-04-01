@@ -4,7 +4,8 @@
  *
  * Implementation of the Island class
  *
- * Author: Nate Ly
+ * Author: Nate Ly 
+ * Modified on 3/31/24
  */
 
 #include "Island.h"

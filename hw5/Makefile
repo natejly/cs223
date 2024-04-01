@@ -1,6 +1,6 @@
 #
 #  Makefile
-#  CPSC 223 Pset 5
+#  Nate Ly, CPSC 223 Pset 5, 3/31/24
 #
 #  Makefile for treasure-hunter.cpp, LinkedList and Island
 #

@@ -1,6 +1,6 @@
 /*
  * treasure-hunte.cpp
- * CPSC 223 Pset 5
+ * Nate Ly, CPSC 223 Pset 5, 3/31/24
  *
  * TO STUDENT: Do not modify this file!
  *

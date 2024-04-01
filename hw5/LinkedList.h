@@ -2,7 +2,7 @@
 
 /*
  * LinkedList.h
- * CPSC 223 Pset 5
+ * Nate Ly, CPSC 223 Pset 5, 3/31/24
  *
  * Interface for Linked List of Islands
  *
