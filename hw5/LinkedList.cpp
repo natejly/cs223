@@ -10,7 +10,7 @@
 #include "LinkedList.h"
 #include "NodeType.h"
 using namespace std;
-
+#include <iostream>
 // Default constructor
 LinkedList::LinkedList()
 {
@@ -54,12 +54,20 @@ LinkedList &LinkedList::operator=(const LinkedList &rhs)
     head->info = rhsNode->info;
     head->next = nullptr;
     currNode = head;
+    // check to update currPos
+    if(rhsNode == rhs.currPos){
+        this->currPos = currNode;
+    }
     // step to next node in RHS and walk and copy
     rhsNode = rhsNode->next;
     while(rhsNode != nullptr){
+        // check if we update currentPos
         currNode->next = new NodeType();
         currNode = currNode->next;
         currNode->info = rhsNode->info;
+        if(rhsNode == rhs.currPos){
+            this->currPos = currNode;
+        }
         rhsNode = rhsNode->next;
         currNode->next = nullptr;
     }
@@ -69,6 +77,8 @@ LinkedList &LinkedList::operator=(const LinkedList &rhs)
 // Copy constructor
 LinkedList::LinkedList(const LinkedList &other)
 {
+    currPos = nullptr;
+
     if (other.head == nullptr){
         return;
     }
@@ -80,6 +90,10 @@ LinkedList::LinkedList(const LinkedList &other)
     head->info = tempNode->info;
     head->next = nullptr;
     currNode = head;
+    // check to update currPos
+    if(tempNode == other.currPos){
+        this->currPos = currNode;
+    }
     //step to next node in other and copy into this
     tempNode = tempNode->next;
     // repeat untill we reach end of list
@@ -88,6 +102,10 @@ LinkedList::LinkedList(const LinkedList &other)
         currNode->next = new NodeType();
         currNode = currNode->next;
         currNode->info = tempNode->info;
+        // check to update currPos
+        if(tempNode == other.currPos){
+        this->currPos = currNode;
+        }
         tempNode = tempNode->next;
         currNode->next = nullptr;
     }

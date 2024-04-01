@@ -504,7 +504,9 @@ int test11_num_failed(bool print)
 	list1.insertIsland(Island("island2", true));
 	list1.insertIsland(Island("island3", true));
 
+	Island temp = list1.getNextIsland();
 	list2 = list1;
+	temp = list1.getNextIsland();
 	cerr << "list1:" << endl;
 	list1.print(cerr);
 	cerr << "copy of list1:" << endl;
@@ -514,6 +516,11 @@ int test11_num_failed(bool print)
 	list1.print(cerr);
 	cerr << "coppied list:" << endl;
 	list2.print(cerr);
+	temp = list2.getNextIsland();
+	temp.print(cerr);
+	cerr << endl;
+
+
 
 	return 0;
 	int failed = 0;
@@ -534,8 +541,10 @@ int test12_num_failed(bool print)
 	list1.insertIsland(Island("island1", true));
 	list1.insertIsland(Island("island2", true));
 	list1.insertIsland(Island("island3", true));
+	Island temp = list1.getNextIsland();
 
 	LinkedList list2(list1);
+	temp = list1.getNextIsland();
 	cerr << "list1:" << endl;
 	list1.print(cerr);
 	cerr << "copy of list1:" << endl;
@@ -545,6 +554,10 @@ int test12_num_failed(bool print)
 	list1.print(cerr);
 	cerr << "coppied list:" << endl;
 	list2.print(cerr);
+	temp = list2.getNextIsland();
+	temp.print(cerr);
+	cerr << endl;
+
 
 	return 0;
 	int failed = 0;
