@@ -32,7 +32,9 @@
  *  the sequence in the abstract state?
  * NOTE: This is part of an optional additional activity.
  *
- * Abstraction Function: [describe abstraction function here]
+ * Abstraction Function: The abstraction function for my implementation is the same as 
+ * the description above where this.length keeps track of the number of islands and this.currPos
+ * represents the cursor pointing to an island at our the current location.
  */
 class LinkedList
 {
