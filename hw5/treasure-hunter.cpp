@@ -77,8 +77,8 @@ int main(int argc, char *argv[])
     {
         pattern.push_back(stoi(argv[i]));
     }
-    int removed = removeSome(output_two_filename, islands, num_remove, pattern);
 
+    int removed = removeSome(output_two_filename, islands, num_remove, pattern);
     if (removed == FAIL)
     {
         cerr << "Failed to remove islands from list and write file,"
@@ -104,6 +104,7 @@ int readAllIslands(string islands_filename, string outfile_name, LinkedList &isl
         cerr << "Could not add islands from file" << endl;
         return FAIL;
     }
+
     string islandInfo = "";
     while (getline(infile, islandInfo))
     {
@@ -143,9 +144,7 @@ int removeSome(string outfile_name, LinkedList &islands, int num_remove, vector<
     int actual_removes = 0;
     for (int i = 0; i < num_remove; i++)
     {
-        
         Island s = islands.getNextIsland();
-
         bool reached_end = false;
         for (int j = 1; j < pattern[i % (int)pattern.size()] && !reached_end; j++)
         {

@@ -24,14 +24,6 @@
  *          if it has just been reset or if it has traveled past the end of the
  *          list. Otherwise it is an island that is in the list.
  *
- * TODO: The above comment describes the ABSTRACT state of a list. The CONCRETE
- *  state (i.e., the private members) may differ slightly, significantly, or
- *  not at all. Describe the "abstraction function" for this list: how does a
- *  particular set of values of the private members translate to an abstract
- *  value? Importantly: in which order do the nodes of the linked list map to
- *  the sequence in the abstract state?
- * NOTE: This is part of an optional additional activity.
- *
  * Abstraction Function: The abstraction function for my implementation is the same as 
  * the description above where this.length keeps track of the number of islands and this.currPos
  * represents the cursor pointing to an island at our the current location.
