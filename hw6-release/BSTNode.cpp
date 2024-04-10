@@ -100,12 +100,20 @@ BSTNode::BSTNode(int data)
  *  function, or both.
  */
 BSTNode::BSTNode(const BSTNode &other){
-#pragma message "TODO: Students write code here"
+    this->mData = other.mData;
+    this->mCount = other.mCount;
+    this->mHeight = other.mHeight;
+    this->mColor = other.mColor;
+    //recursing on the left and right children
+    this->mLeft = new BSTNode(*other.mLeft);
+    this->mRight = new BSTNode(*other.mRight);
+    this->parent = other.parent;
 }
 
 BSTNode::~BSTNode()
 {
-#pragma message "TODO: Students write code here"
+    delete this->mLeft;
+    delete this->mRight;
 }
 
 /********************
@@ -114,48 +122,81 @@ BSTNode::~BSTNode()
 
 const BSTNode *BSTNode::minimum_value() const
 {
-#pragma message "TODO: Students write code here"
-
-#pragma message "TODO: This line is in here so that the starter code compiles. " \
-                "Remove or modify it when implementing."
-    return nullptr;
+    const BSTNode *min = this;
+    // min val is all the way to left so we keep going left until we reach the end
+    while (!min->mLeft->is_empty())
+    {
+        min = min->mLeft;
+    }
+    return min;
 }
 
 const BSTNode *BSTNode::maximum_value() const
 {
-#pragma message "TODO: Students write code here"
-
-#pragma message "TODO: This line is in here so that the starter code compiles. " \
-                "Remove or modify it when implementing."
-    return nullptr;
+    const BSTNode *max = this;
+    // max val is all the way to right so we keep going right until we reach the end
+    while (!max->mRight->is_empty())
+    {
+        max = max->mRight;
+    }
+    return max;
 }
 
 const BSTNode *BSTNode::search(int value) const
 {
-#pragma message "TODO: Students write code here"
-
-#pragma message "TODO: This line is in here so that the starter code compiles. " \
-                "Remove or modify it when implementing."
-    return nullptr;
+    const BSTNode *node = this;
+    // if empty return nullptr
+    if (node->is_empty())
+    {
+        return nullptr;
+    }
+    // if less than current node go left and recurse
+    if (value < node->mData)
+    {
+        return node->mLeft->search(value);
+    }
+    // if greater than current node go right and recurse
+    if (value > node->mData)
+    {
+        return node->mRight->search(value);
+    }
+    // if equal return the node
+    return node;
 }
+void BSTNode::recursive_insert(int value, BSTNode *node){
+    // if equal to current node increment count
+    if(value == node->data()){
+        node->mCount++;
+    }
+    // if val is less insert on left child or recurse
+    if(value < node->data()){
+        if(node->mLeft->is_empty()){
+            node->mLeft = new BSTNode(value);
+            return;
+        }
+        recursive_insert(value, node->mLeft);
+    }
+    // if val is greater insert on right child or recurse
+    if(value > node->data()){
+        if(node->mRight->is_empty()){
+            node->mRight = new BSTNode(value);
+            return;
+        }
+        recursive_insert(value, node->mRight);
+    }
 
+}
 BSTNode *BSTNode::bst_insert(int value)
 {
     BSTNode *root = this;
-
-    /********************************
-     ***** BST Insertion Begins *****
-     ********************************/
-
-#pragma message "TODO: Students write code here"
-    // Perform the insertion
-
-    // Make root locally consistent
-
-    /********************************
-     ****** BST Insertion Ends ******
-     ********************************/
-
+    // if empty create a new node with the value
+    if (root->is_empty())
+    {
+        return new BSTNode(value);
+    }
+    //recursive insert
+    recursive_insert(value, root);
+    root->make_locally_consistent();
     return root;
 }
 
@@ -231,24 +272,27 @@ BSTNode *BSTNode::rbt_insert_helper(int value)
 
     return root;
 }
+void BSTNode::recursive_remove(BSTNode *node, int value){
+
+    if (value == node->mData)
+    {
+        delete node;
+        return;
+    }
+    recursive_remove(node->mLeft, value);
+    recursive_remove(node->mRight, value);
+}
 
 BSTNode *BSTNode::bst_remove(int value)
 {
     BSTNode *root = this;
-
-    /********************************
-     ****** BST Removal Begins ******
-     ********************************/
-
-#pragma message "TODO: Students write code here"
-    // Do the removal
-
-    // Make the root locally consistent
-
-    /********************************
-     ****** BST Removal Ends ******
-     ********************************/
-
+    // if empty return nullptr
+    if (root->is_empty())
+    {
+        return nullptr;
+    }
+    recursive_remove(root, value);
+    root->make_locally_consistent();
     return root;
 }
 
@@ -296,20 +340,22 @@ BSTNode *BSTNode::rbt_remove(int value)
 
 int BSTNode::node_count() const
 {
-#pragma message "TODO: Students write code here"
-
-#pragma message "TODO: This line is in here so that the starter code compiles. " \
-                "Remove or modify it when implementing."
-    return 0;
+    // number of non empty nodes in tree
+    if (this->is_empty())
+    {
+        return 0;
+    }
+    //node isn't empty so return 1 + left child count + right child count
+    return 1 + this->mLeft->node_count() + this->mRight->node_count();
 }
 
 int BSTNode::count_total() const
 {
-#pragma message "TODO: Students write code here"
-
-#pragma message "TODO: This line is in here so that the starter code compiles. " \
-                "Remove or modify it when implementing."
-    return 0;
+    if (this->is_empty())
+    {
+        return 0;
+    }
+    return this->mCount + this->mLeft->count_total() + this->mRight->count_total();
 }
 
 bool BSTNode::is_empty() const

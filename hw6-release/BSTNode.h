@@ -185,6 +185,20 @@ public:
      * Runtime Complexity: O([height of tree rooted at this])
      */
     const BSTNode *search(int value) const;
+    /**
+     * Recursively removes the node and children of the node
+     * @param node the root of the tree/subtree
+     * @param value the value to remove
+     * @returns nothing
+    */
+    void recursive_remove(BSTNode *node, int value);
+    /**
+     * Recursively inserts a value into the tree
+     * @param value the value to insert
+     * @param node the root of the tree/subtree
+     * @returns nothing
+    */
+    void recursive_insert(int value, BSTNode *node);
 
     /**
      * Inserts value into this.
