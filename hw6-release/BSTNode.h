@@ -201,17 +201,10 @@ public:
      */
     const BSTNode *search(int value) const;
     /**
-     * Recursively removes the node and children of the node
-     * @param node the root of the tree/subtree
-     * @param value the value to remove
-     * @returns nothing
-    */
-    void recursive_remove(BSTNode *node, int value);
-    /**
      * Recursively inserts a value into the tree
      * @param value the value to insert
      * @param node the root of the tree/subtree
-     * @returns nothing
+     * @returns pointer to node to remove
     */
     void recursive_insert(int value, BSTNode *node);
 
@@ -258,7 +251,12 @@ public:
      * Runtime Complexity: O(log n)
      */
     BSTNode *rbt_insert(int value);
-
+    /**
+     * recursive helper for remove 
+     * @param root the root of the tree
+     * @param value the value of the node to remove
+    */
+    BSTNode *recursive_remove(BSTNode *root, int value);
     /**
      * Removes value from this.
      *

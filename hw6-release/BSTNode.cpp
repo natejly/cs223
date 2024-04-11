@@ -108,16 +108,23 @@ BSTNode::BSTNode(int data)
  *  use an initializer list, or you may write a traditional constructor
  *  function, or both.
  */
-BSTNode::BSTNode(const BSTNode &other){
-    this->mData = other.mData;
-    this->mCount = other.mCount;
-    this->mHeight = other.mHeight;
-    this->mColor = other.mColor;
-    //recursing on the left and right children
-    this->mLeft = new BSTNode(*other.mLeft);
-    this->mRight = new BSTNode(*other.mRight);
-    this->parent = other.parent;
-    
+BSTNode::BSTNode(const BSTNode &other)
+    : mData(other.mData),
+      mCount(other.mCount),
+      mHeight(other.mHeight),
+      mColor(other.mColor),
+      parent(nullptr),
+      mLeft(nullptr),
+      mRight(nullptr)
+      {
+    if (other.mLeft != nullptr) {
+        mLeft = new BSTNode(*other.mLeft);
+        mLeft->parent = this; 
+    }
+    if (other.mRight != nullptr) {
+        mRight = new BSTNode(*other.mRight);
+        mRight->parent = this; 
+    }
 }
 
 BSTNode::~BSTNode()
@@ -156,9 +163,11 @@ const BSTNode *BSTNode::search(int value) const
 {
     const BSTNode *node = this;
     // if empty return nullptr
-    if (node->is_empty())
-    {
+    if (node == nullptr) {
         return nullptr;
+    }
+    if (value == node->mData) {
+        return node;
     }
     // if less than current node go left and recurse
     if (value < node->mData)
@@ -170,11 +179,9 @@ const BSTNode *BSTNode::search(int value) const
     {
         return node->mRight->search(value);
     }
-    // if equal return the node
-    return node;
+    return nullptr;
 }
 void BSTNode::recursive_insert(int value, BSTNode *node){
-
     // if equal to current node increment count
     if(value == node->data()){
         node->mCount++;
@@ -291,28 +298,52 @@ BSTNode *BSTNode::rbt_insert_helper(int value)
 
     return root;
 }
-void BSTNode::recursive_remove(BSTNode *node, int value){
+BSTNode *BSTNode::recursive_remove(BSTNode *root, int value){
 
-    if (value == node->mData)
-    {
-        delete node;
-        return;
+    if(root == nullptr){
+        return nullptr;
     }
-    recursive_remove(node->mLeft, value);
-    recursive_remove(node->mRight, value);
+    if (value < root->mData){
+        root->mLeft = recursive_remove(root->mLeft, value);
+    }
+    else if (value > root->mData){
+        root->mRight = recursive_remove(root->mRight, value);
+    } else{
+        // case left and right empty
+        if(root->mLeft == nullptr && root->mRight == nullptr){
+            BSTNode *temp = root;
+            delete root;
+            return nullptr; 
+        }
+        // case only right empty
+        if (root->mRight == nullptr){
+            BSTNode *temp = root->mLeft;
+            delete root;
+            return temp;
+        }
+        // case only left empty
+        if (root->mLeft == nullptr){
+            BSTNode *temp = root->mRight;
+            delete root;
+            return temp;
+        }
+        BSTNode *temp = root->mLeft;
+        while(!temp->mRight){
+            temp = temp->mRight;
+        }
+        root->mData = temp->mData;
+        root->mCount = temp->mCount;
+        root->mLeft = recursive_remove(temp->mLeft, temp->mData);
+        
+    }
+
+    return root;
 }
 
 BSTNode *BSTNode::bst_remove(int value)
 {
-    BSTNode *root = this;
-    // if empty return nullptr
-    if (root->is_empty())
-    {
-        return nullptr;
-    }
-    recursive_remove(root, value);
-    root->make_locally_consistent();
-    return root;
+    return recursive_remove(this, value);
+
 }
 
 BSTNode *BSTNode::avl_remove(int value)

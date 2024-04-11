@@ -34,7 +34,6 @@ BSTree &BSTree::operator=(const BSTree &source)
         return *this;
     }
     this->root = new BSTNode(*source.root);
-    std::cerr << "Assignment operator called";
     return *this;
 }
 
