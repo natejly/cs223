@@ -8,7 +8,6 @@
 
 #include <iostream>
 #include <cassert>
-
 #include "BSTNodePrinter.h"
 #include "BSTNodeChecker.h"
 
@@ -30,6 +29,13 @@ BSTree::~BSTree()
 
 BSTree &BSTree::operator=(const BSTree &source)
 {
+    if (this == &source)
+    {
+        return *this;
+    }
+    this->root = new BSTNode(*source.root);
+    std::cerr << "Assignment operator called";
+    return *this;
 }
 
 bool BSTree::is_valid() const

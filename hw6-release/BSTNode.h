@@ -83,6 +83,21 @@ public:
      */
     const BSTNode *right_child() const;
 
+    /***********
+     * Setters *
+     ***********/
+    /**
+     * setter for this->mData
+    */
+    void set_data(int data);
+    /**
+     * setter for this->mLeft
+    */
+    void set_left_child(BSTNode *node);
+    /**
+     * setter for this->mRight
+    */
+    void set_right_child(BSTNode *node);
     /********************
      * CONSTRUCTORS AND *
      *    DESTRUCTOR    *

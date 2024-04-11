@@ -67,7 +67,16 @@ const BSTNode *BSTNode::right_child() const
 {
     return this->mRight;
 }
+void BSTNode::set_data(int data){
+    this->mData = data;
+}
+void BSTNode::set_left_child(BSTNode *node){
+    this->mLeft = node;
+}
 
+void BSTNode::set_right_child(BSTNode *node){
+    this->mRight = node;
+}
 /********************
  * CONSTRUCTORS AND *
  *    DESTRUCTOR    *
