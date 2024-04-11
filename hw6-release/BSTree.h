@@ -33,7 +33,12 @@ public:
      * Destructor. Frees all memory owned by this.
      */
     ~BSTree();
-
+    /**
+     * Helper function for copy constructor and assignment operator
+     * @param node the root/parent node of the tree to copy
+     * @return a pointer to the root of the copied tree
+    */
+    void recursive_copy(const BSTNode* node);
     /**
      * Assignment overload. Assigns rhs to this by deep copy.
      */

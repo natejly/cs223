@@ -108,6 +108,7 @@ BSTNode::BSTNode(const BSTNode &other){
     this->mLeft = new BSTNode(*other.mLeft);
     this->mRight = new BSTNode(*other.mRight);
     this->parent = other.parent;
+    
 }
 
 BSTNode::~BSTNode()
@@ -164,25 +165,33 @@ const BSTNode *BSTNode::search(int value) const
     return node;
 }
 void BSTNode::recursive_insert(int value, BSTNode *node){
+
     // if equal to current node increment count
     if(value == node->data()){
         node->mCount++;
+        node->make_locally_consistent();
+        return;
     }
     // if val is less insert on left child or recurse
     if(value < node->data()){
         if(node->mLeft->is_empty()){
             node->mLeft = new BSTNode(value);
+            node->make_locally_consistent();
             return;
         }
         recursive_insert(value, node->mLeft);
+        node->make_locally_consistent();
+
     }
     // if val is greater insert on right child or recurse
     if(value > node->data()){
         if(node->mRight->is_empty()){
             node->mRight = new BSTNode(value);
+            node->make_locally_consistent();
             return;
         }
         recursive_insert(value, node->mRight);
+        node->make_locally_consistent();
     }
 
 }
@@ -190,10 +199,11 @@ BSTNode *BSTNode::bst_insert(int value)
 {
     BSTNode *root = this;
     // if empty create a new node with the value
-    if (root->is_empty())
-    {
-        return new BSTNode(value);
-    }
+  if (root->is_empty()) {
+    root = new BSTNode(value);
+    root->make_locally_consistent();
+    return root;
+  }
     //recursive insert
     recursive_insert(value, root);
     root->make_locally_consistent();
@@ -322,7 +332,7 @@ BSTNode *BSTNode::avl_remove(int value)
     /********************************
      ***** AVL Maintenance Ends *****
      ********************************/
-
+    
     return root;
 }
 
