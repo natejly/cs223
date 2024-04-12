@@ -241,39 +241,19 @@ BSTNode *BSTNode::avl_insert(int value)
 
 BSTNode *BSTNode::rbt_insert(int value)
 {
-    // This function is implemented for you, but rbt_insert_helper is not.
-    // TODO: Think about why the helper function is useful or necessary.
-
     BSTNode *root = this->rbt_insert_helper(value);
     root->mColor = Color::BLACK;
     return root;
 }
 
-/*
- * This function is private, but is is kept here for locality with rbt_insert.
- */
 BSTNode *BSTNode::rbt_insert_helper(int value)
 {
     BSTNode *root = this;
 
-    /********************************
-     ***** BST Insertion Begins *****
-     ********************************/
+    return this->bst_insert(value);
 
-#pragma message "TODO: Students write code here"
-    // Perform the insertion
-
-    /********************************
-     ****** BST Insertion Ends ******
-     ********************************/
-
-    /********************************
-     ***** RB Maintenance Begins ****
-     ********************************/
-
-#pragma message "TODO: Students write code here"
-    // Make root locally consistent
-    // Eliminate a potential red-red violation near root
+root->make_locally_consistent();    
+root->rbt_eliminate_red_red_violation();
 
     /********************************
      ****** RB Maintenance Ends *****
@@ -286,6 +266,8 @@ BSTNode *BSTNode::bst_remove(int value)
 {
     BSTNode *root = this;
     //go left
+    if (!root->is_empty()){
+
     if (root->mData > value)
     {
         root->mLeft = root->mLeft->bst_remove(value);
@@ -296,7 +278,7 @@ BSTNode *BSTNode::bst_remove(int value)
         root->mRight = root->mRight->bst_remove(value);
     }
     //found
-    else if (root->mData == value)
+    else 
     {
         //duplicate remove one from count
         if (root->mCount > 1)
@@ -308,30 +290,31 @@ BSTNode *BSTNode::bst_remove(int value)
         {
             delete root;
             root = new BSTNode();
-            root->make_locally_consistent();
         }
         //repalce with left node
         else if (!root->mLeft->is_empty() && root->mRight->is_empty())
         {
-            BSTNode *temp = new BSTNode(*root->mLeft);
-            delete root;
-            root = temp;
+            root = this->mLeft;
+            this->mLeft = nullptr;
+            delete this;
         }
         //replace with right node
         else if (root->mLeft->is_empty() && !root->mRight->is_empty())
         {
-            BSTNode *temp = new BSTNode(*root->mRight);
-            delete root;
-            root = temp;
+           root = this->mRight;
+            this->mRight = nullptr;
+            delete this;
         }
         else
         {
             //two nodes
-        const BSTNode* succ = root->mRight->minimum_value(); // Find succ
+        BSTNode *succ = (BSTNode *)root->mRight->minimum_value();
         root->mData = succ->mData;
         root->mCount = succ->mCount;
+        succ->mCount = 1;
         root->mRight = root->mRight->bst_remove(succ->mData); //
         }
+    }
     }
 
     root->make_locally_consistent();
