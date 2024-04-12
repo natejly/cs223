@@ -88,7 +88,7 @@ int main()
         print_tree_details(t);
 
         t = t_copy_1;
-
+        
         // check if the tree contains values
         for (int i = -10; i < 20; i++)
         {

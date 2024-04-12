@@ -30,14 +30,13 @@ RBTree::~RBTree()
 
 RBTree &RBTree::operator=(const RBTree &source)
 {
-#pragma message "TODO: Students write code here"
-    // Check for self-assignment
-
-    // Delete existing tree, if it exists
-
-    // Copy root from source.root, if it exists
-
-    // Don't forget to return *this
+    if (this == &source)
+    {
+        return *this;
+    }
+    delete this->root;
+    
+    this->root = new BSTNode(*source.root);
     return *this;
 }
 

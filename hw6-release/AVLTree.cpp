@@ -34,6 +34,8 @@ AVLTree &AVLTree::operator=(const AVLTree &source)
     {
         return *this;
     }
+    delete this->root;
+    
     this->root = new BSTNode(*source.root);
     return *this;
 }

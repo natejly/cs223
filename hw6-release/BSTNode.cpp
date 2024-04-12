@@ -67,14 +67,17 @@ const BSTNode *BSTNode::right_child() const
 {
     return this->mRight;
 }
-void BSTNode::set_data(int data){
+void BSTNode::set_data(int data)
+{
     this->mData = data;
 }
-void BSTNode::set_left_child(BSTNode *node){
+void BSTNode::set_left_child(BSTNode *node)
+{
     this->mLeft = node;
 }
 
-void BSTNode::set_right_child(BSTNode *node){
+void BSTNode::set_right_child(BSTNode *node)
+{
     this->mRight = node;
 }
 /********************
@@ -116,27 +119,41 @@ BSTNode::BSTNode(const BSTNode &other)
       parent(nullptr),
       mLeft(nullptr),
       mRight(nullptr)
-      {
-    if (other.mLeft != nullptr) {
+{
+    if (other.mLeft != nullptr)
+    {
         mLeft = new BSTNode(*other.mLeft);
-        mLeft->parent = this; 
+        mLeft->parent = this;
     }
-    if (other.mRight != nullptr) {
+    if (other.mRight != nullptr)
+    {
         mRight = new BSTNode(*other.mRight);
-        mRight->parent = this; 
+        mRight->parent = this;
     }
 }
 
 BSTNode::~BSTNode()
 {
-    delete this->mLeft;
-    delete this->mRight;
+    if (this->mLeft != nullptr)
+    {
+        delete this->mLeft;
+        this->mLeft = nullptr;
+        
+    }
+    if (this->mRight != nullptr)
+    {
+        delete this->mRight;
+        this->mRight = nullptr;
+    }
 }
 
 /********************
  * PUBLIC FUNCTIONS *
  ********************/
-
+const bool BSTNode::isLeaf() const
+{
+    return (this->mLeft->is_empty() && this->mRight->is_empty());
+}
 const BSTNode *BSTNode::minimum_value() const
 {
     const BSTNode *min = this;
@@ -161,67 +178,38 @@ const BSTNode *BSTNode::maximum_value() const
 
 const BSTNode *BSTNode::search(int value) const
 {
-    const BSTNode *node = this;
-    // if empty return nullptr
-    if (node == nullptr) {
-        return nullptr;
-    }
-    if (value == node->mData) {
-        return node;
-    }
-    // if less than current node go left and recurse
-    if (value < node->mData)
-    {
-        return node->mLeft->search(value);
-    }
-    // if greater than current node go right and recurse
-    if (value > node->mData)
-    {
-        return node->mRight->search(value);
-    }
-    return nullptr;
-}
-void BSTNode::recursive_insert(int value, BSTNode *node){
-    // if equal to current node increment count
-    if(value == node->data()){
-        node->mCount++;
-        node->make_locally_consistent();
-        return;
-    }
-    // if val is less insert on left child or recurse
-    if(value < node->data()){
-        if(node->mLeft->is_empty()){
-            node->mLeft = new BSTNode(value);
-            node->make_locally_consistent();
-            return;
-        }
-        recursive_insert(value, node->mLeft);
-        node->make_locally_consistent();
-
-    }
-    // if val is greater insert on right child or recurse
-    if(value > node->data()){
-        if(node->mRight->is_empty()){
-            node->mRight = new BSTNode(value);
-            node->make_locally_consistent();
-            return;
-        }
-        recursive_insert(value, node->mRight);
-        node->make_locally_consistent();
+    if (this->mData == value) {
+        return this; // Value found at current node
+    } else if (value < this->mData && !this->mLeft->is_empty()) {
+        return this->mLeft->search(value); // Recurse on the left child
+    } else if (value > this->mData && !this->mRight->is_empty()) {
+        return this->mRight->search(value); // Recurse on the right child
     }
 
+    return new BSTNode(); 
+
 }
+
 BSTNode *BSTNode::bst_insert(int value)
 {
     BSTNode *root = this;
-    // if empty create a new node with the value
-  if (root->is_empty()) {
-    root = new BSTNode(value);
-    root->make_locally_consistent();
-    return root;
-  }
-    //recursive insert
-    recursive_insert(value, root);
+
+    if (root->is_empty())
+    {
+        delete root;
+        root = new BSTNode(value);
+    }
+    else if (root->mData > value)
+    {
+        root->mLeft = root->mLeft->bst_insert(value);
+    }
+    else if (root->mData < value)
+    {
+        root->mRight = root->mRight->bst_insert(value);
+        // have a duplicate
+    } else{
+    root->mCount++;
+    }
     root->make_locally_consistent();
     return root;
 }
@@ -230,30 +218,25 @@ BSTNode *BSTNode::avl_insert(int value)
 {
     BSTNode *root = this;
 
-    /********************************
-     ***** BST Insertion Begins *****
-     ********************************/
-
-#pragma message "TODO: Students write code here"
-    // Perform the insertion
-
-    /********************************
-     ****** BST Insertion Ends ******
-     ********************************/
-
-    /********************************
-     **** AVL Maintenance Begins ****
-     ********************************/
-
-#pragma message "TODO: Students write code here"
-    // Make root locally consistent
-    // Ensure root is balanced
-
-    /********************************
-     ***** AVL Maintenance Ends *****
-     ********************************/
-
-    return root;
+    if (root->is_empty())
+    {
+        delete root;
+        root = new BSTNode(value);
+    }
+    else if (root->mData > value)
+    {
+        root->mLeft = root->mLeft->avl_insert(value);
+    }
+    else if (root->mData < value)
+    {
+        root->mRight = root->mRight->avl_insert(value);
+        // have a duplicate
+    } else{
+    root->mCount++;
+    }
+    root->make_locally_consistent();
+    return avl_balance();
+;
 }
 
 BSTNode *BSTNode::rbt_insert(int value)
@@ -298,81 +281,116 @@ BSTNode *BSTNode::rbt_insert_helper(int value)
 
     return root;
 }
-BSTNode *BSTNode::recursive_remove(BSTNode *root, int value){
-    if(root == nullptr){
-        return root;
-    }
-    if (value < root->mData){
-        root->mLeft = recursive_remove(root->mLeft, value);
-    }
-    else if (value > root->mData){
-        root->mRight = recursive_remove(root->mRight, value);
-    } 
-     
-    else{
-        if (root->mCount > 1){
-        root->mCount--;
-        return root;
-        }
-        // case left and right empty
-        if(root->mLeft == nullptr && root->mRight == nullptr){
-            return nullptr; 
-        }
-        // case only right empty
-        if (root->mRight == nullptr){
-            BSTNode *temp = root->mLeft;
-            delete root;
-            return temp;
-        }
-        // case only left empty
-        if (root->mLeft == nullptr){
-            BSTNode *temp = root->mRight;
-            delete root;
-            return temp;
-        }
-        BSTNode *temp = root->mLeft;
-        while(!temp->mRight){
-            temp = temp->mRight;
-        }
-        root->mData = temp->mData;
-        root->mCount = temp->mCount;
-        root->mLeft = recursive_remove(temp->mLeft, temp->mData);
-    }
-    return root;
-}
 
 BSTNode *BSTNode::bst_remove(int value)
 {
-    return recursive_remove(this, value);
+    BSTNode *root = this;
+    //go left
+    if (root->mData > value)
+    {
+        root->mLeft = root->mLeft->bst_remove(value);
+    }
+    //go right
+    else if (root->mData < value)
+    {
+        root->mRight = root->mRight->bst_remove(value);
+    }
+    //found
+    else if (root->mData == value)
+    {
+        //duplicate remove one from count
+        if (root->mCount > 1)
+        {
+            root->mCount--;
+        }
+        //remove if leaf
+        else if (root->isLeaf())
+        {
+            delete root;
+            root = new BSTNode();
+            root->make_locally_consistent();
+        }
+        //repalce with left node
+        else if (!root->mLeft->is_empty() && root->mRight->is_empty())
+        {
+            BSTNode *temp = new BSTNode(*root->mLeft);
+            delete root;
+            root = temp;
+        }
+        //replace with right node
+        else if (root->mLeft->is_empty() && !root->mRight->is_empty())
+        {
+            BSTNode *temp = new BSTNode(*root->mRight);
+            delete root;
+            root = temp;
+        }
+        else
+        {
+            //two nodes
+        const BSTNode* succ = root->mRight->minimum_value(); // Find succ
+        root->mData = succ->mData;
+        root->mCount = succ->mCount;
+        root->mRight = root->mRight->bst_remove(succ->mData); //
+        }
+    }
 
+    root->make_locally_consistent();
+    return root;
 }
 BSTNode *BSTNode::avl_remove(int value)
 {
     BSTNode *root = this;
+    //go left
+    if (root->mData > value)
+    {
+        root->mLeft = root->mLeft->avl_remove(value);
+    }
+    //go right
+    else if (root->mData < value)
+    {
+        root->mRight = root->mRight->avl_remove(value);
+    }
+    //found
+    else if (root->mData == value)
+    {
+        //duplicate remove one from count
+        if (root->mCount > 1)
+        {
+            root->mCount--;
+        }
+        //remove if leaf
+        else if (root->isLeaf())
+        {
+            delete root;
+            root = new BSTNode();
+            root->make_locally_consistent();
+        }
+        //repalce with left node
+        else if (!root->mLeft->is_empty() && root->mRight->is_empty())
+        {
+            BSTNode *temp = new BSTNode(*root->mLeft);
+            delete root;
+            root = temp;
+        }
+        //replace with right node
+        else if (root->mLeft->is_empty() && !root->mRight->is_empty())
+        {
+            BSTNode *temp = new BSTNode(*root->mRight);
+            delete root;
+            root = temp;
+        }
+        else
+        {
+            //two nodes
+        const BSTNode* succ = root->mRight->minimum_value(); // Find succ
+        root->mData = succ->mData;
+        root->mCount = succ->mCount;
+        root->mRight = root->mRight->avl_remove(succ->mData); //
+        }
+    }
 
-    /********************************
-     ****** BST Removal Begins ******
-     ********************************/
-
-#pragma message "TODO: Students write code here"
-    // Do the removal
-    // Make the root locally consistent
-
-    /********************************
-     ******* BST Removal Ends *******
-     ********************************/
-
-    /********************************
-     **** AVL Maintenance Begins ****
-     ********************************/
-
-#pragma message "TODO: Students write code here"
-    // Ensure the tree is AVL-balanced
-
-    /********************************
-     ***** AVL Maintenance Ends *****
-     ********************************/
-    
+    root->make_locally_consistent();
+    root = root->avl_balance();
     return root;
 }
 
@@ -395,7 +413,7 @@ int BSTNode::node_count() const
     {
         return 0;
     }
-    //node isn't empty so return 1 + left child count + right child count
+    // node isn't empty so return 1 + left child count + right child count
     return 1 + this->mLeft->node_count() + this->mRight->node_count();
 }
 
@@ -769,14 +787,15 @@ BSTNode *BSTNode::right_rotate()
 {
     // Leave this assert statement here for your own benefit.
     assert(!this->mLeft->is_empty());
-
-#pragma message "TODO: Students write code here"
-    // Perform the rotation
-    // Make the rotated tree locally consistent
-
-#pragma message "TODO: This line is in here so that the starter code compiles. " \
-                "Remove or modify it when implementing."
-    return this;
+    // temp is new root
+    BSTNode *y = this->mLeft;
+    // rotating
+    BSTNode *t3 = y->mRight;
+    y->mRight = this;
+    this->mLeft = t3;
+    this->make_locally_consistent();
+    y->make_locally_consistent();
+    return y;
 }
 
 BSTNode *BSTNode::left_rotate()
@@ -784,21 +803,43 @@ BSTNode *BSTNode::left_rotate()
     // Leave this assert statement here for your own benefit.
     assert(!this->mRight->is_empty());
 
-#pragma message "TODO: Students write code here"
-    // Perform the rotation
-    // Make the rotated tree locally consistent
-
-#pragma message "TODO: This line is in here so that the starter code compiles. " \
-                "Remove or modify it when implementing."
-    return this;
+    BSTNode *y = this->mRight;
+    BSTNode *t2 = y->mLeft;
+    y->mLeft = this;
+    this->mRight = t2;
+    this->make_locally_consistent();
+    y->make_locally_consistent();
+    return y;
 }
+int BSTNode::get_balance(BSTNode *node){
+    if (node->is_empty()){
+        return 0;
+    }
+    return node->mLeft->mHeight - node->mRight->mHeight;
 
+}
 BSTNode *BSTNode::avl_balance()
 {
-#pragma message "TODO: Students write code here"
-
-#pragma message "TODO: This line is in here so that the starter code compiles. " \
-                "Remove or modify it when implementing."
+    int balance = get_balance(this);
+    if (balance < -1) {
+        if (get_balance(this->mRight) <= 0) {
+            // RR
+            return this->left_rotate();
+        } else {
+            // RL
+            this->mRight = this->mRight->right_rotate();
+            return this->left_rotate();
+        }
+    } else if (balance > 1) {
+        if (get_balance(this->mLeft) >= 0) {
+            // LL
+            return this->right_rotate();
+        } else {
+            // LR
+            this->mLeft = this->mLeft->left_rotate();
+            return this->right_rotate();
+        }
+    }
     return this;
 }
 

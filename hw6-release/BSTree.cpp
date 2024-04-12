@@ -33,6 +33,8 @@ BSTree &BSTree::operator=(const BSTree &source)
     {
         return *this;
     }
+    delete this->root;
+    
     this->root = new BSTNode(*source.root);
     return *this;
 }

@@ -57,7 +57,10 @@ public:
     /***********
      * GETTERS *
      ***********/
-
+    /**
+     * checks if node is a leaf node
+    */
+    const bool isLeaf() const;     
     /**
      * Getter for this->mData
      */
@@ -200,13 +203,7 @@ public:
      * Runtime Complexity: O([height of tree rooted at this])
      */
     const BSTNode *search(int value) const;
-    /**
-     * Recursively inserts a value into the tree
-     * @param value the value to insert
-     * @param node the root of the tree/subtree
-     * @returns pointer to node to remove
-    */
-    void recursive_insert(int value, BSTNode *node);
+
 
     /**
      * Inserts value into this.
@@ -251,12 +248,7 @@ public:
      * Runtime Complexity: O(log n)
      */
     BSTNode *rbt_insert(int value);
-    /**
-     * recursive helper for remove 
-     * @param root the root of the tree
-     * @param value the value of the node to remove
-    */
-    BSTNode *recursive_remove(BSTNode *root, int value);
+
     /**
      * Removes value from this.
      *
@@ -663,7 +655,10 @@ private:
      * Runtime Complexity: O(1)
      */
     BSTNode *left_rotate();
-
+    /**
+     * gets balance factor of node
+    */
+    int get_balance(BSTNode *node);
     /**
      * @param this the root of an almost-balanced AVL Tree.
      * @return the balanced tree.
