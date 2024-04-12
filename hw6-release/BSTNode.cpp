@@ -134,17 +134,15 @@ BSTNode::BSTNode(const BSTNode &other)
 
 BSTNode::~BSTNode()
 {
-    if (this->mLeft != nullptr)
-    {
+
         delete this->mLeft;
         this->mLeft = nullptr;
         
-    }
-    if (this->mRight != nullptr)
-    {
+    
+  
         delete this->mRight;
         this->mRight = nullptr;
-    }
+    
 }
 
 /********************
@@ -185,9 +183,7 @@ const BSTNode *BSTNode::search(int value) const
     } else if (value > this->mData && !this->mRight->is_empty()) {
         return this->mRight->search(value); // Recurse on the right child
     }
-
-    return new BSTNode(); 
-
+    return this->minimum_value()->mLeft; 
 }
 
 BSTNode *BSTNode::bst_insert(int value)
@@ -235,8 +231,7 @@ BSTNode *BSTNode::avl_insert(int value)
     root->mCount++;
     }
     root->make_locally_consistent();
-    return avl_balance();
-;
+    return root->avl_balance();
 }
 
 BSTNode *BSTNode::rbt_insert(int value)
@@ -284,12 +279,12 @@ BSTNode *BSTNode::bst_remove(int value)
         if (root->mCount > 1)
         {
             root->mCount--;
-        }
+        }else{
         //remove if leaf
-        else if (root->isLeaf())
+        if (root->isLeaf())
         {
-            delete root;
             root = new BSTNode();
+            delete this;
         }
         //repalce with left node
         else if (!root->mLeft->is_empty() && root->mRight->is_empty())
@@ -313,8 +308,8 @@ BSTNode *BSTNode::bst_remove(int value)
         root->mCount = succ->mCount;
         succ->mCount = 1;
         root->mRight = root->mRight->bst_remove(succ->mData); //
+        }}
         }
-    }
     }
 
     root->make_locally_consistent();
