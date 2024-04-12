@@ -299,20 +299,23 @@ BSTNode *BSTNode::rbt_insert_helper(int value)
     return root;
 }
 BSTNode *BSTNode::recursive_remove(BSTNode *root, int value){
-
     if(root == nullptr){
-        return nullptr;
+        return root;
     }
     if (value < root->mData){
         root->mLeft = recursive_remove(root->mLeft, value);
     }
     else if (value > root->mData){
         root->mRight = recursive_remove(root->mRight, value);
-    } else{
+    } 
+     
+    else{
+        if (root->mCount > 1){
+        root->mCount--;
+        return root;
+        }
         // case left and right empty
         if(root->mLeft == nullptr && root->mRight == nullptr){
-            BSTNode *temp = root;
-            delete root;
             return nullptr; 
         }
         // case only right empty
@@ -334,9 +337,7 @@ BSTNode *BSTNode::recursive_remove(BSTNode *root, int value){
         root->mData = temp->mData;
         root->mCount = temp->mCount;
         root->mLeft = recursive_remove(temp->mLeft, temp->mData);
-        
     }
-
     return root;
 }
 
@@ -345,7 +346,6 @@ BSTNode *BSTNode::bst_remove(int value)
     return recursive_remove(this, value);
 
 }
-
 BSTNode *BSTNode::avl_remove(int value)
 {
     BSTNode *root = this;
