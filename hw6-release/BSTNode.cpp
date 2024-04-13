@@ -137,10 +137,8 @@ BSTNode::BSTNode(const BSTNode &other)
 
 BSTNode::~BSTNode()
 {
-
     delete this->mLeft;
     this->mLeft = nullptr;
-
     delete this->mRight;
     this->mRight = nullptr;
 }
@@ -284,7 +282,6 @@ BSTNode *BSTNode::bst_remove(int value)
     // go left
     if (!root->is_empty())
     {
-
         if (root->mData > value)
         {
             root->mLeft = root->mLeft->bst_remove(value);
@@ -871,7 +868,6 @@ BSTNode *BSTNode::rbt_eliminate_red_red_violation()
             nb.g->mColor = RED;
             nb.p->mColor = BLACK;
             nb.y->mColor = BLACK;
-            return nb.g;
         }
         else
         {
@@ -886,7 +882,6 @@ BSTNode *BSTNode::rbt_eliminate_red_red_violation()
             case LL:
                 nb.g = nb.g->right_rotate();
                 nb.g->swap_colors_with(nb.g->mRight);
-
                 nb.g->make_locally_consistent();
                 break;
             case RL:
@@ -896,7 +891,7 @@ BSTNode *BSTNode::rbt_eliminate_red_red_violation()
                 nb.g->make_locally_consistent();
                 break;
             case RR:
-                nb.g = nb.g->right_rotate();
+                nb.g = nb.g->left_rotate(); 
                 nb.g->swap_colors_with(nb.g->mLeft);
                 nb.g->make_locally_consistent();
                 break;
