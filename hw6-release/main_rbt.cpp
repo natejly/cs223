@@ -99,19 +99,17 @@ int main()
                      << (t.count_of(i) > 0 ? "contains " : "does not contain ")
                      << "the value " << i << "\n";
         }
-        cout << "\nFinished!\n";
+        cout << "\nFinished!\n\n";
 
         RBTree t2;
-        int values2[] = {87, 87, -30, 40, -73, 12, 88, 45, 23, -85, -89, 5, -98, -19, 78, 61, 52, -33, -22, -11, -59, -78, -92, 91, -98, 39, -5, -5, -48, 86, -28, -47, 54, 11, -36, 46, 31, -33, -15, 94, -19, 64, 17, 46, -96, -78, 59, -13, -18, -66, -85, 88, -82, 42, -98, 46, -34, -73, -95, 76, -23, -84, -15, -42, 53, -61, -46, -70, 79, 97
-
-};
+        int values2[] = {84, 49, -62, 95, 75, 18, -56, -27, -73, 42};
         num_values = sizeof(values2) / sizeof(int);
 
         for (int i = 0; i < num_values; i++)
         {
-                cout << "inserting " << values2[i];
+                
                 t2.insert(values2[i]);
-                t2.print_tree();
+                // t2.print_tree();
         }
         int hi = t2.node_count();
         cout << hi;

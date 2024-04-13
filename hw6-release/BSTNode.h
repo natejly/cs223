@@ -57,10 +57,7 @@ public:
     /***********
      * GETTERS *
      ***********/
-    /**
-     * checks if node is a leaf node
-    */
-    bool isLeaf();     
+    
     /**
      * Getter for this->mData
      */
@@ -167,7 +164,10 @@ public:
     /********************
      * PUBLIC FUNCTIONS *
      ********************/
-
+    /**
+     * checks if node is a leaf node
+    */
+    bool isLeaf(); 
     /**
      * Returns the minimum value in the tree rooted at this.
      *

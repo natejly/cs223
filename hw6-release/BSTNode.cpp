@@ -121,6 +121,7 @@ BSTNode::BSTNode(const BSTNode &other)
 {
     if (other.mLeft != nullptr)
     {
+        //recurse on other left
         mLeft = new BSTNode(*other.mLeft);
         mLeft->parent = this;
     }else{
@@ -128,6 +129,7 @@ BSTNode::BSTNode(const BSTNode &other)
     }
     if (other.mRight != nullptr)
     {
+        //recurse on other right
         mRight = new BSTNode(*other.mRight);
         mRight->parent = this;
     }else{
@@ -148,11 +150,15 @@ BSTNode::~BSTNode()
  ********************/
 bool BSTNode::isLeaf()
 {
+    //checking if left and right are empty
     return (this->mLeft->is_empty() && this->mRight->is_empty());
 }
 const BSTNode *BSTNode::minimum_value() const
 {
     const BSTNode *min = this;
+    if(min->is_empty()){
+        throw std::runtime_error("Tree is empty"); 
+    }
     // min val is all the way to left so we keep going left until we reach the end
     while (!min->mLeft->is_empty())
     {
@@ -164,6 +170,9 @@ const BSTNode *BSTNode::minimum_value() const
 const BSTNode *BSTNode::maximum_value() const
 {
     const BSTNode *max = this;
+    if(max->is_empty()){
+        throw std::runtime_error("Tree is empty"); 
+    }
     // max val is all the way to right so we keep going right until we reach the end
     while (!max->mRight->is_empty())
     {
@@ -198,25 +207,24 @@ BSTNode *BSTNode::bst_insert(int value)
         delete root;
         root = new BSTNode(value);
     }
-    else if (root->mData > value)
+    else if (root->mData > value) // recurse on left
     {
         root->mLeft = root->mLeft->bst_insert(value);
     }
-    else if (root->mData < value)
+    else if (root->mData < value) // recurse on right
     {
         root->mRight = root->mRight->bst_insert(value);
-        // have a duplicate
     }
-    else
+    else // have a duplicate
     {
         root->mCount++;
     }
-    root->make_locally_consistent();
+    root->make_locally_consistent(); //update height
     return root;
 }
 
 BSTNode *BSTNode::avl_insert(int value)
-{
+{   // code coppied from bst_insert
     BSTNode *root = this;
 
     if (root->is_empty())
@@ -231,13 +239,13 @@ BSTNode *BSTNode::avl_insert(int value)
     else if (root->mData < value)
     {
         root->mRight = root->mRight->avl_insert(value);
-        // have a duplicate
     }
     else
     {
         root->mCount++;
     }
     root->make_locally_consistent();
+    //make sure to balance
     return root->avl_balance();
 }
 
@@ -250,6 +258,7 @@ BSTNode *BSTNode::rbt_insert(int value)
 
 BSTNode *BSTNode::rbt_insert_helper(int value)
 {
+    // this part also coppied from bst_insert
     BSTNode *root = this;
 
     if (root->is_empty())
@@ -265,34 +274,32 @@ BSTNode *BSTNode::rbt_insert_helper(int value)
     else if (root->mData < value)
     {
         root->mRight = root->mRight->rbt_insert_helper(value);
-        // have a duplicate
     }
     else
     {
         root->mCount++;
     }
     root->make_locally_consistent();
+    //make sure no red_red violations
     return root->rbt_eliminate_red_red_violation();
-
 }
 
 BSTNode *BSTNode::bst_remove(int value)
 {
+    // refrenced from the rbt_remove
     BSTNode *root = this;
-    // go left
     if (!root->is_empty())
     {
-        if (root->mData > value)
+        if (root->mData > value) // recurse on left
         {
             root->mLeft = root->mLeft->bst_remove(value);
         }
         // go right
-        else if (root->mData < value)
+        else if (root->mData < value) // recurse on right
         {
             root->mRight = root->mRight->bst_remove(value);
         }
-        // found
-        else
+        else // found node
         {
             // duplicate remove one from count
             if (root->mCount > 1)
@@ -323,7 +330,7 @@ BSTNode *BSTNode::bst_remove(int value)
                 }
                 else
                 {
-                    // two nodes
+                    // two nodes replace with sucessor 
                     BSTNode *succ = (BSTNode *)root->mRight->minimum_value();
                     root->mData = succ->mData;
                     root->mCount = succ->mCount;
@@ -333,12 +340,13 @@ BSTNode *BSTNode::bst_remove(int value)
             }
         }
     }
-
+// update height
     root->make_locally_consistent();
     return root;
 }
 BSTNode *BSTNode::avl_remove(int value)
 {
+    // same as bst_remove
     BSTNode *root = this;
     // go left
     if (root->mData > value)
@@ -390,6 +398,7 @@ BSTNode *BSTNode::avl_remove(int value)
         }
     }
     root->make_locally_consistent();
+    //make sure still AVL tree after removing
     root = root->avl_balance();
     return root;
 }
@@ -407,21 +416,23 @@ BSTNode *BSTNode::rbt_remove(int value)
 
 int BSTNode::node_count() const
 {
-    // number of non empty nodes in tree
+    // base case number of nodes in empty tree
     if (this->is_empty())
     {
         return 0;
     }
-    // node isn't empty so return 1 + left child count + right child count
+    // node isn't empty so return 1 and recurse on left and right
     return 1 + this->mLeft->node_count() + this->mRight->node_count();
 }
 
 int BSTNode::count_total() const
 {
+    // base case number of nodes in empty tree
     if (this->is_empty())
     {
         return 0;
     }
+    //recurse on mutiplicity
     return this->mCount + this->mLeft->count_total() + this->mRight->count_total();
 }
 
@@ -786,10 +797,10 @@ BSTNode *BSTNode::right_rotate()
 {
     // Leave this assert statement here for your own benefit.
     assert(!this->mLeft->is_empty());
-    // temp is new root
+    // y is new root
     BSTNode *y = this->mLeft;
-    // rotating
     BSTNode *t3 = y->mRight;
+    // rotating right
     y->mRight = this;
     this->mLeft = t3;
     this->make_locally_consistent();
@@ -801,11 +812,13 @@ BSTNode *BSTNode::left_rotate()
 {
     // Leave this assert statement here for your own benefit.
     assert(!this->mRight->is_empty());
-
+    // y is new root
     BSTNode *y = this->mRight;
     BSTNode *t2 = y->mLeft;
+    //rotating left
     y->mLeft = this;
     this->mRight = t2;
+
     this->make_locally_consistent();
     y->make_locally_consistent();
     return y;
@@ -863,6 +876,7 @@ BSTNode *BSTNode::rbt_eliminate_red_red_violation()
 
     if (nb.shape != SHAPE_NONE)
     {
+        //uncle is red then swap colors
         if (nb.y->mColor == RED)
         {
             nb.g->mColor = RED;
@@ -873,24 +887,24 @@ BSTNode *BSTNode::rbt_eliminate_red_red_violation()
         {
             switch (nb.shape)
             {
-            case LR:
+            case LR: // fixing LR case
                 nb.g->mLeft = nb.g->mLeft->left_rotate();
                 nb.g = nb.g->right_rotate();
                 nb.g->swap_colors_with(nb.g->mRight);
                 nb.g->make_locally_consistent();
                 break;
-            case LL:
+            case LL: // fixing LL case 
                 nb.g = nb.g->right_rotate();
                 nb.g->swap_colors_with(nb.g->mRight);
                 nb.g->make_locally_consistent();
                 break;
-            case RL:
+            case RL: // fixing RL case
                 nb.g->mRight = nb.g->mRight->right_rotate();
                 nb.g = nb.g->left_rotate();
                 nb.g->swap_colors_with(nb.g->mLeft);
                 nb.g->make_locally_consistent();
                 break;
-            case RR:
+            case RR: // fixing RR case
                 nb.g = nb.g->left_rotate(); 
                 nb.g->swap_colors_with(nb.g->mLeft);
                 nb.g->make_locally_consistent();
@@ -899,7 +913,7 @@ BSTNode *BSTNode::rbt_eliminate_red_red_violation()
                 // INVALID case. Do nothing.
                 break;
             }
-            return nb.g;
+            return nb.g; // new root
         }
     }
     return this;
