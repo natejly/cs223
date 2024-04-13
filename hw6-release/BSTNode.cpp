@@ -890,10 +890,10 @@ BSTNode *BSTNode::rbt_eliminate_red_red_violation()
                 nb.g->make_locally_consistent();
                 break;
             case RL:
-                nb.g->mLeft = nb.g->mLeft->right_rotate();
+                nb.g->mRight = nb.g->mRight->right_rotate();
                 nb.g = nb.g->left_rotate();
                 nb.g->mColor = BLACK;
-                nb.g->mRight->mColor = RED;
+                nb.g->mLeft->mColor = RED;
                 nb.g->make_locally_consistent();
                 break;
             case RR:
