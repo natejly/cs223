@@ -116,9 +116,8 @@ BSTNode::BSTNode(const BSTNode &other)
       mCount(other.mCount),
       mHeight(other.mHeight),
       mColor(other.mColor),
-      parent(nullptr),
-      mLeft(nullptr),
-      mRight(nullptr)
+      parent(nullptr)
+
 {
     if (other.mLeft != nullptr)
     {
@@ -135,20 +134,17 @@ BSTNode::BSTNode(const BSTNode &other)
 BSTNode::~BSTNode()
 {
 
-        delete this->mLeft;
-        this->mLeft = nullptr;
-        
-    
-  
-        delete this->mRight;
-        this->mRight = nullptr;
-    
+    delete this->mLeft;
+    this->mLeft = nullptr;
+
+    delete this->mRight;
+    this->mRight = nullptr;
 }
 
 /********************
  * PUBLIC FUNCTIONS *
  ********************/
-const bool BSTNode::isLeaf() const
+bool BSTNode::isLeaf()
 {
     return (this->mLeft->is_empty() && this->mRight->is_empty());
 }
@@ -176,14 +172,19 @@ const BSTNode *BSTNode::maximum_value() const
 
 const BSTNode *BSTNode::search(int value) const
 {
-    if (this->mData == value) {
+    if (this->mData == value)
+    {
         return this; // Value found at current node
-    } else if (value < this->mData && !this->mLeft->is_empty()) {
+    }
+    else if (value < this->mData && !this->mLeft->is_empty())
+    {
         return this->mLeft->search(value); // Recurse on the left child
-    } else if (value > this->mData && !this->mRight->is_empty()) {
+    }
+    else if (value > this->mData && !this->mRight->is_empty())
+    {
         return this->mRight->search(value); // Recurse on the right child
     }
-    return this->minimum_value()->mLeft; 
+    return this->minimum_value()->mLeft;
 }
 
 BSTNode *BSTNode::bst_insert(int value)
@@ -203,8 +204,10 @@ BSTNode *BSTNode::bst_insert(int value)
     {
         root->mRight = root->mRight->bst_insert(value);
         // have a duplicate
-    } else{
-    root->mCount++;
+    }
+    else
+    {
+        root->mCount++;
     }
     root->make_locally_consistent();
     return root;
@@ -227,8 +230,10 @@ BSTNode *BSTNode::avl_insert(int value)
     {
         root->mRight = root->mRight->avl_insert(value);
         // have a duplicate
-    } else{
-    root->mCount++;
+    }
+    else
+    {
+        root->mCount++;
     }
     root->make_locally_consistent();
     return root->avl_balance();
@@ -245,70 +250,86 @@ BSTNode *BSTNode::rbt_insert_helper(int value)
 {
     BSTNode *root = this;
 
-    return this->bst_insert(value);
+    if (root->is_empty())
+    {
+        delete root;
+        root = new BSTNode(value);
+    }
+    else if (root->mData > value)
+    {
+        root->mLeft = root->mLeft->rbt_insert_helper(value);
+    }
+    else if (root->mData < value)
+    {
+        root->mRight = root->mRight->rbt_insert_helper(value);
+        // have a duplicate
+    }
+    else
+    {
+        root->mCount++;
+    }
+    root->mColor = RED;
+    root->make_locally_consistent();
+    return root->rbt_eliminate_red_red_violation();
 
-root->make_locally_consistent();    
-root->rbt_eliminate_red_red_violation();
-
-    /********************************
-     ****** RB Maintenance Ends *****
-     ********************************/
-
-    return root;
 }
 
 BSTNode *BSTNode::bst_remove(int value)
 {
     BSTNode *root = this;
-    //go left
-    if (!root->is_empty()){
+    // go left
+    if (!root->is_empty())
+    {
 
-    if (root->mData > value)
-    {
-        root->mLeft = root->mLeft->bst_remove(value);
-    }
-    //go right
-    else if (root->mData < value)
-    {
-        root->mRight = root->mRight->bst_remove(value);
-    }
-    //found
-    else 
-    {
-        //duplicate remove one from count
-        if (root->mCount > 1)
+        if (root->mData > value)
         {
-            root->mCount--;
-        }else{
-        //remove if leaf
-        if (root->isLeaf())
-        {
-            root = new BSTNode();
-            delete this;
+            root->mLeft = root->mLeft->bst_remove(value);
         }
-        //repalce with left node
-        else if (!root->mLeft->is_empty() && root->mRight->is_empty())
+        // go right
+        else if (root->mData < value)
         {
-            root = this->mLeft;
-            this->mLeft = nullptr;
-            delete this;
+            root->mRight = root->mRight->bst_remove(value);
         }
-        //replace with right node
-        else if (root->mLeft->is_empty() && !root->mRight->is_empty())
-        {
-           root = this->mRight;
-            this->mRight = nullptr;
-            delete this;
-        }
+        // found
         else
         {
-            //two nodes
-        BSTNode *succ = (BSTNode *)root->mRight->minimum_value();
-        root->mData = succ->mData;
-        root->mCount = succ->mCount;
-        succ->mCount = 1;
-        root->mRight = root->mRight->bst_remove(succ->mData); //
-        }}
+            // duplicate remove one from count
+            if (root->mCount > 1)
+            {
+                root->mCount--;
+            }
+            else
+            {
+                // remove if leaf
+                if (root->isLeaf())
+                {
+                    root = new BSTNode();
+                    delete this;
+                }
+                // repalce with left node
+                else if (!root->mLeft->is_empty() && root->mRight->is_empty())
+                {
+                    root = this->mLeft;
+                    this->mLeft = nullptr;
+                    delete this;
+                }
+                // replace with right node
+                else if (root->mLeft->is_empty() && !root->mRight->is_empty())
+                {
+                    root = this->mRight;
+                    this->mRight = nullptr;
+                    delete this;
+                }
+                else
+                {
+                    // two nodes
+                    BSTNode *succ = (BSTNode *)root->mRight->minimum_value();
+                    root->mData = succ->mData;
+                    root->mCount = succ->mCount;
+                    succ->mCount = 1;
+                    root->mRight = root->mRight->bst_remove(succ->mData); //
+                }
+            }
         }
     }
 
@@ -318,39 +339,39 @@ BSTNode *BSTNode::bst_remove(int value)
 BSTNode *BSTNode::avl_remove(int value)
 {
     BSTNode *root = this;
-    //go left
+    // go left
     if (root->mData > value)
     {
         root->mLeft = root->mLeft->avl_remove(value);
     }
-    //go right
+    // go right
     else if (root->mData < value)
     {
         root->mRight = root->mRight->avl_remove(value);
     }
-    //found
+    // found
     else if (root->mData == value)
     {
-        //duplicate remove one from count
+        // duplicate remove one from count
         if (root->mCount > 1)
         {
             root->mCount--;
         }
-        //remove if leaf
+        // remove if leaf
         else if (root->isLeaf())
         {
             delete root;
             root = new BSTNode();
             root->make_locally_consistent();
         }
-        //repalce with left node
+        // repalce with left node
         else if (!root->mLeft->is_empty() && root->mRight->is_empty())
         {
             BSTNode *temp = new BSTNode(*root->mLeft);
             delete root;
             root = temp;
         }
-        //replace with right node
+        // replace with right node
         else if (root->mLeft->is_empty() && !root->mRight->is_empty())
         {
             BSTNode *temp = new BSTNode(*root->mRight);
@@ -359,15 +380,14 @@ BSTNode *BSTNode::avl_remove(int value)
         }
         else
         {
-            //two nodes
-        BSTNode *succ = (BSTNode *)root->mRight->minimum_value();
-        root->mData = succ->mData;
-        root->mCount = succ->mCount;
-        succ->mCount = 1;
-        root->mRight = root->mRight->avl_remove(succ->mData); //
+            // two nodes
+            BSTNode *succ = (BSTNode *)root->mRight->minimum_value();
+            root->mData = succ->mData;
+            root->mCount = succ->mCount;
+            succ->mCount = 1;
+            root->mRight = root->mRight->avl_remove(succ->mData); //
         }
     }
-
     root->make_locally_consistent();
     root = root->avl_balance();
     return root;
@@ -376,7 +396,6 @@ BSTNode *BSTNode::avl_remove(int value)
 BSTNode *BSTNode::rbt_remove(int value)
 {
     // This function is implemented for you.
-
     BHVNeighborhood nb(this, ROOT);
     BSTNode *to_delete = nullptr;
     BSTNode *root = this->rbt_remove_helper(value, nb, to_delete);
@@ -790,30 +809,40 @@ BSTNode *BSTNode::left_rotate()
     y->make_locally_consistent();
     return y;
 }
-int BSTNode::get_balance(BSTNode *node){
-    if (node->is_empty()){
+int BSTNode::get_balance(BSTNode *node)
+{
+    if (node->is_empty())
+    {
         return 0;
     }
     return node->mLeft->mHeight - node->mRight->mHeight;
-
 }
 BSTNode *BSTNode::avl_balance()
 {
     int balance = get_balance(this);
-    if (balance < -1) {
-        if (get_balance(this->mRight) <= 0) {
+    if (balance < -1)
+    {
+        if (get_balance(this->mRight) <= 0)
+        {
             // RR
             return this->left_rotate();
-        } else {
+        }
+        else
+        {
             // RL
             this->mRight = this->mRight->right_rotate();
             return this->left_rotate();
         }
-    } else if (balance > 1) {
-        if (get_balance(this->mLeft) >= 0) {
+    }
+    else if (balance > 1)
+    {
+        if (get_balance(this->mLeft) >= 0)
+        {
             // LL
             return this->right_rotate();
-        } else {
+        }
+        else
+        {
             // LR
             this->mLeft = this->mLeft->left_rotate();
             return this->right_rotate();
@@ -833,31 +862,33 @@ BSTNode *BSTNode::rbt_eliminate_red_red_violation()
 
     if (nb.shape != SHAPE_NONE)
     {
-        /*
-         * There is a red-red violation somewhere in the neighborhood of this
-         *  Fix it.
-         */
-
-#pragma message "TODO: Students fill in the code below"
         if (nb.y->mColor == RED)
         {
-#pragma message "TODO: Eliminate the red-red violation when y is red"
+            nb.g->mColor = RED;
+            nb.p->mColor = BLACK;
+            nb.y->mColor = BLACK;
         }
         else
         {
             switch (nb.shape)
             {
             case LR:
-#pragma message "TODO: Handle LR case"
+                nb.x->left_rotate(); 
+                nb.g->right_rotate(); 
+                nb.g->swap_colors_with(nb.x);
                 break;
             case LL:
-#pragma message "TODO: Handle LL case"
+                nb.g->right_rotate();
+                nb.g->swap_colors_with(nb.p);
                 break;
             case RL:
-#pragma message "TODO: Handle RL case"
+                nb.x->right_rotate(); 
+                nb.g->left_rotate();  
+                nb.g->swap_colors_with(nb.x);
                 break;
             case RR:
-#pragma message "TODO: Handle RR case"
+                nb.g->left_rotate();
+                nb.g->swap_colors_with(nb.p);
                 break;
             default:
                 // INVALID case. Do nothing.
@@ -865,7 +896,6 @@ BSTNode *BSTNode::rbt_eliminate_red_red_violation()
             }
         }
     }
-
     return nb.g;
 }
 

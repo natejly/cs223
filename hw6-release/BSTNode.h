@@ -60,7 +60,7 @@ public:
     /**
      * checks if node is a leaf node
     */
-    const bool isLeaf() const;     
+    bool isLeaf();     
     /**
      * Getter for this->mData
      */
