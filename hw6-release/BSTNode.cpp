@@ -871,6 +871,7 @@ BSTNode *BSTNode::rbt_eliminate_red_red_violation()
             nb.g->mColor = RED;
             nb.p->mColor = BLACK;
             nb.y->mColor = BLACK;
+            return nb.g;
         }
         else
         {
