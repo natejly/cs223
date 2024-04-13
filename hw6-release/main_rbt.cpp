@@ -99,7 +99,7 @@ int main()
                      << (t.count_of(i) > 0 ? "contains " : "does not contain ")
                      << "the value " << i << "\n";
         }
-        cout << "\nFinished!\n\n";
+        cout << "\nFinished!\n";
 
         RBTree t2;
         int values2[] = {84, 49, -62, 95, 75, 18, -56, -27, -73, 42};
@@ -111,7 +111,5 @@ int main()
                 t2.insert(values2[i]);
                 // t2.print_tree();
         }
-        int hi = t2.node_count();
-        cout << hi;
 
 }
