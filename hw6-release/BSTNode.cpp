@@ -906,11 +906,10 @@ BSTNode *BSTNode::rbt_eliminate_red_red_violation()
                 // INVALID case. Do nothing.
                 break;
             }
-            return nb.g;
 
         }
     }
-    return this;
+    return nb.g;
 }
 
 void BSTNode::BHVNeighborhood::fix_blackheight_imbalance()
