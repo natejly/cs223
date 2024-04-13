@@ -360,9 +360,10 @@ BSTNode *BSTNode::avl_remove(int value)
         else
         {
             //two nodes
-        const BSTNode* succ = root->mRight->minimum_value(); // Find succ
+        BSTNode *succ = (BSTNode *)root->mRight->minimum_value();
         root->mData = succ->mData;
         root->mCount = succ->mCount;
+        succ->mCount = 1;
         root->mRight = root->mRight->avl_remove(succ->mData); //
         }
     }
