@@ -123,11 +123,15 @@ BSTNode::BSTNode(const BSTNode &other)
     {
         mLeft = new BSTNode(*other.mLeft);
         mLeft->parent = this;
+    }else{
+        mLeft = nullptr;
     }
     if (other.mRight != nullptr)
     {
         mRight = new BSTNode(*other.mRight);
         mRight->parent = this;
+    }else{
+        mRight = nullptr;
     }
 }
 
@@ -254,6 +258,7 @@ BSTNode *BSTNode::rbt_insert_helper(int value)
     {
         delete root;
         root = new BSTNode(value);
+        root->mColor = RED;
     }
     else if (root->mData > value)
     {
@@ -268,7 +273,6 @@ BSTNode *BSTNode::rbt_insert_helper(int value)
     {
         root->mCount++;
     }
-    root->mColor = RED;
     root->make_locally_consistent();
     return root->rbt_eliminate_red_red_violation();
 
@@ -873,30 +877,39 @@ BSTNode *BSTNode::rbt_eliminate_red_red_violation()
             switch (nb.shape)
             {
             case LR:
-                nb.x->left_rotate(); 
-                nb.g->right_rotate(); 
-                nb.g->swap_colors_with(nb.x);
+                nb.g->mLeft = nb.g->mLeft->left_rotate();
+                nb.g = nb.g->right_rotate();
+                nb.g->mColor = BLACK;
+                nb.g->mRight->mColor = RED;
+                nb.g->make_locally_consistent();
                 break;
             case LL:
-                nb.g->right_rotate();
-                nb.g->swap_colors_with(nb.p);
+                nb.g = nb.g->right_rotate();
+                nb.g->mColor = BLACK;
+                nb.g->mRight->mColor = RED;
+                nb.g->make_locally_consistent();
                 break;
             case RL:
-                nb.x->right_rotate(); 
-                nb.g->left_rotate();  
-                nb.g->swap_colors_with(nb.x);
+                nb.g->mLeft = nb.g->mLeft->right_rotate();
+                nb.g = nb.g->left_rotate();
+                nb.g->mColor = BLACK;
+                nb.g->mRight->mColor = RED;
+                nb.g->make_locally_consistent();
                 break;
             case RR:
-                nb.g->left_rotate();
-                nb.g->swap_colors_with(nb.p);
+                nb.g = nb.g->right_rotate();
+                nb.p->swap_colors_with(nb.g);
+                nb.g->make_locally_consistent();
                 break;
             default:
                 // INVALID case. Do nothing.
                 break;
             }
+            return nb.g;
+
         }
     }
-    return nb.g;
+    return this;
 }
 
 void BSTNode::BHVNeighborhood::fix_blackheight_imbalance()
