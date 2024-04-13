@@ -1,0 +1,15 @@
+==590142== Memcheck, a memory error detector
+==590142== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==590142== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==590142== Command: ./the_rbt
+==590142== Parent PID: 590083
+==590142== 
+==590142== 
+==590142== HEAP SUMMARY:
+==590142==     in use at exit: 0 bytes in 0 blocks
+==590142==   total heap usage: 238 allocs, 238 frees, 94,832 bytes allocated
+==590142== 
+==590142== All heap blocks were freed -- no leaks are possible
+==590142== 
+==590142== For lists of detected and suppressed errors, rerun with: -s
+==590142== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

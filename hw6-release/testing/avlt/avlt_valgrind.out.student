@@ -1,0 +1,15 @@
+==590129== Memcheck, a memory error detector
+==590129== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==590129== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==590129== Command: ./avlt
+==590129== Parent PID: 590083
+==590129== 
+==590129== 
+==590129== HEAP SUMMARY:
+==590129==     in use at exit: 0 bytes in 0 blocks
+==590129==   total heap usage: 244 allocs, 244 frees, 95,072 bytes allocated
+==590129== 
+==590129== All heap blocks were freed -- no leaks are possible
+==590129== 
+==590129== For lists of detected and suppressed errors, rerun with: -s
+==590129== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

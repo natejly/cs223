@@ -1,0 +1,138 @@
+Original tree (asterisk or capital 'R' denote a multiplicity of more than 1;
+	'r' or 'R' denote RED node):
+            __________4___________
+           /                      \
+      ____1r____              ___11r____
+     /          \            /          \
+    -6          2*_        _9          _14_
+                   \      /           /    \
+                   3r    5R         13r   15R 
+
+min: -6
+max: 15
+nodes: 11
+count total: 14
+tree height: 3
+
+Removing 9 from original tree:
+            __________4___________
+           /                      \
+      ____1r____              ___11r____
+     /          \            /          \
+    -6          2*_         5*         _14_
+                   \                  /    \
+                   3r               13r   15R 
+
+min: -6
+max: 15
+nodes: 10
+count total: 13
+tree height: 3
+
+Removing 1 from original tree:
+            __________4___________
+           /                      \
+      ____2R____              ___11r____
+     /          \            /          \
+    -6          3          _9          _14_
+                          /           /    \
+                         5R         13r   15R 
+
+min: -6
+max: 15
+nodes: 10
+count total: 13
+tree height: 3
+
+Removing 11 from original tree:
+            __________4___________
+           /                      \
+      ____1r____              ___13r____
+     /          \            /          \
+    -6          2*_        _9           14_
+                   \      /                \
+                   3r    5R               15R 
+
+min: -6
+max: 15
+nodes: 10
+count total: 13
+tree height: 3
+
+Removing 5 from original tree (should still have one 5):
+            __________4___________
+           /                      \
+      ____1r____              ___11r____
+     /          \            /          \
+    -6          2*_        _9          _14_
+                   \      /           /    \
+                   3r    5r         13r   15R 
+
+min: -6
+max: 15
+nodes: 11
+count total: 13
+tree height: 3
+
+Removing 3 from original tree:
+            __________4___________
+           /                      \
+      ____1r____              ___11r____
+     /          \            /          \
+    -6          2*         _9          _14_
+                          /           /    \
+                         5R         13r   15R 
+
+min: -6
+max: 15
+nodes: 10
+count total: 13
+tree height: 3
+
+Removing -6 from original tree:
+            __________4___________
+           /                      \
+      ____2R____              ___11r____
+     /          \            /          \
+    1           3          _9          _14_
+                          /           /    \
+                         5R         13r   15R 
+
+min: 1
+max: 15
+nodes: 10
+count total: 13
+tree height: 3
+
+Original Tree does not contain the value -10
+Original Tree does not contain the value -9
+Original Tree does not contain the value -8
+Original Tree does not contain the value -7
+Original Tree contains the value -6
+Original Tree does not contain the value -5
+Original Tree does not contain the value -4
+Original Tree does not contain the value -3
+Original Tree does not contain the value -2
+Original Tree does not contain the value -1
+Original Tree does not contain the value 0
+Original Tree contains the value 1
+Original Tree contains the value 2
+Original Tree contains the value 3
+Original Tree contains the value 4
+Original Tree contains the value 5
+Original Tree does not contain the value 6
+Original Tree does not contain the value 7
+Original Tree does not contain the value 8
+Original Tree contains the value 9
+Original Tree does not contain the value 10
+Original Tree contains the value 11
+Original Tree does not contain the value 12
+Original Tree contains the value 13
+Original Tree contains the value 14
+Original Tree contains the value 15
+Original Tree does not contain the value 16
+Original Tree does not contain the value 17
+Original Tree does not contain the value 18
+Original Tree does not contain the value 19
+
+Finished!
