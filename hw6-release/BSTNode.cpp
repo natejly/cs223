@@ -879,37 +879,34 @@ BSTNode *BSTNode::rbt_eliminate_red_red_violation()
             case LR:
                 nb.g->mLeft = nb.g->mLeft->left_rotate();
                 nb.g = nb.g->right_rotate();
-                nb.g->mColor = BLACK;
-                nb.g->mRight->mColor = RED;               
+                nb.g->swap_colors_with(nb.g->mRight);
                 nb.g->make_locally_consistent();
                 break;
             case LL:
                 nb.g = nb.g->right_rotate();
-                nb.g->mColor = BLACK;
-                nb.g->mRight->mColor = RED;      
+                nb.g->swap_colors_with(nb.g->mRight);
+
                 nb.g->make_locally_consistent();
                 break;
             case RL:
                 nb.g->mRight = nb.g->mRight->right_rotate();
                 nb.g = nb.g->left_rotate();
-                nb.g->mColor = BLACK;
-                nb.g->mLeft->mColor = RED;      
+                nb.g->swap_colors_with(nb.g->mLeft);
                 nb.g->make_locally_consistent();
                 break;
             case RR:
                 nb.g = nb.g->right_rotate();
-                nb.g->mColor = BLACK;
-                nb.g->mLeft->mColor = RED;      
+                nb.g->swap_colors_with(nb.g->mLeft);
                 nb.g->make_locally_consistent();
                 break;
             default:
                 // INVALID case. Do nothing.
                 break;
             }
-
+            return nb.g;
         }
     }
-    return nb.g;
+    return this;
 }
 
 void BSTNode::BHVNeighborhood::fix_blackheight_imbalance()
