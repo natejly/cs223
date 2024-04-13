@@ -898,7 +898,8 @@ BSTNode *BSTNode::rbt_eliminate_red_red_violation()
                 break;
             case RR:
                 nb.g = nb.g->right_rotate();
-                nb.p->swap_colors_with(nb.g);
+                nb.g->mColor = BLACK;
+                nb.g->mRight->mColor = RED;                
                 nb.g->make_locally_consistent();
                 break;
             default:
