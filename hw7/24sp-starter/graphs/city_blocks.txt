@@ -1,0 +1,41 @@
+20 D
+Watson Center
+Dunham Lab
+Yale Science Building
+Haven Hot Chicken
+
+19 16 1 Church St
+13 17 1 College St
+17 13 1 College St
+17 18 1 Elm St
+18 19 1 Elm St
+16 15 1 Grove St
+15 14 1 Grove St
+14 13 1 Grove St
+14 1 1 Hillhouse Ave
+1 9 1 Hillhouse Ave
+9 5 1 Hillhouse Ave
+4 8 1 Prospect St
+8 4 1 Prospect St
+8 13 1 Prospect St
+13 8 1 Prospect St
+4 0 1 Sachem St
+0 5 1 Sachem St
+5 4 1 Sachem St
+5 6 1 Sachem St
+6 5 1 Sachem St
+8 9 1 Trumbull St
+9 10 1 Trumbull St
+10 11 1 Trumbull St
+12 12 1 Temple Ct
+10 12 1 Temple St
+12 15 1 Temple St
+15 18 1 Temple St
+6 7 1 Whitney Ave
+7 6 1 Whitney Ave
+7 10 1 Whitney Ave
+11 7 1 Whitney Ave
+16 3 1 Whitney Ave
+3 11 1 Whitney Ave
+6 2 1 Whitney Ave
+2 6 1 Whitney Ave
