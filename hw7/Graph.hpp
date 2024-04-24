@@ -24,7 +24,7 @@
  * Contains the interface and implementation for the Graph class, including
  *  inner structs for Vertex, Edge, and Path.
  *
- * Author: [your name here]
+ * Author: Nate Ly
  */
 
 namespace g
