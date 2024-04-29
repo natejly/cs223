@@ -1,3 +1,4 @@
+# Nate Ly, CS 223 graphs, 4/29/2024
 CXX = g++
 CXXFLAGS = -g -pedantic -std=c++17 -Wall
 DEPS = Graph.hpp MinQueue.hpp traits.hpp
