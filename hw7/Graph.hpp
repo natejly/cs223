@@ -894,16 +894,23 @@ namespace g
                     if (weightlst[j] != W_MAX)
                     {
                         neighborlst = neighbors_of(current);
-                        //go through neighbors and relax
+                        //go through edges and relax
                         for (size_type k = 0; k < neighborlst.size(); k++)
                         {
                             Vertex neighbor = neighborlst[k];
-                            weight = weightlst[j] + edge(current, neighbor).weight;
-                            if (weightlst[vlst[neighbor.index]] > weight)
+                            if (weightlst[current.index] == W_MAX)
+                            {
+                                weight = W_MAX;
+                            }
+                            else
+                            {
+                                weight = weightlst[current.index] + edge(current, neighbor).weight;
+                            }
+                            if (weightlst[neighbor.index] > weight)
                             {
                                 // replace if found a shorter path
-                                weightlst[vlst[neighbor.index]] = weight;
-                                parents[vlst[neighbor.index]] = current;
+                                weightlst[neighbor.index] = weight;
+                                parents[neighbor.index] = current;
                                 break;
                             }
                         }
