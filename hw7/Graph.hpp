@@ -428,7 +428,7 @@ namespace g
                    << setw(rpad) << setfill('~') << ""
                    << path.target << ": ";
 
-                for (size_t i = 0; i < path.size() - 1; i++)
+                for (size_type i = 0; i < path.size() - 1; i++)
                 {
                     Edge e = path.g.edge(path[i], path[i + 1]);
                     Vertex v = e ? e.source : path.source;
@@ -454,8 +454,12 @@ namespace g
          *  body.
          * You must intialize all members of class Graph.
          */
-#pragma message "TODO: Students complete this constructor."
-        Graph() : directed(true) {}
+        Graph()
+        {
+            directed = true;
+            vlst;
+            alst;
+        }
 
         /**
          * Constructs a graph from the given input stream. If the graph is
@@ -674,11 +678,7 @@ namespace g
          */
         vector<Vertex> vertices() const
         {
-#pragma message "TODO: Students write code here"
-
-            // This line is in here so that the starter code compiles. "
-            // Remove or modify it when implementing."
-            return vector<Vertex>();
+            return vlst;
         }
 
         /**
@@ -687,11 +687,16 @@ namespace g
          */
         set<Edge> edges() const
         {
-#pragma message "TODO: Students write code here"
-
-            // This line is in here so that the starter code compiles. "
-            // Remove or modify it when implementing."
-            return set<Edge>();
+            set<Edge> edges;
+            //edges stored in alst so iterating through and insert 
+            for (size_type i = 0; i < alst.size(); i++)
+            {
+                for (size_type j = 0; j < alst[i].size(); j++)
+                {
+                    edges.insert(alst[i][j]);
+                }
+            }
+            return edges;
         }
 
         /**
@@ -702,11 +707,15 @@ namespace g
          */
         vector<Vertex> neighbors_of(const Vertex &v) const
         {
-#pragma message "TODO: Students write code here"
-
-            // This line is in here so that the starter code compiles. "
-            // Remove or modify it when implementing."
-            return vector<Vertex>();
+            vector<Vertex> neighbors;
+            //add all edges with starting at v
+            for (size_type i = 0; i < alst[v].size(); i++)
+            {
+                neighbors.push_back(alst[v][i].target);
+            }
+            // sort the whole list
+            sort(neighbors.begin(), neighbors.end());
+            return neighbors;
         }
 
         /**
@@ -718,10 +727,17 @@ namespace g
          */
         Edge edge(const Vertex &s, const Vertex &t) const
         {
-#pragma message "TODO: Students write code here"
-
-            // This line is in here so that the starter code compiles. "
-            // Remove or modify it when implementing."
+            //going through edges that start at s
+            for (size_type i = 0; i < alst[s].size(); i++)
+            {
+                Edge e = alst[s][i];
+                //if there exists the target vertex then we have found the edge
+                if (e.target == t)
+                {
+                    return e;
+                }
+            }
+            //else return default
             return Edge();
         }
 
@@ -736,8 +752,36 @@ namespace g
          * @param s the starting vertex
          */
         void bfs(const Vertex &s) const
+        // referenced code on canvas
         {
-#pragma message "TODO: Students write code here"
+            vector<bool> visited(vlst.size());
+            vector<Vertex> neighborslst;
+            queue<Vertex> q;
+            Vertex current;
+            Vertex neighbor;
+            // visit starting vertex and put in q
+            visit(s);
+            visited[s] = true;
+            q.push(s);
+            // go untill q empty
+            while (q.empty() == false)
+            {
+                current = q.front();
+                q.pop();
+                // get neighbors of first in q
+                neighborslst = neighbors_of(current);
+                for (size_type i = 0; i < neighborslst.size(); i++)
+                {
+                    neighbor = neighborslst[i];
+                    // if neighbor not already visited visit and add to q
+                    if (visited[neighbor] == false)
+                    {
+                        visit(neighbor);
+                        visited[neighbor] = true;
+                        q.push(neighbor);
+                    }
+                }
+            }
         }
 
         /**
@@ -752,7 +796,8 @@ namespace g
          */
         void dfs(const Vertex &s) const
         {
-#pragma message "TODO: Students write code here"
+            vector<bool> visited(vlst.size());
+            dfs_recursive(s, visited);
         }
 
         /**
@@ -768,8 +813,51 @@ namespace g
          *
          * @assumes the graph has no negative edge weights
          */
-        void dijkstra(const Vertex &s) const {
-#pragma message "TODO: Students write code here"
+        void dijkstra(const Vertex &s) const
+        {
+            MinQueue<W, Vertex> q;
+            vector<bool> visited(vlst.size());
+            vector<W> weightlst(vlst.size(), W_MAX);
+            vector<Vertex> neighborslst;
+            W weight;
+            //set start to 0
+            weightlst[s.index] = 0;
+            q.insert(0, s);
+            while (q.empty() == false)
+            {
+                // smallest weight vertex
+                Vertex current = q.remove_min();
+                if (visited[current.index])
+                {
+                    continue;
+                }
+                visit(current);
+                visited[current.index] = true;
+                neighborslst = neighbors_of(current);
+                for (size_type i = 0; i < neighborslst.size(); i++)
+                {
+                    Vertex neighbor = neighborslst[i];
+                    if (visited[neighbor])
+                    {
+                        continue;
+                    }
+                    // make sure we aren't overflowing
+                    if (weightlst[current.index] == W_MAX)
+                    {
+                        weight = W_MAX;
+                    }
+                    else
+                    {
+                        weight = weightlst[current.index] + edge(current, neighbor).weight;
+                    }
+                    if (weightlst[neighbor] > weight)
+                    {
+                        // replace if found a shorter path
+                        weightlst[neighbor] = weight;
+                    }
+                    q.insert(weight, neighbor);
+                }
+            }
         }
 
         /**
@@ -789,9 +877,58 @@ namespace g
          */
         Path shortest_path(const Vertex &s, const Vertex &t) const
         {
+            //refrenced from Bellman-Ford pseudocode on canvas
             vector<Vertex> parents(vertices().size());
-#pragma message "TODO: Students write code here"
-
+            vector<W> weightlst(vlst.size(), W_MAX);
+            vector<Vertex> neighborlst;
+            weightlst[s.index] = 0;
+            parents[s.index] = s;
+            W weight;
+            vector<Vertex> neighborslst;
+            for (size_type i = 0; i < vlst.size() - 1; i++)
+            {
+                //go through vertices
+                for (size_type j = 0; j < vlst.size(); j++)
+                {
+                    Vertex current = vlst[j];
+                    if (weightlst[j] != W_MAX)
+                    {
+                        neighborlst = neighbors_of(current);
+                        //go through neighbors and relax
+                        for (size_type k = 0; k < neighborlst.size(); k++)
+                        {
+                            Vertex neighbor = neighborlst[k];
+                            weight = weightlst[j] + edge(current, neighbor).weight;
+                            if (weightlst[vlst[neighbor.index]] > weight)
+                            {
+                                // replace if found a shorter path
+                                weightlst[vlst[neighbor.index]] = weight;
+                                parents[vlst[neighbor.index]] = current;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            //negative weight cycle
+            set<Edge> edgelst = edges();
+            for (Edge e : edgelst)
+            {
+                if (weightlst[e.source] == W_MAX)
+                {
+                    weight = W_MAX;
+                }
+                else
+                {
+                    weight = weightlst[e.source] + e.weight;
+                }
+                // if wehave an improved weight after traversing V vertices
+                //then we have completed a cycle of negative weight
+                if (weightlst[e.target] > weight)
+                {
+                    throw runtime_error("Negative weight cycle");
+                }
+            }
             return Path(*this, s, t, parents);
         }
 
@@ -808,7 +945,8 @@ namespace g
             v.index = this->vertices().size();
 
             // Do the insertion
-#pragma message "TODO: Students write code here"
+            vlst.push_back(v);
+            alst.push_back(vector<Edge>());
         }
 
         /**
@@ -849,7 +987,40 @@ namespace g
             }
 
             // Do the edge insertion
-#pragma message "TODO: Students write code here"
+            if (e.weight == 0)
+            {
+                return;
+            }
+
+            for (size_type i = 0; i < alst[e.source].size(); i++)
+            {
+                // replace edge if exists
+                if (alst[e.source][i].target == e.target)
+                {
+                    alst[e.source][i].weight = e.weight;
+                    alst[e.source][i].label = e.label;
+                    return;
+                }
+            }
+            // else add it to alist
+            alst[e.source].push_back(e);
+            if (!directed)
+            // repeat in other way if undirected
+            {
+                Edge e2 = ~e;
+
+                for (size_type i = 0; i < alst[e2.source].size(); i++)
+                {
+                    // replace edge if exists
+                    if (alst[e2.source][i].target == e2.target)
+                    {
+                        alst[e2.source][i].weight = e2.weight;
+                        alst[e2.source][i].label = e2.label;
+                        return;
+                    }
+                }
+                alst[e.target].push_back(e2);
+            }
         }
 
     private:
@@ -858,18 +1029,8 @@ namespace g
          *  member variable's name or type.
          */
         bool directed;
-
-        /*
-         * Add private members of the graph here.
-         *
-         * Your graph must be implemented as an adjacency list. You may use any
-         *  data structures you like to implement it.
-         *
-         * We recommend using a vector<vector<Edge>>, where the outer
-         *  vector is indexed by the vertex index and the inner vector contains
-         *  the edges from that vertex.
-         */
-#pragma message "TODO: Students add private members here"
+        vector<Vertex> vlst;
+        vector<vector<Edge>> alst;
 
         /**
          * "Visits" the given vertex. By default, prints the vertex to cout.
@@ -880,7 +1041,28 @@ namespace g
         {
             cout << vertex << endl;
         }
-
-#pragma message "TODO (optional): Students add private helper methods here."
+        /**
+         * Recursive helper for dfs
+         * Refrenced from implementation on canvas
+         * @param current current vertex
+         * @param visited the list of visited vertices
+         */
+        vector<bool> dfs_recursive(const Vertex &current, vector<bool> &visited) const
+        {
+            visit(current);
+            visited[current] = true;
+            // get list of neighbors
+            vector<Vertex> neighborslst = neighbors_of(current);
+            for (size_type i = 0; i < neighborslst.size(); i++)
+            {
+                Vertex neighbor = neighborslst[i];
+                // if not already visited then recurse on neighbor
+                if (visited[neighbor] == false)
+                {
+                    visited = dfs_recursive(neighbor, visited);
+                }
+            }
+            return visited;
+        }
     };
 }
