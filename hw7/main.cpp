@@ -13,7 +13,7 @@
 
 using std::string;
 
-using Graph = g::Graph<string, string, unsigned int>;
+using Graph = g::Graph<string, string, signed int>;
 using Vertex = Graph::Vertex;
 using Edge = Graph::Edge;
 
